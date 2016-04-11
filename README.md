@@ -1,7 +1,9 @@
 ##Urban Institute ggplot2 theme
 
 [Run this script once per R session](urban_ggplot_theme.R)
-
+```r 
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_ggplot_theme.R')
+```
 
 This is an `R` script that can be run to make default `ggplot2` output align more closely with [the Urban Institute's Data Visualization style guide](http://urbaninstitute.github.io/graphics-styleguide/).
 
