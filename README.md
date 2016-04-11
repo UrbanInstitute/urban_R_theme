@@ -17,7 +17,7 @@ This is an `R` script that can be run to make default `ggplot2` output align mor
 If it is not already installed, please install the free [Lato font from Google fonts](https://www.google.com/fonts/specimen/Lato).
 
 ####Windows users
-If you're on Windows, you'll first need to install Ghostscript. You may need to have IT enter an admin password for this installation. Then, in R, tell R where your ghostscript file is.
+If you're on Windows, you'll first need to [install Ghostscript](http://ghostscript.com/download/). You may need to have IT enter an admin password for this installation. Then, in R, tell R where your ghostscript file is.
 ```
 # Edit the file path if yours is in a different place
 Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.05/bin/gswin32c.exe")
