@@ -16,17 +16,30 @@ This is an `R` script that can be run to make default `ggplot2` output align mor
 ###Installation
 If it is not already installed, please install the free [Lato font from Google fonts](https://www.google.com/fonts/specimen/Lato).
 
+####Windows users
+If you're on Windows, you'll first need to install Ghostscript. You may need to have IT enter an admin password for this installation. Then, in R, tell R where your ghostscript file is.
+```
+# Edit the file path if yours is in a different place
+Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.05/bin/gswin32c.exe")
+```
+
+####Everyone
 Then, run:
 
 ```
-install.packages(c('shiny','ggplot2','reshape2','RColorBrewer','plyr','stringr','extrafont'))
-library(extrafont)
+install.packages(c('ggplot2','reshape2','RColorBrewer','extrafont'))
+library('extrafont')
 font_import()
 loadfonts()
 ```
 
 Loading and importing fonts may take a few minutes.
 
+After the initial installation, to use Lato just load the library in each R session:
+```
+library('extrafont')
+```
+For more information, and to learn how to embed Lato in PDF exports, see the [extrafont README](https://cran.r-project.org/web/packages/extrafont/README.html)
 
 ###Charting!
 ####An example line chart:
