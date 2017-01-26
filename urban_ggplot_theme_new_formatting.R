@@ -6,37 +6,52 @@ library(RColorBrewer)
 
 ####Bar
 ##1 color
-#ggplot(mtcars, aes(factor(cyl))) + 
+#ggplot(data = mtcars, mapping = aes(factor(cyl))) + 
 #  geom_bar() + 
-#  coord_cartesian(ylim = c(0, 100)) +
-#  ggtitle("Title")
+#  ylim(c(0, 50)) +
+#  labs(title = "Title")
 
 ##3 colors
-#qplot(factor(cyl), data = mtcars, geom = "bar", fill = factor(cyl)) + labs(title = "Title")
+#ggplot(data = mtcars, mapping = aes(x = factor(cyl), fill = factor(cyl))) +
+#  geom_bar() +
+#  labs(title = "Title")
 
 ##5 colors
-#ggplot(diamonds, aes(clarity, fill = cut)) + 
+#ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
 #  geom_bar() +
-#  ggtitle("Title") + 
-#  coord_cartesian(ylim = c(0, 15000))
+#  scale_y_continuous(expand = c(0, 0), limits = c(0, 15000)) +
+#  xlab("Clarity") +
+#  ylab("Count") +
+#  labs(
+#    title = "Diamond Clarity",
+#    subtitle = "Something Informative About Diamonds",
+#    caption = "The Source of Diamond Data"
+#       )
 
 ####Scatter
 ##3 colors
-#ggplot(mtcars, aes(wt, mpg)) + 
+#ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + 
 #  geom_point(aes(colour = factor(cyl))) + 
-#  ggtitle("Title")
+#  labs(title = "Title")
 
 ##9 colors
 #dsamp <- diamonds[sample(nrow(diamonds), 1000), ]
-#qplot(carat, price, data = dsamp, colour = clarity, size = 3) +
-#  ggtitle("Title")
+#ggplot(data = dsamp, mapping = aes(x = carat, y = price, color = clarity)) +
+#  geom_point(size = 3) +
+#  scale_y_continuous(expand = c(0, 0), limits = c(0, 20000)) +
+#  labs(title = "Title") +
+#  xlab("Carat") +
+#  ylab("Price (USD)")
 
 ###Line
 ##3 colors
-#library(reshape2)
-#ggplot(mtcars.long, aes(mpg, value, colour = variable)) +
-#  geom_line() +
-#  ggtitle("Title")
+#library(tidyverse)
+#mtcars %>% 
+#  select(mpg, disp, hp, wt) %>%
+#  gather(-mpg, key = variable, value = value) %>%
+#  ggplot(mapping = aes(mpg, value, color = variable)) +
+#  geom_line(size = 1) +
+#  labs(title = "Title") 
 
 ###Facet Grid
 #ggplot(mtcars, aes(mpg, wt)) +
@@ -45,10 +60,10 @@ library(RColorBrewer)
 #  facet_grid(vs ~ am, margins = TRUE)
 
 ###Histogram
-##22 colors
-#ggplot(mtcars) + 
-#  scale_fill_manual(values = extendedPalette(22)) + 
-#  geom_histogram(aes(factor(hp), fill = factor(hp)))
+#ggplot(data = diamonds, mapping = aes(x = depth)) + 
+#  geom_histogram() +
+#  scale_y_continuous(expand = c(0, 0)) +
+#  labs(title = "Title")
 
 ####################################
 
