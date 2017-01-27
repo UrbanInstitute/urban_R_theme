@@ -16,7 +16,7 @@ library(RColorBrewer)
 #  geom_bar() +
 #  labs(title = "Title")
 
-##5 colors
+##5 colors (stacked)
 #ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
 #  geom_bar() +
 #  scale_y_continuous(expand = c(0, 0), limits = c(0, 15000)) +
@@ -28,7 +28,36 @@ library(RColorBrewer)
 #    caption = "The Source of Diamond Data"
 #       )
 
+##5 colors (dodged)
+#ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
+#  geom_bar(position = "dodge") +
+#  scale_y_continuous(expand = c(0, 0), limits = c(0, 6000)) +
+#  xlab("Clarity") +
+#  ylab("Count") +
+#  labs(
+#    title = "Diamond Clarity",
+#    subtitle = "Something Informative About Diamonds",
+#    caption = "The Source of Diamond Data"
+#  )
+
 ####Scatter
+## 1 Color
+#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
+#  geom_point() + 
+#  scale_y_continuous(expand = c(0, 0)) +
+#  labs(title = "Title")
+
+#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
+#  geom_point(alpha = 0.1) + 
+#  scale_y_continuous(expand = c(0, 0)) +
+#  labs(title = "Title",
+#       subtitle = "alpha = 0.1 adds transparency to overlapping points")
+
+#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
+#  geom_hex() + 
+#  labs(title = "Title",
+#       subtitle = "geom_hex adds clarity to overlapping points")
+
 ##3 colors
 #ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + 
 #  geom_point(aes(colour = factor(cyl))) + 
