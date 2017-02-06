@@ -129,8 +129,13 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                         margin = structure(c(0, 0, 0, 0), 
                                            unit = "pt", 
                                            valid.unit = 8L, 
-                                           class = c("margin", "unit")), 
-                        debug = FALSE), 
+                                           class = c("margin", "unit")),
+                        debug = FALSE),
+    title = element_text(size = 18L, 
+                         margin = structure(c(0, 0, 0, 0), 
+                                            unit = "pt", 
+                                            valid.unit = 8L, 
+                                            class = c("margin", "unit"))),
     
     ## Plot Attributes
     
@@ -138,7 +143,10 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                               hjust = 0), 
     plot.subtitle = element_text(size = 14L,
                                  hjust = 0), 
-    plot.caption = NULL,
+    plot.caption = element_text(size = 12L,
+                                hjust = 1,
+                                vjust = 1,
+                                margin = margin(t = base_size / 2 * 0.9)),
     plot.background = NULL, 
     
     plot.margin = unit(c(10L, 10L, 10L, 10L), "points"), 
@@ -152,19 +160,12 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     axis.text.y.right = NULL, 
     
     axis.ticks = element_line(), 
-    axis.title = element_text(family = NULL, 
-                              face = "italic", 
-                              colour = NULL, 
+    axis.title = element_text(face = "italic", 
                               size = 13L, 
-                              hjust = NULL, 
-                              vjust = NULL, 
-                              angle = NULL, 
-                              lineheight = NULL, 
                               margin = structure(c(0, 10, 0, 0), 
                                                  unit = "pt", 
                                                  valid.unit = 8L, 
-                                                 class = c("margin", "unit")),
-                              debug = NULL), 
+                                                 class = c("margin", "unit"))), 
     axis.title.x = NULL, 
     axis.title.y = element_text(angle = 90), 
     axis.title.x.top = NULL, 
@@ -177,8 +178,6 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                                 linetype = NULL, 
                                 lineend = NULL), 
     axis.ticks.y = element_blank(), 
-    
-    
 
     axis.line = element_line(), 
     axis.line.x = element_line(colour = NULL, 
@@ -187,32 +186,30 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                                lineend = NULL), 
     axis.line.y = element_blank(), 
 
-    
-    
- 
-
-    
-    
-    
     ## Legend Attributes
     
     legend.background = element_blank(), 
+    
     legend.spacing = unit(8L, "points"), 
+    legend.spacing.x = NULL, 
+    legend.spacing.y = NULL,
+    
     legend.key = element_rect(size = 0L), 
     legend.key.size = unit(10L, "points"), 
     legend.key.height = NULL, 
     legend.key.width = NULL, 
-    legend.text = element_text(size = 12L), 
+    
+    legend.text = NULL, 
     legend.text.align = NULL, 
-    legend.title = element_blank(), 
+    legend.title = NULL, 
     legend.title.align = NULL, 
+
     legend.position = "top", 
     legend.direction = "horizontal", 
     legend.justification = NULL, 
-    legend.box = "horizontal", 
     legend.margin = NULL, 
-    legend.spacing.x = NULL, 
-    legend.spacing.y = NULL, 
+    
+    legend.box = "horizontal", 
     legend.box.margin = NULL, 
     legend.box.background = NULL, 
     legend.box.spacing = NULL, 
@@ -221,17 +218,17 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     
     panel.background = element_blank(), 
     panel.border = element_blank(), 
-    panel.grid.major = element_line(), 
-    panel.grid.minor = element_line(), 
-    panel.spacing = unit(2L, "points"),
+    panel.ontop = FALSE, 
 
+    panel.spacing = unit(2L, "points"),
     panel.spacing.x = unit(0,"lines"), 
     panel.spacing.y = unit(0,"lines"), 
-    panel.ontop = FALSE, 
-    
+
     panel.grid = NULL, 
+    panel.grid.major = element_line(), 
     panel.grid.major.x = element_blank(), 
     panel.grid.major.y = element_line(colour = "#DEDDDD"), 
+    panel.grid.minor = element_line(), 
     panel.grid.minor.x = element_blank(), 
     panel.grid.minor.y = element_blank(),
     
@@ -248,14 +245,13 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                                                  valid.unit = 8L, 
                                                  class = c("margin", "unit"))), 
     strip.text.x = NULL, 
-    strip.text.y = NULL, 
+    strip.text.y = element_text(angle = -90), 
 
     strip.switch.pad.grid = unit(0,"lines"), 
     strip.switch.pad.wrap = unit(0,"lines"), 
     strip.placement = NULL,
     
     ## Create a 'complete' format
-    
     complete = TRUE
    
     )
