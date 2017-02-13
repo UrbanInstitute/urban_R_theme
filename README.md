@@ -29,8 +29,8 @@ Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.05/bin/gswin32c.exe")
 Then, run:
 
 ```
-install.packages(c('ggplot2','reshape2','RColorBrewer','extrafont'))
-library('extrafont')
+install.packages(c("ggplot2", "reshape2", "RColorBrewer", "extrafont"))
+library(extrafont)
 font_import()
 loadfonts()
 ```
@@ -39,36 +39,36 @@ Loading and importing fonts may take a few minutes.
 
 After the initial installation, to use Lato just load the library in each R session:
 ```
-library('extrafont')
+library(extrafont)
 ```
 For more information, and to learn how to embed Lato in PDF exports, see the [extrafont README](https://cran.r-project.org/web/packages/extrafont/README.html)
 
 ###Charting!
 ####An example line chart:
 ```
-ggplot(economics_long, aes(date, value01, colour = variable))
-+ geom_line()
-+ scale_y_continuous(expand = c(0,0))
-+ ggtitle('Example line chart')
+ggplot(economics_long, aes(date, value01, colour = variable)) +
+  geom_line() +
+  scale_y_continuous(expand = c(0,0)) +
+  labs(title = "Example line chart")
 ```
 ![example line chart](img/example_line_chart.png)
 
 **Note that**
 
-- `ggtitle()` Should always be used to add a title to charts
+- `labs(title = "Title")` Should always be used to add a title to charts
 - `scale_y_continuous(expand = c(0,0))` removes gaps between the axis lines and the origin
 
 ###An example bar chart
 ```
-ggplot(mpg, aes(class))
-+ geom_bar(aes(fill = drv))
-+ scale_y_continuous(expand=c(0,0))
-+ ggtitle("Example Bar Chart")
+ggplot(mpg, aes(class)) +
+  geom_bar(aes(fill = drv)) +
+  scale_y_continuous(expand=c(0,0)) +
+  labs(title = "Example Bar Chart")
 ```
 ![example bar chart](img/example_bar_chart.png)
 **Note that**
 
-- `ggtitle()` Should always be used to add a title to charts
+- `labs(title = "Title")` Should always be used to add a title to charts
 - `scale_y_continuous(expand = c(0,0))` removes gaps between the axis lines and the origin. Without this option, bar charts look like:
 
 ![the horror](img/yuck.png)
