@@ -128,13 +128,12 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                         lineheight = 0.9, 
                         margin = margin(),
                         debug = FALSE),
-    title = element_text(size = 18L, 
-                         margin = margin(b = 2)),
     
     ## Plot Attributes
     
     plot.title = element_text(size = 18L,
-                              hjust = 0), 
+                              hjust = 0,
+                              margin = margin(b = 2)), 
     plot.subtitle = element_text(size = 14L,
                                  hjust = 0,
                                  margin = margin(b = 10)),
@@ -183,7 +182,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     
     legend.background = element_blank(), 
     
-    legend.spacing = unit(8L, "pt"), 
+    legend.spacing = unit(20L, "pt"), 
     legend.spacing.x = NULL, 
     legend.spacing.y = NULL,
     
@@ -213,11 +212,10 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     panel.border = element_blank(), 
     panel.ontop = FALSE, 
 
-    panel.spacing = unit(2L, "pt"),
-    panel.spacing.x = unit(0,"lines"), 
-    panel.spacing.y = unit(0,"lines"), 
+    panel.spacing = unit(6L, "pt"),
+    panel.spacing.x = NULL, 
+    panel.spacing.y = NULL, 
 
-    panel.grid = NULL, 
     panel.grid.major = element_line(), 
     panel.grid.major.x = element_blank(), 
     panel.grid.major.y = element_line(colour = "#DEDDDD"), 
@@ -228,17 +226,20 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     ## Strip Attributes (Facetting)
     
     strip.background = element_rect(fill = "#dedddd", 
-                                    colour = NULL, 
-                                    size = NULL, 
-                                    linetype = 0L), 
+                                    colour = NA,
+                                    size = 10), 
     strip.text = element_text(face = "bold", 
-                              size = 14L),
-    strip.text.x = NULL, 
-    strip.text.y = element_text(angle = -90), 
-
-    strip.switch.pad.grid = unit(0,"lines"), 
-    strip.switch.pad.wrap = unit(0,"lines"), 
-    strip.placement = NULL,
+                              size = rel(0.8)),
+  
+    strip.text.x = element_text(margin = margin(t = 4.5, b = 4.5)), 
+    strip.text.y = element_text(angle = -90, margin = margin(l = 4.5, r = 4.5)), 
+    
+    strip.placement = "inside",
+    strip.placement.x =  NULL,
+    strip.placement.y =  NULL,
+    
+    strip.switch.pad.grid = unit(0.1, "cm"), 
+    strip.switch.pad.wrap = unit(0.1, "cm"), 
     
     ## Create a 'complete' format
     complete = TRUE

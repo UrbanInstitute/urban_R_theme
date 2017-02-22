@@ -33,7 +33,7 @@ ggplot(data = mtcars, mapping = aes(factor(cyl))) +
        caption = "Urban Institute")
 
 source("urban_theme.R")
-ggplot(data = mtcars, mapping = aes(factor(cyl))) + 
+ggplot(data = mtcars, mapping = aes(factor(cyl))) +
   geom_bar() + 
   labs(title = "Gg",
        subtitle = "Gg",
@@ -104,14 +104,11 @@ ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
 ``` {r scatter plot hex}
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
   geom_hex() + 
+  scale_y_continuous(expand = c(0, 0)) +
   labs(title = "Title",
-       subtitle = "geom_hex adds clarity to overlapping points")
-
-ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
-  stat_binhex() + 
-  labs(title = "Title",
-       subtitle = "geom_hex adds clarity to overlapping points")
-
+       subtitle = "geom_hex adds clarity to overlapping points") +
+  theme(legend.position = "right",
+        legend.direction = "vertical")
 
 #3 colors
 ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + 
@@ -272,7 +269,7 @@ drivers.states <- left_join(states, drivers.usa, by = c("state" = "state"))
 ggplot(drivers.states, aes(lon, lat, group = state)) +
   geom_polygon(aes(fill = perc_speeding)) +
   coord_quickmap() +
-  labs(title = "Drivers Involved in Fatal Collision While Speeing",
+  labs(title = "Drivers Involved in Fatal Collision While Speeding",
        subtitle = "As a share of the number of fatal collisions per billion miles, 2009",
        caption = "Source: fivethirtyeight R package")  +
   theme(axis.text = element_blank(),
@@ -344,19 +341,51 @@ ggplot(census.counties, aes(lon, lat, group = id)) +
 ```{r heat map}
 
 bad_drivers %>%
-  gather(num_drivers:losses, key = "variable", value = "value") 
-
+  mutate(`Number of Drivers` = scale(num_drivers)) %>%
+  mutate(`Percent Speeding` = scale(perc_speeding)) %>%
+  mutate(`Percent Alcohol` = scale(perc_alcohol)) %>%
+  mutate(`Percent Not Distracted` = scale(perc_not_distracted)) %>%
+  mutate(`Percent No Previous` = scale(perc_no_previous)) %>%
+  select(-insurance_premiums, -losses, -(num_drivers:losses)) %>%
+  gather(`Number of Drivers`:`Percent No Previous`, key = "variable", value = "SD's from Mean") %>%
+  ggplot(aes(variable, state)) +
+  geom_tile(aes(fill = `SD's from Mean`)) +
+  ylab(NULL) +
+  xlab(NULL) +
+  labs(title = "Drivers Involved in Fatal Collisions By Behavior",
+       subtitle = "As a share of the number of fatal collisions per billion miles, 2009",
+       caption = "Source: fivethirtyeight R package") + 
+  scale_fill_gradient(low = "white", high = "#1696d2")
 #https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
 
+```
+
+
+## Small Multiples
+
+Smaller font on the x- and y-axes makes sense for small multiples. 
+```{r small multiples}
+
+# Facet Wrap
+txhousing %>%
+  filter(city != "Brazoria County" & city != "Brownsville" & city != "San Angelo" & city != "Denton County") %>%
+  ggplot(aes(median)) +
+  geom_histogram() +
+  facet_wrap(~city) +
+  xlab("Median Monthly Home Value") +
+  ylab("Count") +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = "Median Monthly Home Prices in Selected Texas Cities")
+
+# Facet grid
 
 ```
 
 
 
-
-
-
-
+#ggplot(mpg, aes(displ, hwy)) +
+#  geom_point() +
+#  facet_wrap(~class)
 
 
 
