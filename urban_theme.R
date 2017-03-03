@@ -133,7 +133,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     
     plot.title = element_text(size = 18L,
                               hjust = 0,
-                              margin = margin(b = 5)), 
+                              margin = margin(b = 8)), 
     plot.subtitle = element_text(size = 14L,
                                  hjust = 0,
                                  margin = margin(b = 10)),
@@ -144,7 +144,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                                 margin = margin(t = base_size / 2 * 0.9)),
     plot.background = NULL, 
     
-    plot.margin = margin(10L, 10L, 10L, 10L), 
+    plot.margin = margin(t = 10L, r = 10L, b = 10L, l = 10L), 
     
     ## Axis Attributes
     
@@ -199,7 +199,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     legend.position = "top", 
     legend.direction = "horizontal", 
     legend.justification = NULL, 
-    legend.margin = margin(6, 0, 6, 0, "pt"), 
+    legend.margin = margin(t = 6, r = 0, b = 6, l = 0, "pt"), 
     
     legend.box = "horizontal", 
     legend.box.margin = NULL, 
@@ -229,10 +229,11 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
                                     colour = NA,
                                     size = 10), 
     strip.text = element_text(face = "bold", 
-                              size = rel(0.8)),
+                              size = rel(0.5)),
   
     strip.text.x = element_text(margin = margin(t = 4.5, b = 4.5)), 
-    strip.text.y = element_text(angle = -90, margin = margin(l = 4.5, r = 4.5)), 
+    strip.text.y = element_text(angle = -90, 
+                                margin = margin(l = 4.5, r = 4.5)), 
     
     strip.placement = "inside",
     strip.placement.x =  NULL,
@@ -252,8 +253,8 @@ theme_set(theme_urban())
 ################ Set Default Colors for Monochromatic Plots ####################
 
 update_geom_defaults("bar", list(fill = "#1696d2"))
-update_geom_defaults("point", list(color = "#1696d2"))
-update_geom_defaults("line", list(color = "#1696d2"))
+update_geom_defaults("point", list(colour = "#1696d2"))
+update_geom_defaults("line", list(colour = "#1696d2"))
 
 #############################
 
