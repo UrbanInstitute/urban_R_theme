@@ -28,11 +28,11 @@ The greatest strength of R is its vibrant and open community of users, developer
 
 #### Installation
 
-**R** can be added on any Urban Institute computer by IT. 
+**R** can be added on any Urban Institute computer by IT.
 
 **R Studio** is an Integrated Development Environment that greatly expands the interface and capabilites of R. Loading R Studio is the preferred way of loading R. 
 
-**R Packages** is open-source code developed by R users that contains useful functions and data that expand the power and applicability of R. Packages are regularly added on [CRAN]() and GitHub. Most packages can be installed once with `install.packages("package name")`. This only needs to happen once on each computer. Packages can be loaded using `library(package name)`. This needs to happen at the beginning of each script for each package used. **Note:** `install.packages()` uses quotation marks while `library()` does not. 
+**R Packages** are collections of open-source code developed by R users that contain useful functions and data that expand the power and applicability of R. Packages are regularly added on [CRAN](https://cran.r-project.org/) and [GitHub](https://github.com/). Most packages can be installed with `install.packages("package name")`. This only needs to happen once on each computer for each version of the package. Packages can be loaded using `library(package name)`. This needs to happen at the beginning of each script for each package used. **Note:** `install.packages()` uses quotation marks while `library()` does not. 
 
 There are thousands of packages, but most tasks can be accomplished with a handful of important packages:
 
@@ -62,10 +62,10 @@ There are thousands of packages, but most tasks can be accomplished with a handf
 
 Run this script once per R session
 ```
-source()
+source()  ## TODO(aaron): add source link to R theme
 ```
 
-This is an `R` script that can be run to make default `ggplot2` output align more closely with [the Urban Institute's Data Visualization style guide](http://urbaninstitute.github.io/graphics-styleguide/).
+This is an `R` script that makes `ggplot2` output align more closely with [the Urban Institute's Data Visualization style guide](http://urbaninstitute.github.io/graphics-styleguide/).
 
 * This script does **not produce publication ready graphics**. Visual styles must still be edited using your project/paper's normal editing workflow.
 	*  ***Exporting charts as a pdf will allow them to be more easily edited***
@@ -98,7 +98,7 @@ library(extrafont)
 
 #### Grammar of Graphics and Conventions
 
-Hadley Wickham's ggplot2 is based on Leland Wilkinson's grammar of graphics and Wickham's layered grammar of graphics. The layered grammar of graphics is essentially a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2. 
+Hadley Wickham's ggplot2 is based on Leland Wilkinson's *Grammar of Graphics* and Wickham's *A Layered Grammar of Graphics*. The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2. 
 
 
 * **Data** are what are visualizaed in a plot and **mappings** are directions for how data are mapped in a plot in a way that can be perceived by humans.  
@@ -113,18 +113,15 @@ More information: [ggplot2: Elegant Graphics for Data Analysis](https://www.amaz
 
 #### Tips and Tricks
 
-* `ggplot2` expects data to be in the format of data frames. It is preferable for the data frames to be "tidy" with each variable as a column, each obseravtion as a row, and each observational unit as a separate table. `dplyr` and `tidyr` contain concise and effective tools for "tidying" data.
+* `ggplot2` expects data to be in data frames. It is preferable for the data frames to be "tidy" with each variable as a column, each obseravtion as a row, and each observational unit as a separate table. `dplyr` and `tidyr` contain concise and effective tools for "tidying" data.
 
 * R allows function arguments to be called explicitly by name and implicitly by position. The coding examples in this guide only contain named arguments for clarity.
 
 * Continuous legends should be switched to vertical using `theme(legend.direction = "vertical")`.
 
-* Graphics will sometimes render differently on different operating systems. 
-  * Windows, Mac, and Linux
-  * anti-aliasing
-  TODO(aaron): clarify this
+* Graphics will sometimes render differently on different operating systems. This is because anti-aliasing is activated in R on Mac and Linux but not activated in R on Windows. [This blog post](https://www.r-bloggers.com/exporting-nice-plots-in-r/) outlines several fixes for this problem.
 
-* Most features of the plots can be adjusted by adding `theme()` to the end of a ggplot call. For example, a plot with a continuous legend would look like this:
+* Most features of plots can be adjusted by adding `theme()` to the end of a ggplot call. For example, a plot with a continuous legend would look like this:
 
 ```
 ggplot(diamonds, aes(carat, price)) +
@@ -262,7 +259,7 @@ ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
 ```
 
 
-### Scatter Plots With Random Noise
+### Scatter Plots With Random Noise{.tabset}
 
 Sometimes scatter plots have many overlapping points but a reasonable number of observations. `geom_jitter` adds a small amount of random noise so points are less likely to overlap. `width` and `height` control the amount of noise that is added. In the following before-and-after, notice how many more points are visible after adding jitter.
 
@@ -296,7 +293,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
 
 ### Scatter Plots with Fill
 
-A thired aestheitc can be added to scatter plots. Here, color signifies the number of cylinders in each car. Before `ggplot()` is called, Cylinders iscreated using `library(dplyr)` and the piping operator `%>%`.
+A thired aestheitc can be added to scatter plots. Here, color signifies the number of cylinders in each car. Before `ggplot()` is called, Cylinders is created using `library(dplyr)` and the piping operator `%>%`.
 
 ``` {r filled scatter plot}
 mtcars %>%
@@ -311,7 +308,7 @@ mtcars %>%
 ```
 
 ### Bubble Scatter Plot
-TODO(aaron)
+TODO(aaron): Create bubble scatter plot
 
 ## Line Plots
 ```{r line plots}
@@ -341,7 +338,7 @@ economics %>%
   gather(pop, unemploy, key = "variable", value = "value") %>%
   ggplot(mapping = aes(x = date, y = value, color = variable)) +
   geom_line(size = 1) +
-  scale_y_continuous(labels = scales::comma) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
   labs(title = "Unemployment and Population",
        subtitle = "Total Population and Total Unemployment in the U.S. Over Time",
        caption = "Urban Institute",
@@ -402,14 +399,14 @@ diamonds %>%
 
 ### Categorical Variables
 
-The following plots are effective at displaying how a continuous variable varies across different levels of a categorical variable. 
+The following plots are effective at displaying how a continuous or discrete variable varies across different levels of a categorical variable. 
 
 ### Box Plot
 ```{r box plot}
 ggplot(InsectSprays, aes(x = spray, y = count)) +
   geom_boxplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Number of Insect Killed by Insect Sprays",
+  labs(title = "Number of Insects Killed by Insect Sprays",
        caption = "Urban Institute", 
        x = "Type of Insect Spray",
        y = "Number of Dead Insects")
@@ -420,20 +417,21 @@ ggplot(InsectSprays, aes(x = spray, y = count)) +
 ggplot(InsectSprays, aes(x = spray, y = count, fill = spray)) +
   geom_violin() +
   scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Number of Insect Killed by Insect Sprays",
+  labs(title = "Number of Insects Killed by Insect Sprays",
        caption = "Urban Institute",
        x = "Type of Insect Spray",
        y = "Number of Dead Insects")
 ```
 
 ### Bean Plots
+TODO(aaron): Add ben plots
 
 ## Area Plot
 
 ### Stacked Area
 ```{r area plot stack}
 txhousing %>%
-  filter(city == "Austin" | city == "Houston"| city == "Dallas"| city == "San Antonio" | city == "Fort Worth") %>%
+  filter(city %in% c("Austin","Houston","Dallas","San Antonio","Fort Worth")) %>%
   group_by(city, year) %>%
   summarize(sales = sum(sales)) %>%
   ggplot(aes(x = year, y = sales, fill = city)) +
@@ -495,13 +493,15 @@ TODO(aaron): [add waffle plot with glyphs](https://github.com/hrbrmstr/waffle)
 
 ## Choropleth
 
-Choropleths are maps with reagions shaded based on variables. It is simple to build choropleths in R for states and counties. 
+Choropleths are maps with regions shaded based on variables. It is simple to build choropleths in R for states and counties. 
 
 Choropleths require some data management because state or county level data need to be joined to the vector boundaries. Additionally, extra edits need to be made in `theme()` but those changes can just be copied-and-pasted from the examples. 
 
-For a more thorough explanation, read pages 55-61 of Hadley Wickham's [ggplot2: Elegant Graphics for Data Analysis](https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403).
+For a more thorough explanation, read pages 55-61 of Hadley Wickham's [ggplot2: Elegant Graphics for Data Analysis](https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403). Please contact Aaron at awilliams@urban.org if you want to borrow a copy. 
 
 ### States
+
+Be sure to add `scale_fill_gradient()` with `low =` and `high =` to ensure that continuous variables are clearly displayed from low to high. 
 
 ```{r state chorpleth, message = FALSE, warning = FALSE}
 library(fivethirtyeight)
@@ -520,9 +520,11 @@ drivers.states <- left_join(states, drivers.usa, by = c("state" = "state"))
 # Plot!
 ggplot(drivers.states, aes(lon, lat, group = state)) +
   geom_polygon(aes(fill = perc_speeding)) +
+  scale_fill_gradient(low = "#CEE8F3", 
+                      high = "#094C6B") +
   coord_quickmap() +
-  labs(title = "Drivers Involved in Fatal Collision While Speeding",
-       subtitle = "As a share of the number of fatal collisions per billion miles, 2009",
+  labs(title = "Percentage of Fatal Collisions Involving Speeding",
+       subtitle = "Share of fatal collisions per billion miles, 2009",
        caption = "Source: fivethirtyeight R package")  +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank(),
@@ -530,8 +532,8 @@ ggplot(drivers.states, aes(lon, lat, group = state)) +
         panel.grid = element_blank(),
         axis.line = element_blank(),
         legend.position = "right",
-        legend.direction = "vertical") +
-  guides(colour = guide_legend(reverse = TRUE))
+        legend.direction = "vertical")
+
 ```
 
 ### Counties
@@ -555,6 +557,8 @@ census.counties <- left_join(indiana.census, indiana.counties, by = c("county" =
 # Plot
 ggplot(census.counties, aes(lon, lat, group = county)) +
   geom_polygon(aes(fill = poptotal)) +
+  scale_fill_gradient(low = "#CEE8F3", 
+                    high = "#094C6B") +
   coord_quickmap()  +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank(),
@@ -598,7 +602,7 @@ ggplot(census.counties, aes(lon, lat, group = id)) +
         axis.line = element_blank(),
         legend.position = "right",
         legend.direction = "vertical") +
-  labs(title = "Home Sales in Selected Texas Counties",
+  labs(title = "Home Sales in Select Texas Counties",
        caption = "Urban Institute")
 
 ```
@@ -609,24 +613,26 @@ ggplot(census.counties, aes(lon, lat, group = id)) +
 ## Heat map
 ```{r heat map, fig.height=10}
 bad_drivers %>%
-  mutate(`Number of Drivers` = scale(num_drivers)) %>%
-  mutate(`Percent Speeding` = scale(perc_speeding)) %>%
-  mutate(`Percent Alcohol` = scale(perc_alcohol)) %>%
-  mutate(`Percent Not Distracted` = scale(perc_not_distracted)) %>%
-  mutate(`Percent No Previous` = scale(perc_no_previous)) %>%
+  mutate(`Number of Drivers` = scale(num_drivers),
+         `Percent Speeding` = scale(perc_speeding),
+         `Percent Alcohol` = scale(perc_alcohol),
+         `Percent Not Distracted` = scale(perc_not_distracted),
+         `Percent No Previous` = scale(perc_no_previous),
+         state = factor(state, levels = rev(state))
+         ) %>%
   select(-insurance_premiums, -losses, -(num_drivers:losses)) %>%
   gather(`Number of Drivers`:`Percent No Previous`, key = "variable", value = "SD's from Mean") %>%
   ggplot(aes(variable, state)) +
-  geom_tile(aes(fill = `SD's from Mean`)) +
-  labs(title = "Drivers Involved in Fatal Collisions By Behavior",
-       subtitle = "As a share of the number of fatal collisions per billion miles, 2009",
-       caption = "Source: fivethirtyeight R package",
-       x = NULL,
-       y = NULL) + 
-  scale_fill_gradient(low = "white", high = "#1696d2") +
-  theme(legend.position = "right",
-        legend.direction = "vertical",
-        axis.text.x = element_text(angle = 45))
+    geom_tile(aes(fill = `SD's from Mean`)) +
+    labs(title = "Drivers Involved in Fatal Collisions By Behavior",
+      subtitle = "As a share of scaled fatal collisions per billion miles, 2009",
+      caption = "Source: fivethirtyeight R package",
+      x = NULL,
+      y = NULL) + 
+    scale_fill_gradient(low = "white", high = "#1696d2") +
+    theme(legend.position = "right",
+      legend.direction = "vertical",
+      axis.text.x = element_text(angle = 45))
 #https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/
 
 ```
@@ -675,3 +681,7 @@ txhousing %>%
 ## Shiny
 
 ## ggvis
+
+[ggvis](http://ggvis.rstudio.com/) is Hadley Wickham's successor to `ggplot2 `. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. `ggplot2` is still the best way to make graphics in R. 
+
+Functionality that is added to `ggvis` that isn't possible in `ggplot` will be added to this section in the future. 
