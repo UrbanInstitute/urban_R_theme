@@ -17,7 +17,8 @@ library(datasets)
 
 options(scipen = 999)
 
-source("urban_theme.R")
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R')
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
 ```
 
 ## Introduction
@@ -60,9 +61,16 @@ There are thousands of packages, but most tasks can be accomplished with a handf
   
 #### Using the Urban R Theme
 
-Run this script once per R session
+Depending on your operating system, run one of the following scripts once per R session:
+
+**Windows**
 ```
-source()  ## TODO(aaron): add source link to R theme
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R')
+```
+
+**Mac**
+```
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
 ```
 
 This is an `R` script that makes `ggplot2` output align more closely with [the Urban Institute's Data Visualization style guide](http://urbaninstitute.github.io/graphics-styleguide/).
@@ -465,7 +473,9 @@ The waffle package {[CRAN](https://cran.r-project.org/web/packages/waffle/waffle
 
 Waffle charts will require a little extra tinkering since they are called from `library(waffle)` instead of `library(ggplot2)`. Most importantly, waffle charts require `theme_urban(text = element_text(family = "Lato"))` for the Lato font. 
 
-```{r waffle}
+### Single Waffle Chart
+
+```{r single waffle}
 library(waffle)
 
 parts <- c(`Virginia\nClinics` = (1000 - 208 - 105), `Maryland\nClinics` = 208, `D.C.\nClinics` = 105)
@@ -474,6 +484,35 @@ waffle(parts, rows = 25, size = 1, colors = c("#1696d2", "#fdbf11", "#000000"), 
        subtitle = "1 Square == 1 Clinic",
        caption = "Urban Institute") +
   theme(text = element_text(family = "Lato"))
+```
+
+### Waffle Charts with Glyphs
+
+Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are `glyph_size =` and `use_glyph =`. Both are called in the `waffle()` function. 
+
+Using glyphs requires downloading fontawesome. That can be done [here](https://github.com/hrbrmstr/waffle/tree/master/inst/fonts).Then run `library(extrafont)`, 
+`font_import(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
+
+```{r waffle with glyphs}
+library(extrafont)
+font_import("H:\\IT\\urban_R_theme\\docs")
+loadfonts()
+
+parts <- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
+waffle(parts, rows = 5, glyph_size = 1, colors = c("#1696d2", "#fdbf11", "#000000"), legend_pos = "bottom", use_glyph = "medkit") +
+  labs(title = "Free Clinics in the D.C.-Maryland-Virginia Area",
+       subtitle = "1 Square == 20 Clinics",
+       caption = "Urban Institute") +
+  theme(text = element_text(family = "Lato"))
+
+```
+
+### Multiple Waffle Charts
+
+`library(waffle)` allows multiple waffle charts to be ironed together using `iron()`. Ironing multiple charts together requires some trial-and-error to get the sizes and resolution to look good, but the results can be worth the work. Don't forget `theme(text = element_text(family = "Lato"))`!
+
+```{r ironed waffle}
+library(waffle)
 
 white <- c(`With Degree` = 169300, `Without Degree` = 800)
 black <- c(`With Degree` = 174900, `Without Degree` = 34700)
@@ -488,8 +527,6 @@ iron(
   theme(text = element_text(family = "Lato"))
 ) 
 ```
-
-TODO(aaron): [add waffle plot with glyphs](https://github.com/hrbrmstr/waffle)
 
 ## Choropleth
 
