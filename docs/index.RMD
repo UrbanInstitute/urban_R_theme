@@ -3,6 +3,7 @@ title: "Urban Institute R Theme Example Plots"
 author: "Aaron Williams"
 output:
   html_document:
+    self_contained: no
     code_folding: hide
     toc: true
     toc_float: TRUE 
@@ -17,7 +18,8 @@ library(datasets)
 
 options(scipen = 999)
 
-source("urban_theme.R")
+#source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R')
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
 ```
 
 ## Introduction
@@ -60,9 +62,16 @@ There are thousands of packages, but most tasks can be accomplished with a handf
   
 #### Using the Urban R Theme
 
-Run this script once per R session
+Depending on your operating system, run one of the following scripts once per R session:
+
+**Windows**
 ```
-source()  ## TODO(aaron): add source link to R theme
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R')
+```
+
+**Mac**
+```
+source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
 ```
 
 This is an `R` script that makes `ggplot2` output align more closely with [the Urban Institute's Data Visualization style guide](http://urbaninstitute.github.io/graphics-styleguide/).
@@ -290,10 +299,25 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
        )
 ```
 
+### Scatter Plot with Counts
+
+Another option is to use `geom_count()` to add a size dimension to overlapping points.
+
+```{r geom_count}
+ggplot(data = mpg, mapping = aes(x = displ, y = cty)) + 
+  geom_count() + 
+  scale_y_continuous() +
+  labs(title = "Displacement and City MPG",
+       subtitle = "Cars With Less Displacement Generally Get Better City MPG",
+       caption = "Urban Institute",
+       x = "Displacement",
+       y = "City MPG"
+  )
+```
 
 ### Scatter Plots with Fill
 
-A thired aestheitc can be added to scatter plots. Here, color signifies the number of cylinders in each car. Before `ggplot()` is called, Cylinders is created using `library(dplyr)` and the piping operator `%>%`.
+A third aesthetic can be added to scatter plots. Here, color signifies the number of cylinders in each car. Before `ggplot()` is called, Cylinders is created using `library(dplyr)` and the piping operator `%>%`.
 
 ``` {r filled scatter plot}
 mtcars %>%
@@ -308,7 +332,20 @@ mtcars %>%
 ```
 
 ### Bubble Scatter Plot
-TODO(aaron): Create bubble scatter plot
+
+`size =` can be used as a mapping to plot a fourth dimension. 
+
+```{r bubble chart}
+mtcars %>%
+  mutate(Cylinders = factor(cyl), `Automatic Transmission` = factor(am)) %>%
+  ggplot(mapping = aes(x = wt, y = mpg, color = `Automatic Transmission`, size = Cylinders)) + 
+  geom_point() + 
+  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon") +
+  theme(legend.title = element_text(hjust = 0))
+```
 
 ## Line Plots
 ```{r line plots}
@@ -424,7 +461,7 @@ ggplot(InsectSprays, aes(x = spray, y = count, fill = spray)) +
 ```
 
 ### Bean Plots
-TODO(aaron): Add ben plots
+TODO(aaron): Add bean plots
 
 ## Area Plot
 
@@ -465,7 +502,9 @@ The waffle package {[CRAN](https://cran.r-project.org/web/packages/waffle/waffle
 
 Waffle charts will require a little extra tinkering since they are called from `library(waffle)` instead of `library(ggplot2)`. Most importantly, waffle charts require `theme_urban(text = element_text(family = "Lato"))` for the Lato font. 
 
-```{r waffle}
+### Single Waffle Chart
+
+```{r single waffle}
 library(waffle)
 
 parts <- c(`Virginia\nClinics` = (1000 - 208 - 105), `Maryland\nClinics` = 208, `D.C.\nClinics` = 105)
@@ -474,6 +513,35 @@ waffle(parts, rows = 25, size = 1, colors = c("#1696d2", "#fdbf11", "#000000"), 
        subtitle = "1 Square == 1 Clinic",
        caption = "Urban Institute") +
   theme(text = element_text(family = "Lato"))
+```
+
+### Waffle Charts with Glyphs
+
+Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are `glyph_size =` and `use_glyph =`. Both are called in the `waffle()` function. Note: `size = 1` is sensible and `glyph_size = 12` is sensible. 
+
+Using glyphs requires downloading fontawesome. That can be done [here](https://github.com/hrbrmstr/waffle/tree/master/inst/fonts).Then run `library(extrafont)`, 
+`font_import(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
+
+```{r waffle with glyphs}
+#library(extrafont)
+#font_import("H:\\IT\\urban_R_theme\\docs")
+#loadfonts()
+
+parts <- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
+waffle(parts, rows = 5, glyph_size = 12, colors = c("#1696d2", "#fdbf11", "#000000"), legend_pos = "bottom", use_glyph = "medkit") +
+  labs(title = "Free Clinics in the D.C.-Maryland-Virginia Area",
+       subtitle = "1 Square == 20 Clinics",
+       caption = "Urban Institute") +
+  theme(text = element_text(family = "Lato"))
+
+```
+
+### Multiple Waffle Charts
+
+`library(waffle)` allows multiple waffle charts to be ironed together using `iron()`. Ironing multiple charts together requires some trial-and-error to get the sizes and resolution to look good, but the results can be worth the work. Don't forget `theme(text = element_text(family = "Lato"))`!
+
+```{r ironed waffle}
+library(waffle)
 
 white <- c(`With Degree` = 169300, `Without Degree` = 800)
 black <- c(`With Degree` = 174900, `Without Degree` = 34700)
@@ -489,7 +557,110 @@ iron(
 ) 
 ```
 
-TODO(aaron): [add waffle plot with glyphs](https://github.com/hrbrmstr/waffle)
+## Dot Maps
+
+R can function as a geographical information system (GIS) using `library(ggmap)`. ggmap uses Google Maps, OpenStreetMap, Stamen Maps to create mappings (Grammar of Graphics) of maps (colloquial). Data with longitudes and latitudes can then be charted using many ggplot2 geoms. 
+
+ggmap creates several different map types:
+* terrain - A combination of major roads, cities names, state borders, and a terrain map. 
+* terrain-background -
+* satellite - A satellite image of the specified area with no labels. 
+* roadmap - A Google roadmap
+* hybrid - A satellite image with state boarders and major cities.
+* watercolor - A bizarre sand-colored map with roads and water. 
+* toner - A clean black-and-white map where land is white and water is black. 
+
+Set the map type with `maptype = ""`. 
+
+### States{.tabset}
+
+#### Terrain
+```{r Colorado terrain, message=FALSE}
+library(zipcode)
+library(tidyverse)
+library(ggmap)
+
+data(zipcode)
+zipcode <- as_tibble(zipcode)
+
+colorado <- zipcode %>%
+  filter(state == "CO")
+
+ggmap(get_map(location = "colorado", zoom = 6, maptype = "terrain")) +
+  scale_x_continuous(limits = c(-109, -102)) +
+  scale_y_continuous(limits = c(37, 41)) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
+  labs(title = "Zip Codes in Colorado",
+       x = NULL,
+       y = NULL)
+```
+
+#### Toner
+```{r Colorado toner, message=FALSE}
+library(zipcode)
+library(tidyverse)
+library(ggmap)
+
+data(zipcode)
+zipcode <- as_tibble(zipcode)
+
+colorado <- zipcode %>%
+  filter(state == "CO")
+
+ggmap(get_map(location = "colorado", zoom = 6, maptype = "toner", source = "stamen")) +
+  scale_x_continuous(limits = c(-109, -102)) +
+  scale_y_continuous(limits = c(37, 41)) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
+  labs(title = "Zip Codes in Colorado",
+       x = NULL,
+       y = NULL)
+```
+
+#### Hybrid
+```{r colorado hybrid, message=FALSE}
+library(zipcode)
+library(tidyverse)
+library(ggmap)
+
+data(zipcode)
+zipcode <- as_tibble(zipcode)
+
+colorado <- zipcode %>%
+  filter(state == "CO")
+
+ggmap(get_map(location = "colorado", zoom = 6, maptype = "hybrid")) +
+  scale_x_continuous(limits = c(-109, -102)) +
+  scale_y_continuous(limits = c(37, 41)) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
+  labs(title = "Zip Codes in Colorado",
+       x = NULL,
+       y = NULL)
+```
+
+### Localities
+
+```{r nyc, message=FALSE}
+newyork <- zipcode %>%
+  filter(state == "NY")
+
+ggmap(get_map(location = "new york city", zoom = 11, maptype = "satellite")) +
+  geom_point(data = newyork, aes(x = longitude, y = latitude), size = 2, alpha = 0.5) +
+  labs(title = "Zip Codes in New York, NY",
+       x = NULL,
+       y = NULL) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank())
+```
 
 ## Choropleth
 
@@ -606,9 +777,6 @@ ggplot(census.counties, aes(lon, lat, group = id)) +
        caption = "Urban Institute")
 
 ```
-
-### Dot Map
-### DC Crime Map
 
 ## Heat map
 ```{r heat map, fig.height=10}

@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Aaron Williams" />
+
+
+<title>Urban Institute R Theme Example Plots</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<script src="index_files/navigation-1.1/codefolding.js"></script>
+<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Urban Institute R Theme Example Plots</h1>
+<h4 class="author"><em>Aaron Williams</em></h4>
+
+</div>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This <a href="https://bookdown.org/yihui/bookdown/">Bookdown</a> contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute’s ggplot2 theme which will create near-publication-ready plots.</p>
+<p>The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham’s book, <a href="http://r4ds.had.co.nz/">R for Data Science</a>, is a comprehensive text for beginners. <a href="http://stackoverflow.com/">Stackoverflow</a> is full of questions and answers (be sure to include “[r]” in the search). Finally, don’t hesitate to contact Alex Engler (<a href="mailto:aengler@urban.org">aengler@urban.org</a>) or Aaron Williams (<a href="mailto:awilliams@urban.org">awilliams@urban.org</a>).</p>
+<div id="installation" class="section level4">
+<h4>Installation</h4>
+<p><strong>R</strong> can be added on any Urban Institute computer by IT.</p>
+<p><strong>R Studio</strong> is an Integrated Development Environment that greatly expands the interface and capabilites of R. Loading R Studio is the preferred way of loading R.</p>
+<p><strong>R Packages</strong> are collections of open-source code developed by R users that contain useful functions and data that expand the power and applicability of R. Packages are regularly added on <a href="https://cran.r-project.org/">CRAN</a> and <a href="https://github.com/">GitHub</a>. Most packages can be installed with <code>install.packages(&quot;package name&quot;)</code>. This only needs to happen once on each computer for each version of the package. Packages can be loaded using <code>library(package name)</code>. This needs to happen at the beginning of each script for each package used. <strong>Note:</strong> <code>install.packages()</code> uses quotation marks while <code>library()</code> does not.</p>
+<p>There are thousands of packages, but most tasks can be accomplished with a handful of important packages:</p>
+<ul>
+<li><code>ggplot</code> data visualization</li>
+<li><code>dplyr</code> data management</li>
+<li><code>tidyr</code> data tidying</li>
+<li><code>readr</code> data import</li>
+<li><code>purrr</code> functional programming</li>
+<li><code>tibble</code> data frames</li>
+<li><code>hms</code> times</li>
+<li><code>stringr</code> character strings</li>
+<li><code>lubridate</code> dates/times<br />
+</li>
+<li><code>forcats</code> factors</li>
+<li><code>DBI</code> databases</li>
+<li><code>haven</code> SPSS, SAS, and Stata files</li>
+<li><code>httr</code> web apis</li>
+<li><code>jsonlite</code> JSON</li>
+<li><code>readxl</code>.xls and .xlsx</li>
+<li><code>rvest</code> web scraping</li>
+<li><code>xml2</code> XML</li>
+<li><code>modelr</code> simple modelling within a pipeline</li>
+<li><code>broom</code> turning models into tidy data</li>
+<li><code>tidyverse</code> loads all of the packages listed up to this point; see Hadley Wichkham’s “<a href="https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0/">tidyverse</a>”</li>
+<li><code>shiny</code> interactive web applications</li>
+</ul>
+</div>
+<div id="using-the-urban-r-theme" class="section level4">
+<h4>Using the Urban R Theme</h4>
+<p>Depending on your operating system, run one of the following scripts once per R session:</p>
+<p><strong>Windows</strong></p>
+<pre><code>source(&#39;https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R&#39;)</code></pre>
+<p><strong>Mac</strong></p>
+<pre><code>source(&#39;https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R&#39;)</code></pre>
+<p>This is an <code>R</code> script that makes <code>ggplot2</code> output align more closely with <a href="http://urbaninstitute.github.io/graphics-styleguide/">the Urban Institute’s Data Visualization style guide</a>.</p>
+<ul>
+<li>This script does <strong>not produce publication ready graphics</strong>. Visual styles must still be edited using your project/paper’s normal editing workflow.
+<ul>
+<li><strong><em>Exporting charts as a pdf will allow them to be more easily edited</em></strong></li>
+<li>You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: <img src="img/pdf_export_option.png" alt="pdf export option" /></li>
+</ul></li>
+<li><p>The theme has been tested against <code>ggplot2 version 2.2.0</code>. It will not function properly with older (<code>&lt; 2.0.0</code>) versions of <code>ggplot2</code></p></li>
+<li>If it is not already installed, please install the free <a href="https://www.google.com/fonts/specimen/Lato">Lato font from Google fonts</a>.</li>
+<li>If you’re on Windows, you’ll first need to <a href="http://ghostscript.com/download/">install Ghostscript</a>. You may need to have IT enter an admin password for this installation. Then, in R, tell R where your ghostscript file is.</li>
+<li><p>Edit the file path if yours is in a different place</p>
+<pre><code>Sys.setenv(R_GSCMD=&quot;C:/Program Files/gs/gs9.05/bin/gswin32c.exe&quot;)`</code></pre></li>
+</ul>
+<p><strong>Run this script once:</strong></p>
+<pre><code>install.packages(c(&quot;ggplot2&quot;, &quot;reshape2&quot;, &quot;RColorBrewer&quot;, &quot;extrafont&quot;))
+library(extrafont)
+font_import()
+loadfonts()</code></pre>
+<p>Loading and importing fonts may take a few minutes.</p>
+<p>After the initial installation, to use Lato just load the library in each R session:</p>
+<pre><code>library(extrafont)</code></pre>
+</div>
+<div id="grammar-of-graphics-and-conventions" class="section level4">
+<h4>Grammar of Graphics and Conventions</h4>
+<p>Hadley Wickham’s ggplot2 is based on Leland Wilkinson’s <em>Grammar of Graphics</em> and Wickham’s <em>A Layered Grammar of Graphics</em>. The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2.</p>
+<ul>
+<li><strong>Data</strong> are what are visualizaed in a plot and <strong>mappings</strong> are directions for how data are mapped in a plot in a way that can be perceived by humans.<br />
+</li>
+<li><strong>Geoms</strong> are representations of the actual data like points, lines, and bars.</li>
+<li><strong>Stats</strong> are statistical transformations that represent summaries of the data like histograms.</li>
+<li><strong>Scales</strong> map values in the data space to values in the aesthetic space. Scales draw legends and axes.</li>
+<li><strong>Coordinate System</strong> describe how geoms are mapped to the plane of the graphic.<br />
+</li>
+<li><strong>Facettings</strong> break the data into meaningful subsets like small multiples.</li>
+<li><strong>Themes</strong> control the finer points of a plot such as fonts, font sizes, and background colors.</li>
+</ul>
+<p>More information: <a href="https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403">ggplot2: Elegant Graphics for Data Analysis</a></p>
+</div>
+<div id="tips-and-tricks" class="section level4">
+<h4>Tips and Tricks</h4>
+<ul>
+<li><p><code>ggplot2</code> expects data to be in data frames. It is preferable for the data frames to be “tidy” with each variable as a column, each obseravtion as a row, and each observational unit as a separate table. <code>dplyr</code> and <code>tidyr</code> contain concise and effective tools for “tidying” data.</p></li>
+<li><p>R allows function arguments to be called explicitly by name and implicitly by position. The coding examples in this guide only contain named arguments for clarity.</p></li>
+<li><p>Continuous legends should be switched to vertical using <code>theme(legend.direction = &quot;vertical&quot;)</code>.</p></li>
+<li><p>Graphics will sometimes render differently on different operating systems. This is because anti-aliasing is activated in R on Mac and Linux but not activated in R on Windows. <a href="https://www.r-bloggers.com/exporting-nice-plots-in-r/">This blog post</a> outlines several fixes for this problem.</p></li>
+<li><p>Most features of plots can be adjusted by adding <code>theme()</code> to the end of a ggplot call. For example, a plot with a continuous legend would look like this:</p></li>
+</ul>
+<pre><code>ggplot(diamonds, aes(carat, price)) +
+  stat_binhex(aes(colour = ..count..)) +
+  theme(legend.position = &quot;right&quot;,
+        legend.direction = &quot;vertical&quot;)</code></pre>
+</div>
+</div>
+<div id="bar-plots" class="section level2">
+<h2>Bar Plots</h2>
+<div id="one-color" class="section level3">
+<h3>One Color</h3>
+<pre class="r"><code>ggplot(data = mtcars, mapping = aes(factor(cyl))) +
+  geom_bar() + 
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 20)) +
+  labs(title = &quot;Number of Cars By Number of Cylinders&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Number of Cylinders&quot;,
+       y = &quot;Count&quot;)</code></pre>
+<p><img src="index_files/figure-html/barplots-1.png" width="672" /></p>
+</div>
+<div id="three-colors" class="section level3">
+<h3>Three Colors</h3>
+<p>This is identical to the previous plot except colors and a legend are added with <code>fill = factor(cyl)</code>. Turning <code>x</code> into a factor with <code>factor(cyl)</code> skips 5 and 7 on the <code>x-axis</code>. Adding <code>fill = cyl</code> without <code>factor()</code> would have created a continuous color scheme and legend.</p>
+<pre class="r"><code>ggplot(data = mtcars, mapping = aes(x = factor(cyl), fill = factor(cyl))) +
+  geom_bar() +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = &quot;Number of Cars By Number of Cylinders&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Number of Cylinders&quot;,
+       y = &quot;Count&quot;
+       ) </code></pre>
+<p><img src="index_files/figure-html/barplot%20with%203%20colors-1.png" width="672" /></p>
+</div>
+<div id="stacked-bar-plot" class="section level3">
+<h3>Stacked Bar Plot</h3>
+<p>An additional aesthetic can easily be added to bar plots by adding <code>fill = categorical variable</code> to the mapping. Here, diamond quality subsets each bar showing the count of diamonds with each level of clarity.</p>
+<pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) + 
+  geom_bar() +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 15000), labels = scales::comma) +
+  labs(
+    title = &quot;Diamond Clarity&quot;,
+    subtitle = &quot;Something Informative About Diamonds&quot;,
+    caption = &quot;The Source of Diamond Data&quot;,
+    x = &quot;Clarity&quot;,
+    y = &quot;Count&quot;
+    )</code></pre>
+<p><img src="index_files/figure-html/stacked%20bar%20plot-1.png" width="672" /></p>
+</div>
+<div id="stacked-bar-plot-with-position-fill" class="section level3">
+<h3>Stacked Bar Plot With Position = Fill</h3>
+<p><code>position = &quot;fill&quot;</code> in <code>geom_bar()</code> changes the y-axis from count to the proportion of each bar.</p>
+<pre class="r"><code>#5 colors (stacked)
+ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) + 
+  geom_bar(position = &quot;fill&quot;) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::percent) +
+  labs(title = &quot;Better Cut Diamonds have Better Clarity&quot;,
+      subtitle = &quot;Share of Diamonds with Different Qualities by Clarity of Cut&quot;,
+      caption = &quot;The Source of Diamond Data&quot;,
+      x = &quot;Clarity&quot;,
+      y = &quot;Count&quot;)</code></pre>
+<p><img src="index_files/figure-html/stacked%20bar%20plot%20fill-1.png" width="672" /></p>
+</div>
+<div id="dodged-bar-plot" class="section level3">
+<h3>Dodged Bar Plot</h3>
+<p>Subsetted bar charts in ggplot2 are stacked by default. <code>position = &quot;dodge&quot;</code> in <code>geom_bar()</code> expands the bar chart so the bars appear next to each other.</p>
+<pre class="r"><code>#5 colors (dodged)
+ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
+  geom_bar(position = &quot;dodge&quot;) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 6000), labels = scales::comma) +
+  labs(title = &quot;Diamond Clarity&quot;,
+       subtitle = &quot;Something Informative About Diamonds&quot;,
+       caption = &quot;The Source of Diamond Data&quot;,
+       x = &quot;Clarity&quot;,
+       y = &quot;Count&quot;)</code></pre>
+<p><img src="index_files/figure-html/dodged%20bar%20plot-1.png" width="672" /></p>
+</div>
+</div>
+<div id="scatter-plots" class="section level2">
+<h2>Scatter Plots</h2>
+<div id="one-color-scatter-plot" class="section level3">
+<h3>One Color Scatter Plot</h3>
+<p>Scatter plots are useful for showing relationships between two or more variables.</p>
+<pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
+  geom_point() + 
+  scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
+  labs(title = &quot;Diamond Prices Increase With Size&quot;,
+       subtitle = &quot;Diamond Prices in Dollars and Sizes in Carats&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Carat&quot;,
+       y = &quot;Price&quot;
+       )</code></pre>
+<p><img src="index_files/figure-html/one-color%20scatter%20plot-1.png" width="672" /></p>
+</div>
+<div id="high-density-scatter-plot-with-transparency" class="section level3">
+<h3>High-Density Scatter Plot with Transparency</h3>
+<p>Large numbers of observations can sometimes make scatter plots tough to interpret because points overlap. Adding <code>alpha =</code> with a number between 0 and 1 adds transparency to points and clarity to plots. Now it’s easy to see that jewelry stores are probably rounding up but not rounding down carats!</p>
+<pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
+  geom_point(alpha = 0.05) + 
+  scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
+  labs(title = &quot;Diamond Prices Increase With Size&quot;,
+       subtitle = &quot;Diamond Prices in Dollars and Sizes in Carats&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Carat&quot;,
+       y = &quot;Price&quot;
+       )</code></pre>
+<p><img src="index_files/figure-html/alpha%20scatter%20plot-1.png" width="672" /></p>
+</div>
+<div id="hex-scatter-plot" class="section level3">
+<h3>Hex Scatter Plot</h3>
+<p>Sometimes transparency isn’t enough to bring clarity to a scatter plot with many observations. As n increases into the hundreds of thousands and even millions, <code>geom_hex</code> can be one of the best ways to display relationships between two variables.</p>
+<pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
+  geom_hex(mapping = aes(colour = ..count..)) + 
+  scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
+  labs(title = &quot;Title&quot;,
+       subtitle = &quot;geom_hex adds clarity to overlapping points&quot;,
+       x = &quot;Carat&quot;,
+       y = &quot;Price&quot;) +
+  theme(legend.position = &quot;right&quot;,
+        legend.direction = &quot;vertical&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatter%20plot%20hex-1.png" width="672" /></p>
+</div>
+<div id="scatter-plots-with-random-noise" class="section level3 tabset">
+<h3>Scatter Plots With Random Noise</h3>
+<p>Sometimes scatter plots have many overlapping points but a reasonable number of observations. <code>geom_jitter</code> adds a small amount of random noise so points are less likely to overlap. <code>width</code> and <code>height</code> control the amount of noise that is added. In the following before-and-after, notice how many more points are visible after adding jitter.</p>
+<div id="before" class="section level4">
+<h4>Before</h4>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = cty)) + 
+  geom_point() + 
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = &quot;Displacement and City MPG&quot;,
+       subtitle = &quot;Cars With Less Displacement Generally Get Better City MPG&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Displacement&quot;,
+       y = &quot;City MPG&quot;
+       )</code></pre>
+<p><img src="index_files/figure-html/before%20scatter%20plot-1.png" width="672" /></p>
+</div>
+<div id="after" class="section level4">
+<h4>After</h4>
+<pre class="r"><code>set.seed(2017)
+ggplot(data = mpg, mapping = aes(x = displ, y = cty)) + 
+  geom_jitter(width = 0.2, height = 0.2) + 
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = &quot;Displacement and City MPG&quot;,
+       subtitle = &quot;Cars With Less Displacement Generally Get Better City MPG&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Displacement&quot;,
+       y = &quot;City MPG&quot;
+       )</code></pre>
+<p><img src="index_files/figure-html/jitter%20plot-1.png" width="672" /></p>
+</div>
+</div>
+<div id="scatter-plot-with-counts" class="section level3">
+<h3>Scatter Plot with Counts</h3>
+<p>Another option is to use <code>geom_count()</code> to add a size dimension to overlapping points.</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = cty)) + 
+  geom_count() + 
+  scale_y_continuous() +
+  labs(title = &quot;Displacement and City MPG&quot;,
+       subtitle = &quot;Cars With Less Displacement Generally Get Better City MPG&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Displacement&quot;,
+       y = &quot;City MPG&quot;
+  )</code></pre>
+<p><img src="index_files/figure-html/geom_count-1.png" width="672" /></p>
+</div>
+<div id="scatter-plots-with-fill" class="section level3">
+<h3>Scatter Plots with Fill</h3>
+<p>A third aesthetic can be added to scatter plots. Here, color signifies the number of cylinders in each car. Before <code>ggplot()</code> is called, Cylinders is created using <code>library(dplyr)</code> and the piping operator <code>%&gt;%</code>.</p>
+<pre class="r"><code>mtcars %&gt;%
+  mutate(Cylinders = factor(cyl)) %&gt;%
+  ggplot(mapping = aes(x = wt, y = mpg, colour = Cylinders)) + 
+  geom_point(size = 3) + 
+  labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;) +
+  theme(legend.title = element_text(hjust = 0))</code></pre>
+<p><img src="index_files/figure-html/filled%20scatter%20plot-1.png" width="672" /></p>
+</div>
+<div id="bubble-scatter-plot" class="section level3">
+<h3>Bubble Scatter Plot</h3>
+<p><code>size =</code> can be used as a mapping to plot a fourth dimension.</p>
+<pre class="r"><code>mtcars %&gt;%
+  mutate(Cylinders = factor(cyl), `Automatic Transmission` = factor(am)) %&gt;%
+  ggplot(mapping = aes(x = wt, y = mpg, color = `Automatic Transmission`, size = Cylinders)) + 
+  geom_point() + 
+  labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;) +
+  theme(legend.title = element_text(hjust = 0))</code></pre>
+<p><img src="index_files/figure-html/bubble%20chart-1.png" width="672" /></p>
+</div>
+</div>
+<div id="line-plots" class="section level2">
+<h2>Line Plots</h2>
+<pre class="r"><code>ggplot(data = economics, mapping = aes(x = date, y = unemploy)) +
+  geom_line() +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = &quot;Unemployment in the United States&quot;,
+       subtitle = &quot;Number of Unemployed Americans in the U.S.&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Year&quot;, 
+       y = &quot;Number Unemployed (1,000s)&quot;)</code></pre>
+<p><img src="index_files/figure-html/line%20plots-1.png" width="672" /></p>
+<div id="lines-plots-with-multiple-lines" class="section level3">
+<h3>Lines Plots With Multiple Lines</h3>
+<p>Plotting more than one line can be useful for seeing the relationship of variables over time, but it takes a small amount of data munging.</p>
+<p>This is because <code>ggplot2</code> wants data in a “long” format instead of a “wide” format for line plots with multiple lines. <code>gather()</code> and <code>spread()</code> from the <code>tidyr</code> package make switching back-and-forth between “long” and “wide” painless. Essentially, variable titles go into “key” and variable values go into “value”. Then ggplot2, turns the different levels of the key variable (population, unemployment) into colors.</p>
+<pre class="r"><code>library(tidyverse)
+
+economics %&gt;%
+  select(date, pop, unemploy) %&gt;%
+  gather(pop, unemploy, key = &quot;variable&quot;, value = &quot;value&quot;) %&gt;%
+  ggplot(mapping = aes(x = date, y = value, color = variable)) +
+  geom_line(size = 1) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
+  labs(title = &quot;Unemployment and Population&quot;,
+       subtitle = &quot;Total Population and Total Unemployment in the U.S. Over Time&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Year&quot;,
+       y = &quot;People (1,000s)&quot;)</code></pre>
+<p><img src="index_files/figure-html/line%20charts%20multiple-1.png" width="672" /></p>
+</div>
+</div>
+<div id="binning" class="section level2">
+<h2>Binning</h2>
+<p>Histograms and frequency polygons show the distribution of a single numeric variable. Both bin variables and then count the number of observations in a bin. Histograms display distributions with a bar as a geom and frequency polygons show distributions with the line geom. Frequency polygons can be easily layered.</p>
+<div id="histogram" class="section level3">
+<h3>Histogram</h3>
+<pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = depth)) + 
+  geom_histogram(bins = 100) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
+  labs(title = &quot;Distribution of Diamond Depths&quot;,
+       caption = &quot;Urban Institute&quot;, 
+       x = &quot;Depth&quot;,
+       y = &quot;Count&quot;)</code></pre>
+<p><img src="index_files/figure-html/histogram-1.png" width="672" /></p>
+<pre class="r"><code>diamonds %&gt;%
+  filter(cut == &quot;Fair&quot; | cut == &quot;Premium&quot;) %&gt;%
+  ggplot(mapping = aes(x = depth, fill = cut)) + 
+  geom_histogram(bins = 100) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
+  labs(title = &quot;Distribution of Diamond Depths and Quality&quot;,
+       caption = &quot;Urban Institute&quot;, 
+       x = &quot;Depth&quot;,
+       y = &quot;Count&quot;)</code></pre>
+<p><img src="index_files/figure-html/histogram-2.png" width="672" /></p>
+</div>
+<div id="frequency-polygon" class="section level3">
+<h3>Frequency Polygon</h3>
+<pre class="r"><code>population %&gt;%
+  filter(year == 2013 &amp; population &lt; 3000000) %&gt;%
+  ggplot(mapping = aes(x = population)) + 
+  geom_freqpoly() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(labels = scales::comma) +
+  labs(title = &quot;Populations of World Countries&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Population&quot;,
+       y = &quot;Count&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="index_files/figure-html/frequency%20polygon-1.png" width="672" /></p>
+<pre class="r"><code>diamonds %&gt;%
+  filter(cut == &quot;Ideal&quot; | cut == &quot;Premium&quot;) %&gt;%
+  ggplot(aes(x = price, color = cut)) +
+  geom_freqpoly(size = 1) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_y_continuous(labels = scales::dollar) +
+  labs(title = &quot;Distribution of Diamond Prices and Diamond Cut&quot;,
+       caption = &quot;Urban Institue&quot;,
+       x = &quot;Price&quot;,
+       y = &quot;Count&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="index_files/figure-html/frequency%20polygon-2.png" width="672" /></p>
+</div>
+<div id="categorical-variables" class="section level3">
+<h3>Categorical Variables</h3>
+<p>The following plots are effective at displaying how a continuous or discrete variable varies across different levels of a categorical variable.</p>
+</div>
+<div id="box-plot" class="section level3">
+<h3>Box Plot</h3>
+<pre class="r"><code>ggplot(InsectSprays, aes(x = spray, y = count)) +
+  geom_boxplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = &quot;Number of Insects Killed by Insect Sprays&quot;,
+       caption = &quot;Urban Institute&quot;, 
+       x = &quot;Type of Insect Spray&quot;,
+       y = &quot;Number of Dead Insects&quot;)</code></pre>
+<p><img src="index_files/figure-html/box%20plot-1.png" width="672" /></p>
+</div>
+<div id="violin-plot" class="section level3">
+<h3>Violin Plot</h3>
+<pre class="r"><code>ggplot(InsectSprays, aes(x = spray, y = count, fill = spray)) +
+  geom_violin() +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = &quot;Number of Insects Killed by Insect Sprays&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Type of Insect Spray&quot;,
+       y = &quot;Number of Dead Insects&quot;)</code></pre>
+<p><img src="index_files/figure-html/violin%20plot-1.png" width="672" /></p>
+</div>
+<div id="bean-plots" class="section level3">
+<h3>Bean Plots</h3>
+<p>TODO(aaron): Add bean plots</p>
+</div>
+</div>
+<div id="area-plot" class="section level2">
+<h2>Area Plot</h2>
+<div id="stacked-area" class="section level3">
+<h3>Stacked Area</h3>
+<pre class="r"><code>txhousing %&gt;%
+  filter(city %in% c(&quot;Austin&quot;,&quot;Houston&quot;,&quot;Dallas&quot;,&quot;San Antonio&quot;,&quot;Fort Worth&quot;)) %&gt;%
+  group_by(city, year) %&gt;%
+  summarize(sales = sum(sales)) %&gt;%
+  ggplot(aes(x = year, y = sales, fill = city)) +
+    geom_area(position = &quot;stack&quot;) +
+    scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
+    labs(title = &quot;Home Sales in Texas Cities&quot;,
+         caption = &quot;Urban Institute&quot;,
+         x = &quot;Year&quot;,
+         y = &quot;Home Sales&quot;)</code></pre>
+<p><img src="index_files/figure-html/area%20plot%20stack-1.png" width="672" /></p>
+</div>
+<div id="filled-area" class="section level3">
+<h3>Filled Area</h3>
+<pre class="r"><code>txhousing %&gt;%
+  filter(city == &quot;Austin&quot; | city == &quot;Houston&quot;| city == &quot;Dallas&quot;| city == &quot;San Antonio&quot; | city == &quot;Fort Worth&quot;) %&gt;%
+  group_by(city, year) %&gt;%
+  summarize(listings = sum(listings)) %&gt;%
+  mutate(listings = ifelse(is.na(listings), lag(listings), listings)) %&gt;%
+  ggplot(aes(x = year, y = listings, fill = city)) +
+    geom_area(position = &quot;fill&quot;) +
+    scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
+    labs(title = &quot;Home Listings in Texas Cities&quot;,
+         caption = &quot;Urban Institute&quot;,
+         x = &quot;Year&quot;,
+         y = &quot;Proportion of Home Listings&quot;)</code></pre>
+<p><img src="index_files/figure-html/area%20plot%20fill-1.png" width="672" /></p>
+</div>
+</div>
+<div id="waffle-chart-square-pie-chart" class="section level2">
+<h2>Waffle Chart / Square Pie Chart</h2>
+<p>The waffle package {<a href="https://cran.r-project.org/web/packages/waffle/waffle.pdf">CRAN</a> and <a href="https://github.com/hrbrmstr/waffle">Github</a>} makes creating square pie charts easy. It can also be combined with <a href="http://fontawesome.io/">glpyhs</a> for more elegant shapes than squares. This example uses data pulled from <a href="http://www.urban.org/features/vision-equitable-dc">A Vision for an Equitable DC</a>.</p>
+<p>Waffle charts will require a little extra tinkering since they are called from <code>library(waffle)</code> instead of <code>library(ggplot2)</code>. Most importantly, waffle charts require <code>theme_urban(text = element_text(family = &quot;Lato&quot;))</code> for the Lato font.</p>
+<div id="single-waffle-chart" class="section level3">
+<h3>Single Waffle Chart</h3>
+<pre class="r"><code>library(waffle)
+
+parts &lt;- c(`Virginia\nClinics` = (1000 - 208 - 105), `Maryland\nClinics` = 208, `D.C.\nClinics` = 105)
+waffle(parts, rows = 25, size = 1, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11&quot;, &quot;#000000&quot;), legend_pos = &quot;bottom&quot;) +
+  labs(title = &quot;Free Clinics in the D.C.-Maryland-Virginia Area&quot;,
+       subtitle = &quot;1 Square == 1 Clinic&quot;,
+       caption = &quot;Urban Institute&quot;) +
+  theme(text = element_text(family = &quot;Lato&quot;))</code></pre>
+<p><img src="index_files/figure-html/single%20waffle-1.png" width="672" /></p>
+</div>
+<div id="waffle-charts-with-glyphs" class="section level3">
+<h3>Waffle Charts with Glyphs</h3>
+<p>Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are <code>glyph_size =</code> and <code>use_glyph =</code>. Both are called in the <code>waffle()</code> function. Note: <code>size = 1</code> is sensible and <code>glyph_size = 12</code> is sensible.</p>
+<p>Using glyphs requires downloading fontawesome. That can be done <a href="https://github.com/hrbrmstr/waffle/tree/master/inst/fonts">here</a>.Then run <code>library(extrafont)</code>, <code>font_import(&lt;font-location&gt;)</code>, and <code>loadfonts()</code> once. After that, building waffle charts with glpyhs should be as easy as one function call.</p>
+<pre class="r"><code>#library(extrafont)
+#font_import(&quot;H:\\IT\\urban_R_theme\\docs&quot;)
+#loadfonts()
+
+parts &lt;- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
+waffle(parts, rows = 5, glyph_size = 12, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11&quot;, &quot;#000000&quot;), legend_pos = &quot;bottom&quot;, use_glyph = &quot;medkit&quot;) +
+  labs(title = &quot;Free Clinics in the D.C.-Maryland-Virginia Area&quot;,
+       subtitle = &quot;1 Square == 20 Clinics&quot;,
+       caption = &quot;Urban Institute&quot;) +
+  theme(text = element_text(family = &quot;Lato&quot;))</code></pre>
+<p><img src="index_files/figure-html/waffle%20with%20glyphs-1.png" width="672" /></p>
+</div>
+<div id="multiple-waffle-charts" class="section level3">
+<h3>Multiple Waffle Charts</h3>
+<p><code>library(waffle)</code> allows multiple waffle charts to be ironed together using <code>iron()</code>. Ironing multiple charts together requires some trial-and-error to get the sizes and resolution to look good, but the results can be worth the work. Don’t forget <code>theme(text = element_text(family = &quot;Lato&quot;))</code>!</p>
+<pre class="r"><code>library(waffle)
+
+white &lt;- c(`With Degree` = 169300, `Without Degree` = 800)
+black &lt;- c(`With Degree` = 174900, `Without Degree` = 34700)
+hispanic &lt;- c(`With Degree` = 27700, `Without Degree` = 12400)
+
+iron(
+  waffle(white / 83, rows = 40, size = 0.25, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11&quot;), title = &quot;White&quot;, keep = FALSE, pad = 10) + 
+  theme(text = element_text(family = &quot;Lato&quot;)),
+  waffle(black / 83, rows = 40, size = 0.25, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11&quot;), title = &quot;Black&quot;, keep = FALSE) + 
+  theme(text = element_text(family = &quot;Lato&quot;)),
+  waffle(hispanic / 83, rows = 40, size = 0.25, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11&quot;), title = &quot;Hispanic&quot;, keep = FALSE, pad = 59, xlab = &quot;1 Square == 83 People&quot;) + 
+  theme(text = element_text(family = &quot;Lato&quot;))
+) </code></pre>
+<p><img src="index_files/figure-html/ironed%20waffle-1.png" width="672" /></p>
+</div>
+</div>
+<div id="dot-maps" class="section level2">
+<h2>Dot Maps</h2>
+<p>R can function as a geographical information system (GIS) using <code>library(ggmap)</code>. ggmap uses Google Maps, OpenStreetMap, Stamen Maps to create mappings (Grammar of Graphics) of maps (colloquial). Data with longitudes and latitudes can then be charted using many ggplot2 geoms.</p>
+<p>ggmap creates several different map types: * terrain - A combination of major roads, cities names, state borders, and a terrain map. * terrain-background - * satellite - A satellite image of the specified area with no labels. * roadmap - A Google roadmap * hybrid - A satellite image with state boarders and major cities. * watercolor - A bizarre sand-colored map with roads and water. * toner - A clean black-and-white map where land is white and water is black.</p>
+<p>Set the map type with <code>maptype = &quot;&quot;</code>.</p>
+<div id="states" class="section level3 tabset">
+<h3>States</h3>
+<div id="terrain" class="section level4">
+<h4>Terrain</h4>
+<pre class="r"><code>library(zipcode)
+library(tidyverse)
+library(ggmap)
+
+data(zipcode)
+zipcode &lt;- as_tibble(zipcode)
+
+colorado &lt;- zipcode %&gt;%
+  filter(state == &quot;CO&quot;)
+
+ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;terrain&quot;)) +
+  scale_x_continuous(limits = c(-109, -102)) +
+  scale_y_continuous(limits = c(37, 41)) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
+  labs(title = &quot;Zip Codes in Colorado&quot;,
+       x = NULL,
+       y = NULL)</code></pre>
+<p><img src="index_files/figure-html/Colorado%20terrain-1.png" width="672" /></p>
+</div>
+<div id="toner" class="section level4">
+<h4>Toner</h4>
+<pre class="r"><code>library(zipcode)
+library(tidyverse)
+library(ggmap)
+
+data(zipcode)
+zipcode &lt;- as_tibble(zipcode)
+
+colorado &lt;- zipcode %&gt;%
+  filter(state == &quot;CO&quot;)
+
+ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;toner&quot;, source = &quot;stamen&quot;)) +
+  scale_x_continuous(limits = c(-109, -102)) +
+  scale_y_continuous(limits = c(37, 41)) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
+  labs(title = &quot;Zip Codes in Colorado&quot;,
+       x = NULL,
+       y = NULL)</code></pre>
+<p><img src="index_files/figure-html/Colorado%20toner-1.png" width="672" /></p>
+</div>
+<div id="hybrid" class="section level4">
+<h4>Hybrid</h4>
+<pre class="r"><code>library(zipcode)
+library(tidyverse)
+library(ggmap)
+
+data(zipcode)
+zipcode &lt;- as_tibble(zipcode)
+
+colorado &lt;- zipcode %&gt;%
+  filter(state == &quot;CO&quot;)
+
+ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;hybrid&quot;)) +
+  scale_x_continuous(limits = c(-109, -102)) +
+  scale_y_continuous(limits = c(37, 41)) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
+  labs(title = &quot;Zip Codes in Colorado&quot;,
+       x = NULL,
+       y = NULL)</code></pre>
+<p><img src="index_files/figure-html/colorado%20hybrid-1.png" width="672" /></p>
+</div>
+</div>
+<div id="localities" class="section level3">
+<h3>Localities</h3>
+<pre class="r"><code>newyork &lt;- zipcode %&gt;%
+  filter(state == &quot;NY&quot;)
+
+ggmap(get_map(location = &quot;new york city&quot;, zoom = 11, maptype = &quot;satellite&quot;)) +
+  geom_point(data = newyork, aes(x = longitude, y = latitude), size = 2, alpha = 0.5) +
+  labs(title = &quot;Zip Codes in New York, NY&quot;,
+       x = NULL,
+       y = NULL) +
+  theme(axis.text = element_blank(),
+        axis.line = element_blank(),
+        axis.ticks = element_blank())</code></pre>
+<p><img src="index_files/figure-html/nyc-1.png" width="672" /></p>
+</div>
+</div>
+<div id="choropleth" class="section level2">
+<h2>Choropleth</h2>
+<p>Choropleths are maps with regions shaded based on variables. It is simple to build choropleths in R for states and counties.</p>
+<p>Choropleths require some data management because state or county level data need to be joined to the vector boundaries. Additionally, extra edits need to be made in <code>theme()</code> but those changes can just be copied-and-pasted from the examples.</p>
+<p>For a more thorough explanation, read pages 55-61 of Hadley Wickham’s <a href="https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403">ggplot2: Elegant Graphics for Data Analysis</a>. Please contact Aaron at <a href="mailto:awilliams@urban.org">awilliams@urban.org</a> if you want to borrow a copy.</p>
+<div id="states-1" class="section level3">
+<h3>States</h3>
+<p>Be sure to add <code>scale_fill_gradient()</code> with <code>low =</code> and <code>high =</code> to ensure that continuous variables are clearly displayed from low to high.</p>
+<pre class="r"><code>library(fivethirtyeight)
+
+# Create data frame with vector boundaries
+states &lt;- map_data(&quot;state&quot;) %&gt;%
+  select(lon = long, lat, group, state = region)
+
+# Create data frame with state driving data
+drivers.usa &lt;- bad_drivers %&gt;%
+  mutate(state = tolower(state))
+  
+# Join the vector boundaries and state data
+drivers.states &lt;- left_join(states, drivers.usa, by = c(&quot;state&quot; = &quot;state&quot;))
+
+# Plot!
+ggplot(drivers.states, aes(lon, lat, group = state)) +
+  geom_polygon(aes(fill = perc_speeding)) +
+  scale_fill_gradient(low = &quot;#CEE8F3&quot;, 
+                      high = &quot;#094C6B&quot;) +
+  coord_quickmap() +
+  labs(title = &quot;Percentage of Fatal Collisions Involving Speeding&quot;,
+       subtitle = &quot;Share of fatal collisions per billion miles, 2009&quot;,
+       caption = &quot;Source: fivethirtyeight R package&quot;)  +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_blank(),
+        legend.position = &quot;right&quot;,
+        legend.direction = &quot;vertical&quot;)</code></pre>
+<p><img src="index_files/figure-html/state%20chorpleth-1.png" width="672" /></p>
+</div>
+<div id="counties" class="section level3">
+<h3>Counties</h3>
+<pre class="r"><code>library(USAboundaries)
+
+# Create data frame with vector boundaries
+indiana.counties &lt;- map_data(&quot;county&quot;, &quot;indiana&quot;) %&gt;%
+  select(lon = long, lat, group, id = subregion)
+
+# Create data frame with population data
+indiana.census &lt;- midwest %&gt;%
+  tbl_df() %&gt;%
+  filter(state == &quot;IN&quot;) %&gt;%
+  mutate(county = tolower(county)) %&gt;%
+  select(county, area, poptotal, percwhite, percblack) 
+
+# Join the vector boundaries and county data
+census.counties &lt;- left_join(indiana.census, indiana.counties, by = c(&quot;county&quot; = &quot;id&quot;))
+   
+# Plot
+ggplot(census.counties, aes(lon, lat, group = county)) +
+  geom_polygon(aes(fill = poptotal)) +
+  scale_fill_gradient(low = &quot;#CEE8F3&quot;, 
+                    high = &quot;#094C6B&quot;) +
+  coord_quickmap()  +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_blank(),
+        legend.position = &quot;right&quot;,
+        legend.direction = &quot;vertical&quot;) +
+  labs(title = &quot;Population in Indiana Counties&quot;,
+       caption = &quot;Urban Institute&quot;)</code></pre>
+<p><img src="index_files/figure-html/choropleth-1.png" width="672" /></p>
+</div>
+<div id="texas-sales" class="section level3">
+<h3>Texas sales</h3>
+<pre class="r"><code>library(USAboundaries)
+
+# Create data frame with vector boundaries
+texas.counties &lt;- map_data(&quot;county&quot;, &quot;texas&quot;) %&gt;%
+  select(lon = long, lat, group, id = subregion)
+
+# Create data frame with hosuing data
+texas.sales &lt;- txhousing %&gt;%
+  filter(year == 2014) %&gt;%
+  select(city, sales) %&gt;%
+  mutate(city = tolower(city)) %&gt;%
+  group_by(city) %&gt;%
+  summarize(sales = sum(sales))
+
+# Join the vector boundaries and state data
+census.counties &lt;- left_join(texas.counties, texas.sales, by = c(&quot;id&quot; = &quot;city&quot;))
+
+#Plot
+ggplot(census.counties, aes(lon, lat, group = id)) +
+  geom_polygon(aes(fill = sales)) +
+  coord_quickmap()  +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        axis.line = element_blank(),
+        legend.position = &quot;right&quot;,
+        legend.direction = &quot;vertical&quot;) +
+  labs(title = &quot;Home Sales in Select Texas Counties&quot;,
+       caption = &quot;Urban Institute&quot;)</code></pre>
+<p><img src="index_files/figure-html/texas-1.png" width="672" /></p>
+</div>
+</div>
+<div id="heat-map" class="section level2">
+<h2>Heat map</h2>
+<pre class="r"><code>bad_drivers %&gt;%
+  mutate(`Number of Drivers` = scale(num_drivers),
+         `Percent Speeding` = scale(perc_speeding),
+         `Percent Alcohol` = scale(perc_alcohol),
+         `Percent Not Distracted` = scale(perc_not_distracted),
+         `Percent No Previous` = scale(perc_no_previous),
+         state = factor(state, levels = rev(state))
+         ) %&gt;%
+  select(-insurance_premiums, -losses, -(num_drivers:losses)) %&gt;%
+  gather(`Number of Drivers`:`Percent No Previous`, key = &quot;variable&quot;, value = &quot;SD&#39;s from Mean&quot;) %&gt;%
+  ggplot(aes(variable, state)) +
+    geom_tile(aes(fill = `SD&#39;s from Mean`)) +
+    labs(title = &quot;Drivers Involved in Fatal Collisions By Behavior&quot;,
+      subtitle = &quot;As a share of scaled fatal collisions per billion miles, 2009&quot;,
+      caption = &quot;Source: fivethirtyeight R package&quot;,
+      x = NULL,
+      y = NULL) + 
+    scale_fill_gradient(low = &quot;white&quot;, high = &quot;#1696d2&quot;) +
+    theme(legend.position = &quot;right&quot;,
+      legend.direction = &quot;vertical&quot;,
+      axis.text.x = element_text(angle = 45))</code></pre>
+<p><img src="index_files/figure-html/heat%20map-1.png" width="672" /></p>
+<pre class="r"><code>#https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/</code></pre>
+</div>
+<div id="facetting" class="section level2">
+<h2>Facetting</h2>
+<pre class="r"><code>##Facet Grid
+ggplot(mtcars, aes(mpg, wt)) +
+  geom_point() + 
+  ggtitle(&quot;Title&quot;) +
+  facet_grid(vs ~ am, margins = TRUE)</code></pre>
+<p><img src="index_files/figure-html/facetting-1.png" width="672" /></p>
+</div>
+<div id="small-multiples" class="section level2">
+<h2>Small Multiples</h2>
+<p>R’s facetting system is a powerful way to make “small multiples”.</p>
+<p>Some edits to the theme may be necessary depending upon how many rows and columns are in the plot.</p>
+<pre class="r"><code># Facet Wrap
+txhousing %&gt;%
+  filter(city != &quot;Brazoria County&quot; &amp; city != &quot;Brownsville&quot; &amp; city != &quot;San Angelo&quot; &amp; city != &quot;Denton County&quot;) %&gt;%
+  ggplot(aes(x = median)) +
+  geom_histogram() +
+  facet_wrap(~city) +
+  scale_x_continuous(labels = scales::dollar) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = &quot;Median Monthly Home Prices in Selected Texas Cities&quot;,
+       x = &quot;Median Monthly Home Value&quot;,
+       y = &quot;Count&quot;) + 
+  theme(axis.text.x = element_text(angle = 90),
+        strip.text = element_text(face = &quot;plain&quot;, 
+                              size = rel(0.5)))</code></pre>
+<p><img src="index_files/figure-html/small%20multiples-1.png" width="672" /></p>
+<pre class="r"><code># Facet grid</code></pre>
+</div>
+<div id="loess" class="section level2">
+<h2>Loess</h2>
+<div id="smoothers" class="section level3">
+<h3>Smoothers</h3>
+</div>
+</div>
+<div id="combining-geoms" class="section level2">
+<h2>Combining Geoms</h2>
+</div>
+<div id="shiny" class="section level2">
+<h2>Shiny</h2>
+</div>
+<div id="ggvis" class="section level2">
+<h2>ggvis</h2>
+<p><a href="http://ggvis.rstudio.com/">ggvis</a> is Hadley Wickham’s successor to <code>ggplot2</code>. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. <code>ggplot2</code> is still the best way to make graphics in R.</p>
+<p>Functionality that is added to <code>ggvis</code> that isn’t possible in <code>ggplot</code> will be added to this section in the future.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
