@@ -26,7 +26,7 @@ source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/ur
 
 R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This [Bookdown](https://bookdown.org/yihui/bookdown/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
 
-The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Alex Engler (aengler@urban.org) or Aaron Williams (awilliams@urban.org). 
+The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Aaron Williams (awilliams@urban.org). 
 
 #### Installation
 
@@ -38,7 +38,7 @@ The greatest strength of R is its vibrant and open community of users, developer
 
 There are thousands of packages, but most tasks can be accomplished with a handful of important packages:
 
-  * `ggplot` data visualization
+  * `ggplot2` data visualization
   * `dplyr` data management
   * `tidyr` data tidying
   * `readr` data import 
@@ -55,7 +55,7 @@ There are thousands of packages, but most tasks can be accomplished with a handf
   * `readxl`.xls and .xlsx
   * `rvest` web scraping
   * `xml2` XML
-  * `modelr` simple modelling within a pipeline
+  * `modelr` simple modeling within a pipeline
   * `broom` turning models into tidy data
   * `tidyverse` loads all of the packages listed up to this point; see Hadley Wichkham's "[tidyverse](https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0/)"
   * `shiny` interactive web applications
