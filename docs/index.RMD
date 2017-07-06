@@ -26,7 +26,7 @@ source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/ur
 
 R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This [Bookdown](https://bookdown.org/yihui/bookdown/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
 
-The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Alex Engler (aengler@urban.org) or Aaron Williams (awilliams@urban.org). 
+The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Aaron Williams (awilliams@urban.org). 
 
 #### Installation
 
@@ -38,7 +38,7 @@ The greatest strength of R is its vibrant and open community of users, developer
 
 There are thousands of packages, but most tasks can be accomplished with a handful of important packages:
 
-  * `ggplot` data visualization
+  * `ggplot2` data visualization
   * `dplyr` data management
   * `tidyr` data tidying
   * `readr` data import 
@@ -55,7 +55,7 @@ There are thousands of packages, but most tasks can be accomplished with a handf
   * `readxl`.xls and .xlsx
   * `rvest` web scraping
   * `xml2` XML
-  * `modelr` simple modelling within a pipeline
+  * `modelr` simple modeling within a pipeline
   * `broom` turning models into tidy data
   * `tidyverse` loads all of the packages listed up to this point; see Hadley Wichkham's "[tidyverse](https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0/)"
   * `shiny` interactive web applications
@@ -347,6 +347,49 @@ mtcars %>%
   theme(legend.title = element_text(hjust = 0))
 ```
 
+### Highlight Points
+
+
+### Label Points{.tabset}
+
+`geom_text()` and `geom_label()` annotate points on scatterplots. Both functions need `x` values, `y` values, and a vector of labels. It's rarely useful to label every point. Use `filter()` to create a second data set that is subsetted and pass it into the labelling function. 
+
+`geom_text()` labels points without backgrounds. `geom_label()` labels points with backgrounds. 
+
+#### geom_text()
+
+```{r scatterlot geom_text}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(gear == 5)
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+#### geom_label()
+
+```{r scatterlot geom_label}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(gear == 5)
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
 ## Line Plots
 ```{r line plots}
 
@@ -571,6 +614,8 @@ ggmap creates several different map types:
 * toner - A clean black-and-white map where land is white and water is black. 
 
 Set the map type with `maptype = ""`. 
+
+NOTE: If ggmap returns `ggmap Error: GeomRasterAnn was built with an incompatible version of ggproto` then reinstall the package using `install.packages("ggmap", type = "source")`.
 
 ### States{.tabset}
 
@@ -841,10 +886,115 @@ txhousing %>%
 
 ```
 
-## Loess
-### Smoothers
+## Smoothers
 
-## Combining Geoms
+`geom_smooth()` fits and plots models to data with two or more dimensions. 
+
+```{r geom_smooth}
+ggplot(data = mpg) +
+	geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+Understanding and manipulating defaults is more important for `geom_smooth()` than other geoms because it contains a number of assumptions. `geom_smooth()` automatically uses loess for datasets with fewer than 1,000 observations and 
+a generalized additive model with `formula = y ~ s(x, bs = "cs")` for datasets with greater than 1,000 observations. Both default to a 95% confidence interval with the confidence interval displayed. 
+
+Models are chosen with `method = ` and can be set to lm(), glm(), gam(), loess(), rlm(), and more. Formulas can be specified with `formula = ` and `y ~ x` syntax. Plotting the standard error is toggled with `se = TRUE` and `se = FALSE`, and level is specificed with `level = `. As always, more information can be seen in RStudio with `?geom_smooth()`.
+
+`geom_point()` adds a scatterplot to `geom_smooth()`. The order of the function calls is important. The function called second will be layed on top of the function called first. 
+
+```{r geom_smooth2}
+ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+	geom_point(alpha = 0.1) +
+	geom_smooth(color = "red") +
+	scale_y_continuous(expand = c(0, 0), labels = scales::dollar)
+```
+
+`geom_smooth` can be subset by categorical and factor variables. This requires subgroups to have a decent number of observations and and a fair amount of variability across the x-axis. Confidence intervals often widen at the ends so special care is needed for the chart to be meaningful and readable. 
+
+```{r subset geom_smooth}
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = factor(cyl))) +
+	geom_point(alpha = 0.2) +
+	geom_smooth() +
+	labs(title = "Engine Displacement and City MPG by Number of Cylinders",
+			 subtitle = "Loess: MPG = Displacement",
+			 caption = "Urban Institute",
+			 x = "Engine Displacement",
+			 y = "Highway MPG")
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
+	geom_smooth(method = "lm") +
+	geom_point(alpha = 0.2) +
+	labs(title = "Engine Displacement and City MPG by Drive",
+			 subtitle = "Linear Model: MPG = Displacement",
+			 caption = "Urban Institute",
+			 x = "Engine Displacement",
+			 y = "Highway MPG")
+
+```
+
+## Layered Geoms
+
+Geoms can be layered in `ggplot2`. This is useful for design and analysis. 
+
+It is often useful to add points to line plots with a small number of values across the x-axis. This example from [R for Data Science](http://r4ds.had.co.nz/tidy-data.html) shows how changing the line to grey can be appealing. 
+
+### Design{.tabset}
+
+#### Before
+```{r layering geoms design}
+table1 %>%
+	ggplot(aes(x = year, y = cases)) +
+		geom_line(aes(color = country)) +
+		geom_point(aes(color = country)) +
+		scale_y_continuous(labels = scales::comma) +
+		scale_x_continuous(breaks = c(1999, 2000)) +
+		labs(title = "Changes in Tuberculosis Cases in Three Countries",
+					 caption = "Source: World Health Organization Global Tuberculosis Report")
+```
+
+#### After
+```{r layering geoms design grey}
+table1 %>%
+	ggplot(aes(year, cases)) +
+		geom_line(aes(group = country), color = "grey50") +
+		geom_point(aes(color = country)) +
+		scale_y_continuous(labels = scales::comma) +
+		scale_x_continuous(breaks = c(1999, 2000)) +
+		labs(title = "Changes in Tuberculosis Cases in Three Countries",
+					 caption = "Source: World Health Organization Global Tuberculosis Report")
+```
+
+Layering geoms is also useful for adding trend lines and centroids to scatter plots. 
+
+```{r layers}
+# Simple line
+# Regression model
+# Centroids
+```
+
+
+### Centroids
+
+```{r centroids}
+
+mpg_summary <- mpg %>%
+	group_by(cyl) %>%
+	summarize(displ = mean(displ), cty = mean(cty))
+
+mpg %>%
+	ggplot() +
+		geom_point(aes(x = displ, y = cty, color = factor(cyl)), alpha = 0.5) +
+		geom_point(data = mpg_summary, aes(x = displ, y = cty), size = 5, color = "red") +
+		geom_text(data = mpg_summary, aes(x = displ, y = cty, label = cyl)) +
+		labs(title = "City MPG, Engine Displacement, and Number of Cylinders", 
+				 subtitle = "Subgroup Means in Red", 
+				 caption = "Source: EPA Fuel Economy Dataset", 
+				 x = "Displacement",
+				 y = "City MPG")
+
+
+```
 
 ## Shiny
 
@@ -853,3 +1003,14 @@ txhousing %>%
 [ggvis](http://ggvis.rstudio.com/) is Hadley Wickham's successor to `ggplot2 `. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. `ggplot2` is still the best way to make graphics in R. 
 
 Functionality that is added to `ggvis` that isn't possible in `ggplot` will be added to this section in the future. 
+
+
+## Text
+
+## Appendix
+
+### System Info and Package Versioning
+
+```{r System Info and Package Versioning}
+sessionInfo()
+```

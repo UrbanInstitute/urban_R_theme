@@ -240,7 +240,7 @@ div.tocify {
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This <a href="https://bookdown.org/yihui/bookdown/">Bookdown</a> contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute’s ggplot2 theme which will create near-publication-ready plots.</p>
-<p>The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham’s book, <a href="http://r4ds.had.co.nz/">R for Data Science</a>, is a comprehensive text for beginners. <a href="http://stackoverflow.com/">Stackoverflow</a> is full of questions and answers (be sure to include “[r]” in the search). Finally, don’t hesitate to contact Alex Engler (<a href="mailto:aengler@urban.org">aengler@urban.org</a>) or Aaron Williams (<a href="mailto:awilliams@urban.org">awilliams@urban.org</a>).</p>
+<p>The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham’s book, <a href="http://r4ds.had.co.nz/">R for Data Science</a>, is a comprehensive text for beginners. <a href="http://stackoverflow.com/">Stackoverflow</a> is full of questions and answers (be sure to include “[r]” in the search). Finally, don’t hesitate to contact Aaron Williams (<a href="mailto:awilliams@urban.org">awilliams@urban.org</a>).</p>
 <div id="installation" class="section level4">
 <h4>Installation</h4>
 <p><strong>R</strong> can be added on any Urban Institute computer by IT.</p>
@@ -248,7 +248,7 @@ div.tocify {
 <p><strong>R Packages</strong> are collections of open-source code developed by R users that contain useful functions and data that expand the power and applicability of R. Packages are regularly added on <a href="https://cran.r-project.org/">CRAN</a> and <a href="https://github.com/">GitHub</a>. Most packages can be installed with <code>install.packages(&quot;package name&quot;)</code>. This only needs to happen once on each computer for each version of the package. Packages can be loaded using <code>library(package name)</code>. This needs to happen at the beginning of each script for each package used. <strong>Note:</strong> <code>install.packages()</code> uses quotation marks while <code>library()</code> does not.</p>
 <p>There are thousands of packages, but most tasks can be accomplished with a handful of important packages:</p>
 <ul>
-<li><code>ggplot</code> data visualization</li>
+<li><code>ggplot2</code> data visualization</li>
 <li><code>dplyr</code> data management</li>
 <li><code>tidyr</code> data tidying</li>
 <li><code>readr</code> data import</li>
@@ -266,7 +266,7 @@ div.tocify {
 <li><code>readxl</code>.xls and .xlsx</li>
 <li><code>rvest</code> web scraping</li>
 <li><code>xml2</code> XML</li>
-<li><code>modelr</code> simple modelling within a pipeline</li>
+<li><code>modelr</code> simple modeling within a pipeline</li>
 <li><code>broom</code> turning models into tidy data</li>
 <li><code>tidyverse</code> loads all of the packages listed up to this point; see Hadley Wichkham’s “<a href="https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0/">tidyverse</a>”</li>
 <li><code>shiny</code> interactive web applications</li>
@@ -519,6 +519,46 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
   theme(legend.title = element_text(hjust = 0))</code></pre>
 <p><img src="index_files/figure-html/bubble%20chart-1.png" width="672" /></p>
 </div>
+<div id="highlight-points" class="section level3">
+<h3>Highlight Points</h3>
+</div>
+<div id="label-points" class="section level3 tabset">
+<h3>Label Points</h3>
+<p><code>geom_text()</code> and <code>geom_label()</code> annotate points on scatterplots. Both functions need <code>x</code> values, <code>y</code> values, and a vector of labels. It’s rarely useful to label every point. Use <code>filter()</code> to create a second data set that is subsetted and pass it into the labelling function.</p>
+<p><code>geom_text()</code> labels points without backgrounds. <code>geom_label()</code> labels points with backgrounds.</p>
+<div id="geom_text" class="section level4">
+<h4>geom_text()</h4>
+<pre class="r"><code>labels &lt;- mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    filter(gear == 5)
+
+mtcars %&gt;%
+    ggplot(mapping = aes(x = wt, y = mpg)) +
+        geom_point() +
+        geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
+      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatterlot%20geom_text-1.png" width="672" /></p>
+</div>
+<div id="geom_label" class="section level4">
+<h4>geom_label()</h4>
+<pre class="r"><code>labels &lt;- mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    filter(gear == 5)
+
+mtcars %&gt;%
+    ggplot(mapping = aes(x = wt, y = mpg)) +
+        geom_point() +
+        geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
+      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatterlot%20geom_label-1.png" width="672" /></p>
+</div>
+</div>
 </div>
 <div id="line-plots" class="section level2">
 <h2>Line Plots</h2>
@@ -724,6 +764,7 @@ iron(
 <p>R can function as a geographical information system (GIS) using <code>library(ggmap)</code>. ggmap uses Google Maps, OpenStreetMap, Stamen Maps to create mappings (Grammar of Graphics) of maps (colloquial). Data with longitudes and latitudes can then be charted using many ggplot2 geoms.</p>
 <p>ggmap creates several different map types: * terrain - A combination of major roads, cities names, state borders, and a terrain map. * terrain-background - * satellite - A satellite image of the specified area with no labels. * roadmap - A Google roadmap * hybrid - A satellite image with state boarders and major cities. * watercolor - A bizarre sand-colored map with roads and water. * toner - A clean black-and-white map where land is white and water is black.</p>
 <p>Set the map type with <code>maptype = &quot;&quot;</code>.</p>
+<p>NOTE: If ggmap returns <code>ggmap Error: GeomRasterAnn was built with an incompatible version of ggproto</code> then reinstall the package using <code>install.packages(&quot;ggmap&quot;, type = &quot;source&quot;)</code>.</p>
 <div id="states" class="section level3 tabset">
 <h3>States</h3>
 <div id="terrain" class="section level4">
@@ -980,14 +1021,96 @@ txhousing %&gt;%
 <p><img src="index_files/figure-html/small%20multiples-1.png" width="672" /></p>
 <pre class="r"><code># Facet grid</code></pre>
 </div>
-<div id="loess" class="section level2">
-<h2>Loess</h2>
-<div id="smoothers" class="section level3">
-<h3>Smoothers</h3>
+<div id="smoothers" class="section level2">
+<h2>Smoothers</h2>
+<p><code>geom_smooth()</code> fits and plots models to data with two or more dimensions.</p>
+<pre class="r"><code>ggplot(data = mpg) +
+    geom_smooth(mapping = aes(x = displ, y = hwy))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="index_files/figure-html/geom_smooth-1.png" width="672" /></p>
+<p>Understanding and manipulating defaults is more important for <code>geom_smooth()</code> than other geoms because it contains a number of assumptions. <code>geom_smooth()</code> automatically uses loess for datasets with fewer than 1,000 observations and a generalized additive model with <code>formula = y ~ s(x, bs = &quot;cs&quot;)</code> for datasets with greater than 1,000 observations. Both default to a 95% confidence interval with the confidence interval displayed.</p>
+<p>Models are chosen with <code>method =</code> and can be set to lm(), glm(), gam(), loess(), rlm(), and more. Formulas can be specified with <code>formula =</code> and <code>y ~ x</code> syntax. Plotting the standard error is toggled with <code>se = TRUE</code> and <code>se = FALSE</code>, and level is specificed with <code>level =</code>. As always, more information can be seen in RStudio with <code>?geom_smooth()</code>.</p>
+<p><code>geom_point()</code> adds a scatterplot to <code>geom_smooth()</code>. The order of the function calls is important. The function called second will be layed on top of the function called first.</p>
+<pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+    geom_point(alpha = 0.1) +
+    geom_smooth(color = &quot;red&quot;) +
+    scale_y_continuous(expand = c(0, 0), labels = scales::dollar)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39;</code></pre>
+<p><img src="index_files/figure-html/geom_smooth2-1.png" width="672" /></p>
+<p><code>geom_smooth</code> can be subset by categorical and factor variables. This requires subgroups to have a decent number of observations and and a fair amount of variability across the x-axis. Confidence intervals often widen at the ends so special care is needed for the chart to be meaningful and readable.</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = factor(cyl))) +
+    geom_point(alpha = 0.2) +
+    geom_smooth() +
+    labs(title = &quot;Engine Displacement and City MPG by Number of Cylinders&quot;,
+             subtitle = &quot;Loess: MPG = Displacement&quot;,
+             caption = &quot;Urban Institute&quot;,
+             x = &quot;Engine Displacement&quot;,
+             y = &quot;Highway MPG&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;</code></pre>
+<p><img src="index_files/figure-html/subset%20geom_smooth-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
+    geom_smooth(method = &quot;lm&quot;) +
+    geom_point(alpha = 0.2) +
+    labs(title = &quot;Engine Displacement and City MPG by Drive&quot;,
+             subtitle = &quot;Linear Model: MPG = Displacement&quot;,
+             caption = &quot;Urban Institute&quot;,
+             x = &quot;Engine Displacement&quot;,
+             y = &quot;Highway MPG&quot;)</code></pre>
+<p><img src="index_files/figure-html/subset%20geom_smooth-2.png" width="672" /></p>
+</div>
+<div id="layered-geoms" class="section level2">
+<h2>Layered Geoms</h2>
+<p>Geoms can be layered in <code>ggplot2</code>. This is useful for design and analysis.</p>
+<p>It is often useful to add points to line plots with a small number of values across the x-axis. This example from <a href="http://r4ds.had.co.nz/tidy-data.html">R for Data Science</a> shows how changing the line to grey can be appealing.</p>
+<div id="design" class="section level3 tabset">
+<h3>Design</h3>
+<div id="before-1" class="section level4">
+<h4>Before</h4>
+<pre class="r"><code>table1 %&gt;%
+    ggplot(aes(x = year, y = cases)) +
+        geom_line(aes(color = country)) +
+        geom_point(aes(color = country)) +
+        scale_y_continuous(labels = scales::comma) +
+        scale_x_continuous(breaks = c(1999, 2000)) +
+        labs(title = &quot;Changes in Tuberculosis Cases in Three Countries&quot;,
+                     caption = &quot;Source: World Health Organization Global Tuberculosis Report&quot;)</code></pre>
+<p><img src="index_files/figure-html/layering%20geoms%20design-1.png" width="672" /></p>
+</div>
+<div id="after-1" class="section level4">
+<h4>After</h4>
+<pre class="r"><code>table1 %&gt;%
+    ggplot(aes(year, cases)) +
+        geom_line(aes(group = country), color = &quot;grey50&quot;) +
+        geom_point(aes(color = country)) +
+        scale_y_continuous(labels = scales::comma) +
+        scale_x_continuous(breaks = c(1999, 2000)) +
+        labs(title = &quot;Changes in Tuberculosis Cases in Three Countries&quot;,
+                     caption = &quot;Source: World Health Organization Global Tuberculosis Report&quot;)</code></pre>
+<p><img src="index_files/figure-html/layering%20geoms%20design%20grey-1.png" width="672" /></p>
+<p>Layering geoms is also useful for adding trend lines and centroids to scatter plots.</p>
+<pre class="r"><code># Simple line
+# Regression model
+# Centroids</code></pre>
 </div>
 </div>
-<div id="combining-geoms" class="section level2">
-<h2>Combining Geoms</h2>
+<div id="centroids" class="section level3">
+<h3>Centroids</h3>
+<pre class="r"><code>mpg_summary &lt;- mpg %&gt;%
+    group_by(cyl) %&gt;%
+    summarize(displ = mean(displ), cty = mean(cty))
+
+mpg %&gt;%
+    ggplot() +
+        geom_point(aes(x = displ, y = cty, color = factor(cyl)), alpha = 0.5) +
+        geom_point(data = mpg_summary, aes(x = displ, y = cty), size = 5, color = &quot;red&quot;) +
+        geom_text(data = mpg_summary, aes(x = displ, y = cty, label = cyl)) +
+        labs(title = &quot;City MPG, Engine Displacement, and Number of Cylinders&quot;, 
+                 subtitle = &quot;Subgroup Means in Red&quot;, 
+                 caption = &quot;Source: EPA Fuel Economy Dataset&quot;, 
+                 x = &quot;Displacement&quot;,
+                 y = &quot;City MPG&quot;)</code></pre>
+<p><img src="index_files/figure-html/centroids-1.png" width="672" /></p>
+</div>
 </div>
 <div id="shiny" class="section level2">
 <h2>Shiny</h2>
@@ -996,6 +1119,56 @@ txhousing %&gt;%
 <h2>ggvis</h2>
 <p><a href="http://ggvis.rstudio.com/">ggvis</a> is Hadley Wickham’s successor to <code>ggplot2</code>. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. <code>ggplot2</code> is still the best way to make graphics in R.</p>
 <p>Functionality that is added to <code>ggvis</code> that isn’t possible in <code>ggplot</code> will be added to this section in the future.</p>
+</div>
+<div id="text" class="section level2">
+<h2>Text</h2>
+</div>
+<div id="appendix" class="section level2">
+<h2>Appendix</h2>
+<div id="system-info-and-package-versioning" class="section level3">
+<h3>System Info and Package Versioning</h3>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.3.2 (2016-10-31)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: macOS Sierra 10.12.5
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+## [8] base     
+## 
+## other attached packages:
+##  [1] USAboundaries_0.2.0   maps_3.2.0            fivethirtyeight_0.2.0
+##  [4] ggmap_2.6.1           zipcode_1.0           waffle_0.7.0         
+##  [7] bindrcpp_0.2          hexbin_1.27.1         extrafont_0.17       
+## [10] RColorBrewer_1.1-2    dplyr_0.7.0           purrr_0.2.2.2        
+## [13] readr_1.1.1           tidyr_0.6.3           tibble_1.3.3         
+## [16] ggplot2_2.2.1         tidyverse_1.1.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.11      lubridate_1.6.0   lattice_0.20-35  
+##  [4] png_0.1-7         assertthat_0.2.0  rprojroot_1.2    
+##  [7] digest_0.6.12     psych_1.7.5       R6_2.2.2         
+## [10] cellranger_1.1.0  plyr_1.8.4        backports_1.1.0  
+## [13] evaluate_0.10     httr_1.2.1        RgoogleMaps_1.4.1
+## [16] rlang_0.1.1       lazyeval_0.2.0    readxl_1.0.0     
+## [19] geosphere_1.5-5   extrafontdb_1.0   Matrix_1.2-10    
+## [22] rmarkdown_1.6     proto_1.0.0       labeling_0.3     
+## [25] stringr_1.2.0     foreign_0.8-69    munsell_0.4.3    
+## [28] broom_0.4.2       modelr_0.1.0      pkgconfig_2.0.1  
+## [31] mnormt_1.5-5      mgcv_1.8-17       htmltools_0.3.6  
+## [34] gridExtra_2.2.1   nlme_3.1-131      jsonlite_1.5     
+## [37] Rttf2pt1_1.3.4    gtable_0.2.0      magrittr_1.5     
+## [40] scales_0.4.1      stringi_1.1.5     mapproj_1.2-5    
+## [43] reshape2_1.4.2    sp_1.2-4          xml2_1.1.1       
+## [46] rjson_0.2.15      tools_3.3.2       forcats_0.2.0    
+## [49] glue_1.1.1        hms_0.3           jpeg_0.1-8       
+## [52] parallel_3.3.2    yaml_2.1.14       colorspace_1.3-2 
+## [55] rvest_0.3.2       knitr_1.16        bindr_0.1        
+## [58] haven_1.0.0</code></pre>
+</div>
 </div>
 
 

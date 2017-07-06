@@ -1,3 +1,7 @@
+## Urban Institute R graphics guide
+
+A guide to building R graphics at the Urban Institute can be found [here](http://urbaninstitute.github.io/urban_R_theme/).
+
 ## Urban Institute ggplot2 theme
 
 Depending on your operating system, run one of the following scripts once per R session:
@@ -79,3 +83,7 @@ ggplot(mpg, aes(class)) +
 - `scale_y_continuous(expand = c(0,0))` removes gaps between the axis lines and the origin. Without this option, bar charts look like:
 
 ![the horror](img/yuck.png)
+
+## R Theme Copyright and License 
+
+Copyright 2017 Urban Institute. Code released under the GNU General Public License v3.0
