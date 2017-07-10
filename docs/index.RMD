@@ -3,6 +3,7 @@ title: "Urban Institute R Theme Example Plots"
 author: "Aaron Williams"
 output:
   html_document:
+    css: styles.css
     self_contained: no
     code_folding: hide
     toc: true
@@ -24,7 +25,7 @@ source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/ur
 
 ## Introduction
 
-R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This [Bookdown](https://bookdown.org/yihui/bookdown/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
+R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This .html file made with [R Markdown](http://rmarkdown.rstudio.com/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
 
 The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Aaron Williams (awilliams@urban.org). 
 
@@ -862,6 +863,8 @@ ggplot(mtcars, aes(mpg, wt)) +
 
 ## Small Multiples
 
+### facet_wrap()
+
 R's facetting system is a powerful way to make "small multiples".
 
 Some edits to the theme may be necessary depending upon how many rows and columns are in the plot. 
@@ -881,10 +884,34 @@ txhousing %>%
   theme(axis.text.x = element_text(angle = 90),
         strip.text = element_text(face = "plain", 
                               size = rel(0.5)))
-
-# Facet grid
-
 ```
+
+### facet_grid()
+```{r facet grid, message = FALSE, warning = FALSE, fig.height=9}
+# Facet Wrap
+txhousing %>%
+  filter(city != "Brazoria County" & city != "Brownsville" & city != "San Angelo" & city != "Denton County") %>%
+  ggplot(aes(x = median)) +
+  geom_histogram() +
+  facet_grid(~city) +
+  scale_x_continuous(labels = scales::dollar) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = "Median Monthly Home Prices in Selected Texas Cities",
+       x = "Median Monthly Home Value",
+       y = "Count") + 
+  theme(axis.text.x = element_text(angle = 90),
+        strip.text = element_text(face = "plain", 
+                              size = rel(0.5)))
+#TODO(aaron): finish this
+```
+
+
+
+
+
+### facet_geo()
+
+`geofacet` is a new package that combines small 
 
 ## Smoothers
 
