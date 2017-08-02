@@ -95,7 +95,7 @@ Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.05/bin/gswin32c.exe")`
 ```
 install.packages(c("ggplot2", "reshape2", "RColorBrewer", "extrafont"))
 library(extrafont)
-font_import()
+port()
 loadfonts()
 ```
 
@@ -432,7 +432,6 @@ economics %>%
 Histograms and frequency polygons show the distribution of a single numeric variable. Both bin variables and then count the number of observations in a bin. Histograms display distributions with a bar as a geom and frequency polygons show distributions with the line geom. Frequency polygons can be easily layered.
 
 ### Histogram
-
 ```{r histogram}
 ggplot(data = diamonds, mapping = aes(x = depth)) + 
   geom_histogram(bins = 100) +
@@ -476,6 +475,22 @@ diamonds %>%
        caption = "Urban Institue",
        x = "Price",
        y = "Count")
+```
+
+### Joy Plots
+
+Joy plots are partially overlapping histograms facetted by a categorical variable that pack a lot of information into one compact plot. They were [recently introduced](https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html) by `library(ggjoy)`.
+
+```{r joyplot}
+library(ggjoy)
+
+ggplot(diamonds, mapping = aes(x = price, y = cut)) +
+	geom_joy() +
+	scale_x_continuous(labels = scales::dollar) +
+  labs(title = "Distribution of Diamond Prices by Diamond Cut",
+       caption = "Urban Institue",
+       x = "Price",
+       y = "Cut")
 ```
 
 ### Categorical Variables
@@ -564,12 +579,12 @@ waffle(parts, rows = 25, size = 1, colors = c("#1696d2", "#fdbf11", "#000000"), 
 Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are `glyph_size =` and `use_glyph =`. Both are called in the `waffle()` function. Note: `size = 1` is sensible and `glyph_size = 12` is sensible. 
 
 Using glyphs requires downloading fontawesome. That can be done [here](https://github.com/hrbrmstr/waffle/tree/master/inst/fonts).Then run `library(extrafont)`, 
-`font_import(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
+`port(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
 
 ```{r waffle with glyphs}
-#library(extrafont)
-#font_import("H:\\IT\\urban_R_theme\\docs")
-#loadfonts()
+library(extrafont)
+#font_import("H:/IT/urban_R_theme/docs")
+loadfonts()
 
 parts <- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
 waffle(parts, rows = 5, glyph_size = 12, colors = c("#1696d2", "#fdbf11", "#000000"), legend_pos = "bottom", use_glyph = "medkit") +
