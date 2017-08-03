@@ -1,21 +1,35 @@
 ---
-title: "Urban Institute R Theme Example Plots"
-author: "Aaron Williams"
 output:
   html_document:
     css: styles.css
-    self_contained: no
+    self_contained: FALSE
     code_folding: hide
-    toc: true
-    toc_float: TRUE 
+    toc: TRUE
+    toc_float: TRUE
 ---
+<div id="header">
+![](images/urban-institute-logo.png)
+</div>
+
+```{r urban logo, echo = FALSE}
+#include_graphics("images/urban-institute-logo.png", dpi = NA)
+
+#htmltools::img(src = "images/urban-institute-logo.png", 
+#               alt = 'logo', 
+#               style = 'position:absolute; top:0; right:0; padding:10px;')
+```
+
+## Urban Institute R Graphics Guide
+
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(warning = FALSE)
+library(knitr)
 
-library(tidyverse)
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(warning = FALSE)
+
 library(datasets)
+library(tidyverse)
 
 options(scipen = 999)
 
@@ -23,7 +37,6 @@ options(scipen = 999)
 source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
 ```
 
-## Introduction
 
 R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This .html file made with [R Markdown](http://rmarkdown.rstudio.com/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
 
@@ -79,7 +92,8 @@ This is an `R` script that makes `ggplot2` output align more closely with [the U
 
 * This script does **not produce publication ready graphics**. Visual styles must still be edited using your project/paper's normal editing workflow.
 	*  ***Exporting charts as a pdf will allow them to be more easily edited***
-	*  You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: ![pdf export option](img/pdf_export_option.png)
+	*  You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: `r knitr::include_graphics("images/pdf_export_option.png")`
+
 
 * The theme has been tested against `ggplot2 version 2.2.0`. It will not function properly with older (`< 2.0.0`) versions of `ggplot2`
 
@@ -582,9 +596,9 @@ Using glyphs requires downloading fontawesome. That can be done [here](https://g
 `port(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
 
 ```{r waffle with glyphs}
-library(extrafont)
+#library(extrafont)
 #font_import("H:/IT/urban_R_theme/docs")
-loadfonts()
+#loadfonts()
 
 parts <- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
 waffle(parts, rows = 5, glyph_size = 12, colors = c("#1696d2", "#fdbf11", "#000000"), legend_pos = "bottom", use_glyph = "medkit") +

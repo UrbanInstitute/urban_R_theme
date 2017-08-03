@@ -8,6 +8,10 @@
 	color: #1696d2;
 }
 
+/* Header image formatting */
+#header {
+	padding-top: 12px;
+}
 
 /* Legend Formatting */
 .list-group-item.active {

@@ -9,10 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Aaron Williams" />
 
 
-<title>Urban Institute R Theme Example Plots</title>
+<title></title>
 
 <script src="index_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -232,14 +231,18 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Urban Institute R Theme Example Plots</h1>
-<h4 class="author"><em>Aaron Williams</em></h4>
 
 </div>
 
 
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
+<div id="header">
+<div class="figure">
+<img src="images/urban-institute-logo.png" />
+
+</div>
+</div>
+<div id="urban-institute-r-graphics-guide" class="section level2">
+<h2>Urban Institute R Graphics Guide</h2>
 <p>R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This .html file made with <a href="http://rmarkdown.rstudio.com/">R Markdown</a> contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute’s ggplot2 theme which will create near-publication-ready plots.</p>
 <p>The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham’s book, <a href="http://r4ds.had.co.nz/">R for Data Science</a>, is a comprehensive text for beginners. <a href="http://stackoverflow.com/">Stackoverflow</a> is full of questions and answers (be sure to include “[r]” in the search). Finally, don’t hesitate to contact Aaron Williams (<a href="mailto:awilliams@urban.org">awilliams@urban.org</a>).</p>
 <div id="installation" class="section level4">
@@ -285,7 +288,7 @@ div.tocify {
 <li>This script does <strong>not produce publication ready graphics</strong>. Visual styles must still be edited using your project/paper’s normal editing workflow.
 <ul>
 <li><strong><em>Exporting charts as a pdf will allow them to be more easily edited</em></strong></li>
-<li>You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: <img src="img/pdf_export_option.png" alt="pdf export option" /></li>
+<li>You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: <img src="images/pdf_export_option.png" width="241" /></li>
 </ul></li>
 <li><p>The theme has been tested against <code>ggplot2 version 2.2.0</code>. It will not function properly with older (<code>&lt; 2.0.0</code>) versions of <code>ggplot2</code></p></li>
 <li>If it is not already installed, please install the free <a href="https://www.google.com/fonts/specimen/Lato">Lato font from Google fonts</a>.</li>
@@ -445,9 +448,6 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        y = &quot;Price&quot;) +
   theme(legend.position = &quot;right&quot;,
         legend.direction = &quot;vertical&quot;)</code></pre>
-<pre><code>## Warning: Computation failed in `stat_binhex()`:
-## Package `hexbin` required for `stat_binhex`.
-## Please install and try again.</code></pre>
 <p><img src="index_files/figure-html/scatter%20plot%20hex-1.png" width="672" /></p>
 </div>
 <div id="scatter-plots-with-random-noise" class="section level3 tabset">
@@ -521,7 +521,6 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
        x = &quot;Weight (Tons)&quot;,
        y = &quot;Miles Per Gallon&quot;) +
   theme(legend.title = element_text(hjust = 0))</code></pre>
-<pre><code>## Warning: Using size for a discrete variable is not advised.</code></pre>
 <p><img src="index_files/figure-html/bubble%20chart-1.png" width="672" /></p>
 </div>
 <div id="highlight-points" class="section level3">
@@ -647,6 +646,21 @@ economics %&gt;%
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 <p><img src="index_files/figure-html/frequency%20polygon-2.png" width="672" /></p>
 </div>
+<div id="joy-plots" class="section level3">
+<h3>Joy Plots</h3>
+<p>Joy plots are partially overlapping histograms facetted by a categorical variable that pack a lot of information into one compact plot. They were <a href="https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html">recently introduced</a> by <code>library(ggjoy)</code>.</p>
+<pre class="r"><code>library(ggjoy)
+
+ggplot(diamonds, mapping = aes(x = price, y = cut)) +
+    geom_joy() +
+    scale_x_continuous(labels = scales::dollar) +
+  labs(title = &quot;Distribution of Diamond Prices by Diamond Cut&quot;,
+       caption = &quot;Urban Institue&quot;,
+       x = &quot;Price&quot;,
+       y = &quot;Cut&quot;)</code></pre>
+<pre><code>## Picking joint bandwidth of 458</code></pre>
+<p><img src="index_files/figure-html/joyplot-1.png" width="672" /></p>
+</div>
 <div id="categorical-variables" class="section level3">
 <h3>Categorical Variables</h3>
 <p>The following plots are effective at displaying how a continuous or discrete variable varies across different levels of a categorical variable.</p>
@@ -732,48 +746,11 @@ waffle(parts, rows = 25, size = 1, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11
 <h3>Waffle Charts with Glyphs</h3>
 <p>Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are <code>glyph_size =</code> and <code>use_glyph =</code>. Both are called in the <code>waffle()</code> function. Note: <code>size = 1</code> is sensible and <code>glyph_size = 12</code> is sensible.</p>
 <p>Using glyphs requires downloading fontawesome. That can be done <a href="https://github.com/hrbrmstr/waffle/tree/master/inst/fonts">here</a>.Then run <code>library(extrafont)</code>, <code>port(&lt;font-location&gt;)</code>, and <code>loadfonts()</code> once. After that, building waffle charts with glpyhs should be as easy as one function call.</p>
-<pre class="r"><code>library(extrafont)
+<pre class="r"><code>#library(extrafont)
 #font_import(&quot;H:/IT/urban_R_theme/docs&quot;)
-loadfonts()</code></pre>
-<pre><code>## .Keyboard already registered with pdfFonts().</code></pre>
-<pre><code>## More than one version of regular/bold/italic found for System Font. Skipping setup for this font.</code></pre>
-<pre><code>## Andale Mono already registered with pdfFonts().</code></pre>
-<pre><code>## More than one version of regular/bold/italic found for Apple Braille. Skipping setup for this font.</code></pre>
-<pre><code>## AppleMyungjo already registered with pdfFonts().</code></pre>
-<pre><code>## Arial Black already registered with pdfFonts().</code></pre>
-<pre><code>## More than one version of regular/bold/italic found for Arial. Skipping setup for this font.</code></pre>
-<pre><code>## Arial Narrow already registered with pdfFonts().</code></pre>
-<pre><code>## Arial Rounded MT Bold already registered with pdfFonts().</code></pre>
-<pre><code>## Arial Unicode MS already registered with pdfFonts().</code></pre>
-<pre><code>## Bodoni Ornaments already registered with pdfFonts().</code></pre>
-<pre><code>## Bodoni 72 Smallcaps already registered with pdfFonts().</code></pre>
-<pre><code>## No regular (non-bold, non-italic) version of . Skipping setup for this font.</code></pre>
-<pre><code>## No regular (non-bold, non-italic) version of Brush Script MT. Skipping setup for this font.</code></pre>
-<pre><code>## Comic Sans MS already registered with pdfFonts().</code></pre>
-<pre><code>## Courier New already registered with pdfFonts().</code></pre>
-<pre><code>## No regular (non-bold, non-italic) version of DIN Alternate. Skipping setup for this font.</code></pre>
-<pre><code>## No regular (non-bold, non-italic) version of DIN Condensed. Skipping setup for this font.</code></pre>
-<pre><code>## FontAwesome already registered with pdfFonts().</code></pre>
-<pre><code>## Georgia already registered with pdfFonts().</code></pre>
-<pre><code>## Impact already registered with pdfFonts().</code></pre>
-<pre><code>## Khmer Sangam MN already registered with pdfFonts().</code></pre>
-<pre><code>## Lao Sangam MN already registered with pdfFonts().</code></pre>
-<pre><code>## Lato Black already registered with pdfFonts().</code></pre>
-<pre><code>## Lato already registered with pdfFonts().</code></pre>
-<pre><code>## Lato Hairline already registered with pdfFonts().</code></pre>
-<pre><code>## Lato Light already registered with pdfFonts().</code></pre>
-<pre><code>## Luminari already registered with pdfFonts().</code></pre>
-<pre><code>## Microsoft Sans Serif already registered with pdfFonts().</code></pre>
-<pre><code>## Tahoma already registered with pdfFonts().</code></pre>
-<pre><code>## Times New Roman already registered with pdfFonts().</code></pre>
-<pre><code>## Trattatello already registered with pdfFonts().</code></pre>
-<pre><code>## Trebuchet MS already registered with pdfFonts().</code></pre>
-<pre><code>## Verdana already registered with pdfFonts().</code></pre>
-<pre><code>## Webdings already registered with pdfFonts().</code></pre>
-<pre><code>## Wingdings already registered with pdfFonts().</code></pre>
-<pre><code>## Wingdings 2 already registered with pdfFonts().</code></pre>
-<pre><code>## Wingdings 3 already registered with pdfFonts().</code></pre>
-<pre class="r"><code>parts &lt;- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
+#loadfonts()
+
+parts &lt;- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
 waffle(parts, rows = 5, glyph_size = 12, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11&quot;, &quot;#000000&quot;), legend_pos = &quot;bottom&quot;, use_glyph = &quot;medkit&quot;) +
   labs(title = &quot;Free Clinics in the D.C.-Maryland-Virginia Area&quot;,
        subtitle = &quot;1 Square == 20 Clinics&quot;,
@@ -831,8 +808,6 @@ ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;terrain
   labs(title = &quot;Zip Codes in Colorado&quot;,
        x = NULL,
        y = NULL)</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_rect).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/Colorado%20terrain-1.png" width="672" /></p>
 </div>
 <div id="toner" class="section level4">
@@ -857,8 +832,6 @@ ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;toner&q
   labs(title = &quot;Zip Codes in Colorado&quot;,
        x = NULL,
        y = NULL)</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_rect).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/Colorado%20toner-1.png" width="672" /></p>
 </div>
 <div id="hybrid" class="section level4">
@@ -883,8 +856,6 @@ ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;hybrid&
   labs(title = &quot;Zip Codes in Colorado&quot;,
        x = NULL,
        y = NULL)</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_rect).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/colorado%20hybrid-1.png" width="672" /></p>
 </div>
 </div>
@@ -901,7 +872,6 @@ ggmap(get_map(location = &quot;new york city&quot;, zoom = 11, maptype = &quot;s
   theme(axis.text = element_blank(),
         axis.line = element_blank(),
         axis.ticks = element_blank())</code></pre>
-<pre><code>## Warning: Removed 1970 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/nyc-1.png" width="672" /></p>
 </div>
 </div>
@@ -1037,8 +1007,6 @@ ggplot(census.counties, aes(lon, lat, group = id)) +
     theme(legend.position = &quot;right&quot;,
       legend.direction = &quot;vertical&quot;,
       axis.text.x = element_text(angle = 45))</code></pre>
-<pre><code>## Warning: attributes are not identical across measure variables; they will
-## be dropped</code></pre>
 <p><img src="index_files/figure-html/heat%20map-1.png" width="672" /></p>
 <pre class="r"><code>#https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/</code></pre>
 </div>
@@ -1222,10 +1190,11 @@ mpg %&gt;%
 ## other attached packages:
 ##  [1] USAboundaries_0.3.0   maps_3.2.0            fivethirtyeight_0.2.0
 ##  [4] ggmap_2.6.1           zipcode_1.0           waffle_0.7.0         
-##  [7] bindrcpp_0.2          extrafont_0.17        RColorBrewer_1.1-2   
-## [10] dplyr_0.7.2           purrr_0.2.2.2         readr_1.1.1          
-## [13] tidyr_0.6.3           tibble_1.3.3          ggplot2_2.2.1        
-## [16] tidyverse_1.1.1      
+##  [7] ggjoy_0.3.0           bindrcpp_0.2          hexbin_1.27.1        
+## [10] extrafont_0.17        RColorBrewer_1.1-2    dplyr_0.7.2          
+## [13] purrr_0.2.3           readr_1.1.1           tidyr_0.6.3          
+## [16] tibble_1.3.3          ggplot2_2.2.1         tidyverse_1.1.1      
+## [19] knitr_1.16           
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.12      lubridate_1.6.0   lattice_0.20-35  
@@ -1238,7 +1207,7 @@ mpg %&gt;%
 ## [22] rmarkdown_1.6     proto_1.0.0       labeling_0.3     
 ## [25] stringr_1.2.0     foreign_0.8-69    munsell_0.4.3    
 ## [28] broom_0.4.2       compiler_3.4.1    modelr_0.1.1     
-## [31] pkgconfig_2.0.1   mnormt_1.5-5      mgcv_1.8-17      
+## [31] pkgconfig_2.0.1   mnormt_1.5-5      mgcv_1.8-18      
 ## [34] htmltools_0.3.6   gridExtra_2.2.1   nlme_3.1-131     
 ## [37] jsonlite_1.5      Rttf2pt1_1.3.4    gtable_0.2.0     
 ## [40] magrittr_1.5      scales_0.4.1      stringi_1.1.5    
@@ -1246,8 +1215,8 @@ mpg %&gt;%
 ## [46] xml2_1.1.1        rjson_0.2.15      tools_3.4.1      
 ## [49] forcats_0.2.0     glue_1.1.1        hms_0.3          
 ## [52] jpeg_0.1-8        parallel_3.4.1    yaml_2.1.14      
-## [55] colorspace_1.3-2  rvest_0.3.2       knitr_1.16       
-## [58] bindr_0.1         haven_1.1.0</code></pre>
+## [55] colorspace_1.3-2  rvest_0.3.2       bindr_0.1        
+## [58] haven_1.1.0</code></pre>
 </div>
 </div>
 
