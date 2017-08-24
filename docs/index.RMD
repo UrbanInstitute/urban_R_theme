@@ -1,20 +1,35 @@
 ---
-title: "Urban Institute R Theme Example Plots"
-author: "Aaron Williams"
 output:
   html_document:
-    self_contained: no
+    css: styles.css
+    self_contained: FALSE
     code_folding: hide
-    toc: true
-    toc_float: TRUE 
+    toc: TRUE
+    toc_float: TRUE
 ---
+<div id="header">
+![](images/urban-institute-logo.png)
+</div>
+
+```{r urban logo, echo = FALSE}
+#include_graphics("images/urban-institute-logo.png", dpi = NA)
+
+#htmltools::img(src = "images/urban-institute-logo.png", 
+#               alt = 'logo', 
+#               style = 'position:absolute; top:0; right:0; padding:10px;')
+```
+
+## Urban Institute R Graphics Guide
+
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(warning = FALSE)
+library(knitr)
 
-library(tidyverse)
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(warning = FALSE)
+
 library(datasets)
+library(tidyverse)
 
 options(scipen = 999)
 
@@ -22,9 +37,8 @@ options(scipen = 999)
 source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
 ```
 
-## Introduction
 
-R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This [Bookdown](https://bookdown.org/yihui/bookdown/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
+R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This .html file made with [R Markdown](http://rmarkdown.rstudio.com/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
 
 The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Aaron Williams (awilliams@urban.org). 
 
@@ -78,7 +92,8 @@ This is an `R` script that makes `ggplot2` output align more closely with [the U
 
 * This script does **not produce publication ready graphics**. Visual styles must still be edited using your project/paper's normal editing workflow.
 	*  ***Exporting charts as a pdf will allow them to be more easily edited***
-	*  You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: ![pdf export option](img/pdf_export_option.png)
+	*  You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: `r knitr::include_graphics("images/pdf_export_option.png")`
+
 
 * The theme has been tested against `ggplot2 version 2.2.0`. It will not function properly with older (`< 2.0.0`) versions of `ggplot2`
 
@@ -94,7 +109,7 @@ Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.05/bin/gswin32c.exe")`
 ```
 install.packages(c("ggplot2", "reshape2", "RColorBrewer", "extrafont"))
 library(extrafont)
-font_import()
+port()
 loadfonts()
 ```
 
@@ -431,7 +446,6 @@ economics %>%
 Histograms and frequency polygons show the distribution of a single numeric variable. Both bin variables and then count the number of observations in a bin. Histograms display distributions with a bar as a geom and frequency polygons show distributions with the line geom. Frequency polygons can be easily layered.
 
 ### Histogram
-
 ```{r histogram}
 ggplot(data = diamonds, mapping = aes(x = depth)) + 
   geom_histogram(bins = 100) +
@@ -475,6 +489,22 @@ diamonds %>%
        caption = "Urban Institue",
        x = "Price",
        y = "Count")
+```
+
+### Joy Plots
+
+Joy plots are partially overlapping histograms facetted by a categorical variable that pack a lot of information into one compact plot. They were [recently introduced](https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html) by `library(ggjoy)`.
+
+```{r joyplot}
+library(ggjoy)
+
+ggplot(diamonds, mapping = aes(x = price, y = cut)) +
+	geom_joy() +
+	scale_x_continuous(labels = scales::dollar) +
+  labs(title = "Distribution of Diamond Prices by Diamond Cut",
+       caption = "Urban Institue",
+       x = "Price",
+       y = "Cut")
 ```
 
 ### Categorical Variables
@@ -563,11 +593,11 @@ waffle(parts, rows = 25, size = 1, colors = c("#1696d2", "#fdbf11", "#000000"), 
 Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are `glyph_size =` and `use_glyph =`. Both are called in the `waffle()` function. Note: `size = 1` is sensible and `glyph_size = 12` is sensible. 
 
 Using glyphs requires downloading fontawesome. That can be done [here](https://github.com/hrbrmstr/waffle/tree/master/inst/fonts).Then run `library(extrafont)`, 
-`font_import(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
+`port(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
 
 ```{r waffle with glyphs}
 #library(extrafont)
-#font_import("H:\\IT\\urban_R_theme\\docs")
+#font_import("H:/IT/urban_R_theme/docs")
 #loadfonts()
 
 parts <- c(`Virginia\nClinics` = (50 - 10 - 5), `Maryland\nClinics` = 10, `D.C.\nClinics` = 5)
@@ -862,6 +892,8 @@ ggplot(mtcars, aes(mpg, wt)) +
 
 ## Small Multiples
 
+### facet_wrap()
+
 R's facetting system is a powerful way to make "small multiples".
 
 Some edits to the theme may be necessary depending upon how many rows and columns are in the plot. 
@@ -881,10 +913,34 @@ txhousing %>%
   theme(axis.text.x = element_text(angle = 90),
         strip.text = element_text(face = "plain", 
                               size = rel(0.5)))
-
-# Facet grid
-
 ```
+
+### facet_grid()
+```{r facet grid, message = FALSE, warning = FALSE, fig.height=9}
+# Facet Wrap
+txhousing %>%
+  filter(city != "Brazoria County" & city != "Brownsville" & city != "San Angelo" & city != "Denton County") %>%
+  ggplot(aes(x = median)) +
+  geom_histogram() +
+  facet_grid(~city) +
+  scale_x_continuous(labels = scales::dollar) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(title = "Median Monthly Home Prices in Selected Texas Cities",
+       x = "Median Monthly Home Value",
+       y = "Count") + 
+  theme(axis.text.x = element_text(angle = 90),
+        strip.text = element_text(face = "plain", 
+                              size = rel(0.5)))
+#TODO(aaron): finish this
+```
+
+
+
+
+
+### facet_geo()
+
+`geofacet` is a new package that combines small 
 
 ## Smoothers
 
