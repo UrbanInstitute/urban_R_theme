@@ -499,7 +499,7 @@ Joy plots are partially overlapping histograms facetted by a categorical variabl
 library(ggjoy)
 
 ggplot(diamonds, mapping = aes(x = price, y = cut)) +
-	geom_joy() +
+	geom_joy(fill = "#1696d2") +
 	scale_x_continuous(labels = scales::dollar) +
   labs(title = "Distribution of Diamond Prices by Diamond Cut",
        caption = "Urban Institue",
