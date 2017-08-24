@@ -31,12 +31,12 @@
 /* In-line code formatting */
 code {
     white-space: pre;
-    font-family: "Helvetice Neue", Helvetica, Arial, sans-serif;
+    font-family: "Monaco", Helvetica, Arial, sans-serif;
 }
 
 /* Code box format */
 .pre {
-	font-family: "Helvetice Neue", Helvetica, Arial, sans-serif;	
+	font-family: "Monaco", Helvetica, Arial, sans-serif;	
 }
 
 /* Button Formatting */

@@ -652,7 +652,7 @@ economics %&gt;%
 <pre class="r"><code>library(ggjoy)
 
 ggplot(diamonds, mapping = aes(x = price, y = cut)) +
-    geom_joy() +
+    geom_joy(fill = &quot;#1696d2&quot;) +
     scale_x_continuous(labels = scales::dollar) +
   labs(title = &quot;Distribution of Diamond Prices by Diamond Cut&quot;,
        caption = &quot;Urban Institue&quot;,
@@ -1188,35 +1188,35 @@ mpg %&gt;%
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] USAboundaries_0.3.0   maps_3.2.0            fivethirtyeight_0.2.0
+##  [1] USAboundaries_0.3.0   maps_3.2.0            fivethirtyeight_0.3.0
 ##  [4] ggmap_2.6.1           zipcode_1.0           waffle_0.7.0         
 ##  [7] ggjoy_0.3.0           bindrcpp_0.2          hexbin_1.27.1        
 ## [10] extrafont_0.17        RColorBrewer_1.1-2    dplyr_0.7.2          
-## [13] purrr_0.2.3           readr_1.1.1           tidyr_0.6.3          
+## [13] purrr_0.2.3           readr_1.1.1           tidyr_0.7.0          
 ## [16] tibble_1.3.3          ggplot2_2.2.1         tidyverse_1.1.1      
-## [19] knitr_1.16           
+## [19] knitr_1.17           
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.12      lubridate_1.6.0   lattice_0.20-35  
-##  [4] png_0.1-7         assertthat_0.2.0  rprojroot_1.2    
-##  [7] digest_0.6.12     psych_1.7.5       R6_2.2.2         
-## [10] cellranger_1.1.0  plyr_1.8.4        backports_1.1.0  
-## [13] evaluate_0.10.1   httr_1.2.1        RgoogleMaps_1.4.1
-## [16] rlang_0.1.1       lazyeval_0.2.0    readxl_1.0.0     
-## [19] geosphere_1.5-5   extrafontdb_1.0   Matrix_1.2-10    
-## [22] rmarkdown_1.6     proto_1.0.0       labeling_0.3     
-## [25] stringr_1.2.0     foreign_0.8-69    munsell_0.4.3    
-## [28] broom_0.4.2       compiler_3.4.1    modelr_0.1.1     
-## [31] pkgconfig_2.0.1   mnormt_1.5-5      mgcv_1.8-18      
-## [34] htmltools_0.3.6   gridExtra_2.2.1   nlme_3.1-131     
-## [37] jsonlite_1.5      Rttf2pt1_1.3.4    gtable_0.2.0     
-## [40] magrittr_1.5      scales_0.4.1      stringi_1.1.5    
-## [43] mapproj_1.2-5     reshape2_1.4.2    sp_1.2-5         
-## [46] xml2_1.1.1        rjson_0.2.15      tools_3.4.1      
-## [49] forcats_0.2.0     glue_1.1.1        hms_0.3          
-## [52] jpeg_0.1-8        parallel_3.4.1    yaml_2.1.14      
-## [55] colorspace_1.3-2  rvest_0.3.2       bindr_0.1        
-## [58] haven_1.1.0</code></pre>
+##  [1] httr_1.3.0        jsonlite_1.5      modelr_0.1.1     
+##  [4] assertthat_0.2.0  sp_1.2-5          cellranger_1.1.0 
+##  [7] yaml_2.1.14       Rttf2pt1_1.3.4    backports_1.1.0  
+## [10] lattice_0.20-35   glue_1.1.1        extrafontdb_1.0  
+## [13] digest_0.6.12     rvest_0.3.2       colorspace_1.3-2 
+## [16] htmltools_0.3.6   Matrix_1.2-11     plyr_1.8.4       
+## [19] psych_1.7.5       pkgconfig_2.0.1   broom_0.4.2      
+## [22] haven_1.1.0       scales_0.4.1      jpeg_0.1-8       
+## [25] mgcv_1.8-18       lazyeval_0.2.0    mnormt_1.5-5     
+## [28] proto_1.0.0       magrittr_1.5      readxl_1.0.0     
+## [31] evaluate_0.10.1   nlme_3.1-131      forcats_0.2.0    
+## [34] xml2_1.1.1        foreign_0.8-69    tools_3.4.1      
+## [37] hms_0.3           geosphere_1.5-5   RgoogleMaps_1.4.1
+## [40] stringr_1.2.0     munsell_0.4.3     compiler_3.4.1   
+## [43] rlang_0.1.2       rjson_0.2.15      labeling_0.3     
+## [46] rmarkdown_1.6     gtable_0.2.0      reshape2_1.4.2   
+## [49] R6_2.2.2          gridExtra_2.2.1   lubridate_1.6.0  
+## [52] bindr_0.1         rprojroot_1.2     stringi_1.1.5    
+## [55] parallel_3.4.1    Rcpp_0.12.12      mapproj_1.2-5    
+## [58] png_0.1-7         tidyselect_0.1.1</code></pre>
 </div>
 </div>
 
