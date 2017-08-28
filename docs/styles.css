@@ -41,5 +41,15 @@ code {
 
 /* Button Formatting */
 .btn {
-	border-radius: 0px;	
+	border-radius: 0;	
+}
+
+/* Kable Formatting
+caption {
+	font-size: 18px;
+	color: #000000;
+} */
+
+.table.header {
+	text-align: center;
 }
