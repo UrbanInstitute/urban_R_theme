@@ -105,6 +105,8 @@ windows.options(width = 8.33333333333333, height = 5.55555555555556)
 
 #################### create new 'complete' ggplot2 theme ###################
 
+windowsFont(Lato = windowsFont("Lato"))
+
 theme_urban <- function(base_size = 12, base_family = "Lato") {
   theme(
     
