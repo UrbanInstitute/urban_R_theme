@@ -307,16 +307,16 @@ loadfonts()</code></pre>
 </div>
 <div id="grammar-of-graphics-and-conventions" class="section level4">
 <h4>Grammar of Graphics and Conventions</h4>
-<p>Hadley Wickham’s ggplot2 is based on Leland Wilkinson’s <em>Grammar of Graphics</em> and Wickham’s <em>A Layered Grammar of Graphics</em>. The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2.</p>
+<p>Hadley Wickham’s ggplot2 is based on Leland Wilkinson’s <a href="https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448"><em>The Grammar of Graphics</em></a> and Wickham’s <a href="http://vita.had.co.nz/papers/layered-grammar.html"><em>A Layered Grammar of Graphics</em></a>. The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2.</p>
 <ul>
 <li><strong>Data</strong> are what are visualizaed in a plot and <strong>mappings</strong> are directions for how data are mapped in a plot in a way that can be perceived by humans.<br />
 </li>
 <li><strong>Geoms</strong> are representations of the actual data like points, lines, and bars.</li>
 <li><strong>Stats</strong> are statistical transformations that represent summaries of the data like histograms.</li>
 <li><strong>Scales</strong> map values in the data space to values in the aesthetic space. Scales draw legends and axes.</li>
-<li><strong>Coordinate System</strong> describe how geoms are mapped to the plane of the graphic.<br />
+<li><strong>Coordinate Systems</strong> describe how geoms are mapped to the plane of the graphic.<br />
 </li>
-<li><strong>Facettings</strong> break the data into meaningful subsets like small multiples.</li>
+<li><strong>Facets</strong> break the data into meaningful subsets like small multiples.</li>
 <li><strong>Themes</strong> control the finer points of a plot such as fonts, font sizes, and background colors.</li>
 </ul>
 <p>More information: <a href="https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403">ggplot2: Elegant Graphics for Data Analysis</a></p>
@@ -440,8 +440,9 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
 <h3>Hex Scatter Plot</h3>
 <p>Sometimes transparency isn’t enough to bring clarity to a scatter plot with many observations. As n increases into the hundreds of thousands and even millions, <code>geom_hex</code> can be one of the best ways to display relationships between two variables.</p>
 <pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
-  geom_hex(mapping = aes(colour = ..count..)) + 
+  geom_hex(mapping = aes(fill = ..count..)) + 
   scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
+    scale_fill_gradientn(colors = c(&quot;#CFE8F3&quot;, &quot;#062635&quot;), labels = scales::comma) +
   labs(title = &quot;Title&quot;,
        subtitle = &quot;geom_hex adds clarity to overlapping points&quot;,
        x = &quot;Carat&quot;,
@@ -530,16 +531,17 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
 <h3>Label Points</h3>
 <p><code>geom_text()</code> and <code>geom_label()</code> annotate points on scatterplots. Both functions need <code>x</code> values, <code>y</code> values, and a vector of labels. It’s rarely useful to label every point. Use <code>filter()</code> to create a second data set that is subsetted and pass it into the labelling function.</p>
 <p><code>geom_text()</code> labels points without backgrounds. <code>geom_label()</code> labels points with backgrounds.</p>
+<p><em>Note:</em> <code>family = &quot;Lato&quot;</code> is required to turn <code>geom_text()</code> into Lato.</p>
 <div id="geom_text" class="section level4">
 <h4>geom_text()</h4>
 <pre class="r"><code>labels &lt;- mtcars %&gt;%
     rownames_to_column(&quot;model&quot;) %&gt;%
-    filter(gear == 5)
+    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
 
 mtcars %&gt;%
     ggplot(mapping = aes(x = wt, y = mpg)) +
         geom_point() +
-        geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
+        geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = &quot;Lato&quot;) +
       labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
        caption = &quot;Urban Institute&quot;,
        x = &quot;Weight (Tons)&quot;,
@@ -550,12 +552,12 @@ mtcars %&gt;%
 <h4>geom_label()</h4>
 <pre class="r"><code>labels &lt;- mtcars %&gt;%
     rownames_to_column(&quot;model&quot;) %&gt;%
-    filter(gear == 5)
+    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
 
 mtcars %&gt;%
     ggplot(mapping = aes(x = wt, y = mpg)) +
         geom_point() +
-        geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
+        geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = &quot;Lato&quot;, nudge_x = 0.35) +
       labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
        caption = &quot;Urban Institute&quot;,
        x = &quot;Weight (Tons)&quot;,
@@ -648,18 +650,18 @@ economics %&gt;%
 </div>
 <div id="joy-plots" class="section level3">
 <h3>Joy Plots</h3>
-<p>Joy plots are partially overlapping histograms facetted by a categorical variable that pack a lot of information into one compact plot. They were <a href="https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html">recently introduced</a> by <code>library(ggjoy)</code>.</p>
-<pre class="r"><code>library(ggjoy)
+<p>Joy plots are partially overlapping histograms faceted by a categorical variable that pack a lot of information into one compact plot. They were <a href="https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html">recently introduced</a> by <code>library(ggjoy)</code>.</p>
+<pre class="r"><code>library(ggridges)
 
 ggplot(diamonds, mapping = aes(x = price, y = cut)) +
-    geom_joy(fill = &quot;#1696d2&quot;) +
+    geom_density_ridges(fill = &quot;#1696d2&quot;) +
     scale_x_continuous(labels = scales::dollar) +
   labs(title = &quot;Distribution of Diamond Prices by Diamond Cut&quot;,
        caption = &quot;Urban Institue&quot;,
        x = &quot;Price&quot;,
        y = &quot;Cut&quot;)</code></pre>
 <pre><code>## Picking joint bandwidth of 458</code></pre>
-<p><img src="index_files/figure-html/joyplot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/ridgeline%20plots-1.png" width="672" /></p>
 </div>
 <div id="categorical-variables" class="section level3">
 <h3>Categorical Variables</h3>
@@ -778,215 +780,11 @@ iron(
 <p><img src="index_files/figure-html/ironed%20waffle-1.png" width="672" /></p>
 </div>
 </div>
-<div id="dot-maps" class="section level2">
-<h2>Dot Maps</h2>
-<p>R can function as a geographical information system (GIS) using <code>library(ggmap)</code>. ggmap uses Google Maps, OpenStreetMap, Stamen Maps to create mappings (Grammar of Graphics) of maps (colloquial). Data with longitudes and latitudes can then be charted using many ggplot2 geoms.</p>
-<p>ggmap creates several different map types: * terrain - A combination of major roads, cities names, state borders, and a terrain map. * terrain-background - * satellite - A satellite image of the specified area with no labels. * roadmap - A Google roadmap * hybrid - A satellite image with state boarders and major cities. * watercolor - A bizarre sand-colored map with roads and water. * toner - A clean black-and-white map where land is white and water is black.</p>
-<p>Set the map type with <code>maptype = &quot;&quot;</code>.</p>
-<p>NOTE: If ggmap returns <code>ggmap Error: GeomRasterAnn was built with an incompatible version of ggproto</code> then reinstall the package using <code>install.packages(&quot;ggmap&quot;, type = &quot;source&quot;)</code>.</p>
-<div id="states" class="section level3 tabset">
-<h3>States</h3>
-<div id="terrain" class="section level4">
-<h4>Terrain</h4>
-<pre class="r"><code>library(zipcode)
-library(tidyverse)
-library(ggmap)
-
-data(zipcode)
-zipcode &lt;- as_tibble(zipcode)
-
-colorado &lt;- zipcode %&gt;%
-  filter(state == &quot;CO&quot;)
-
-ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;terrain&quot;)) +
-  scale_x_continuous(limits = c(-109, -102)) +
-  scale_y_continuous(limits = c(37, 41)) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()) +
-  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
-  labs(title = &quot;Zip Codes in Colorado&quot;,
-       x = NULL,
-       y = NULL)</code></pre>
-<p><img src="index_files/figure-html/Colorado%20terrain-1.png" width="672" /></p>
-</div>
-<div id="toner" class="section level4">
-<h4>Toner</h4>
-<pre class="r"><code>library(zipcode)
-library(tidyverse)
-library(ggmap)
-
-data(zipcode)
-zipcode &lt;- as_tibble(zipcode)
-
-colorado &lt;- zipcode %&gt;%
-  filter(state == &quot;CO&quot;)
-
-ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;toner&quot;, source = &quot;stamen&quot;)) +
-  scale_x_continuous(limits = c(-109, -102)) +
-  scale_y_continuous(limits = c(37, 41)) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()) +
-  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
-  labs(title = &quot;Zip Codes in Colorado&quot;,
-       x = NULL,
-       y = NULL)</code></pre>
-<p><img src="index_files/figure-html/Colorado%20toner-1.png" width="672" /></p>
-</div>
-<div id="hybrid" class="section level4">
-<h4>Hybrid</h4>
-<pre class="r"><code>library(zipcode)
-library(tidyverse)
-library(ggmap)
-
-data(zipcode)
-zipcode &lt;- as_tibble(zipcode)
-
-colorado &lt;- zipcode %&gt;%
-  filter(state == &quot;CO&quot;)
-
-ggmap(get_map(location = &quot;colorado&quot;, zoom = 6, maptype = &quot;hybrid&quot;)) +
-  scale_x_continuous(limits = c(-109, -102)) +
-  scale_y_continuous(limits = c(37, 41)) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()) +
-  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
-  labs(title = &quot;Zip Codes in Colorado&quot;,
-       x = NULL,
-       y = NULL)</code></pre>
-<p><img src="index_files/figure-html/colorado%20hybrid-1.png" width="672" /></p>
-</div>
-</div>
-<div id="localities" class="section level3">
-<h3>Localities</h3>
-<pre class="r"><code>newyork &lt;- zipcode %&gt;%
-  filter(state == &quot;NY&quot;)
-
-ggmap(get_map(location = &quot;new york city&quot;, zoom = 11, maptype = &quot;satellite&quot;)) +
-  geom_point(data = newyork, aes(x = longitude, y = latitude), size = 2, alpha = 0.5) +
-  labs(title = &quot;Zip Codes in New York, NY&quot;,
-       x = NULL,
-       y = NULL) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank())</code></pre>
-<p><img src="index_files/figure-html/nyc-1.png" width="672" /></p>
-</div>
-</div>
-<div id="choropleth" class="section level2">
-<h2>Choropleth</h2>
-<p>Choropleths are maps with regions shaded based on variables. It is simple to build choropleths in R for states and counties.</p>
-<p>Choropleths require some data management because state or county level data need to be joined to the vector boundaries. Additionally, extra edits need to be made in <code>theme()</code> but those changes can just be copied-and-pasted from the examples.</p>
-<p>For a more thorough explanation, read pages 55-61 of Hadley Wickham’s <a href="https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403">ggplot2: Elegant Graphics for Data Analysis</a>. Please contact Aaron at <a href="mailto:awilliams@urban.org">awilliams@urban.org</a> if you want to borrow a copy.</p>
-<div id="states-1" class="section level3">
-<h3>States</h3>
-<p>Be sure to add <code>scale_fill_gradient()</code> with <code>low =</code> and <code>high =</code> to ensure that continuous variables are clearly displayed from low to high.</p>
-<pre class="r"><code>library(fivethirtyeight)
-
-# Create data frame with vector boundaries
-states &lt;- map_data(&quot;state&quot;) %&gt;%
-  select(lon = long, lat, group, state = region)
-
-# Create data frame with state driving data
-drivers.usa &lt;- bad_drivers %&gt;%
-  mutate(state = tolower(state))
-  
-# Join the vector boundaries and state data
-drivers.states &lt;- left_join(states, drivers.usa, by = c(&quot;state&quot; = &quot;state&quot;))
-
-# Plot!
-ggplot(drivers.states, aes(lon, lat, group = state)) +
-  geom_polygon(aes(fill = perc_speeding)) +
-  scale_fill_gradient(low = &quot;#CEE8F3&quot;, 
-                      high = &quot;#094C6B&quot;) +
-  coord_quickmap() +
-  labs(title = &quot;Percentage of Fatal Collisions Involving Speeding&quot;,
-       subtitle = &quot;Share of fatal collisions per billion miles, 2009&quot;,
-       caption = &quot;Source: fivethirtyeight R package&quot;)  +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_blank(),
-        legend.position = &quot;right&quot;,
-        legend.direction = &quot;vertical&quot;)</code></pre>
-<p><img src="index_files/figure-html/state%20chorpleth-1.png" width="672" /></p>
-</div>
-<div id="counties" class="section level3">
-<h3>Counties</h3>
-<pre class="r"><code>library(USAboundaries)
-
-# Create data frame with vector boundaries
-indiana.counties &lt;- map_data(&quot;county&quot;, &quot;indiana&quot;) %&gt;%
-  select(lon = long, lat, group, id = subregion)
-
-# Create data frame with population data
-indiana.census &lt;- midwest %&gt;%
-  tbl_df() %&gt;%
-  filter(state == &quot;IN&quot;) %&gt;%
-  mutate(county = tolower(county)) %&gt;%
-  select(county, area, poptotal, percwhite, percblack) 
-
-# Join the vector boundaries and county data
-census.counties &lt;- left_join(indiana.census, indiana.counties, by = c(&quot;county&quot; = &quot;id&quot;))
-   
-# Plot
-ggplot(census.counties, aes(lon, lat, group = county)) +
-  geom_polygon(aes(fill = poptotal)) +
-  scale_fill_gradient(low = &quot;#CEE8F3&quot;, 
-                    high = &quot;#094C6B&quot;) +
-  coord_quickmap()  +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_blank(),
-        legend.position = &quot;right&quot;,
-        legend.direction = &quot;vertical&quot;) +
-  labs(title = &quot;Population in Indiana Counties&quot;,
-       caption = &quot;Urban Institute&quot;)</code></pre>
-<p><img src="index_files/figure-html/choropleth-1.png" width="672" /></p>
-</div>
-<div id="texas-sales" class="section level3">
-<h3>Texas sales</h3>
-<pre class="r"><code>library(USAboundaries)
-
-# Create data frame with vector boundaries
-texas.counties &lt;- map_data(&quot;county&quot;, &quot;texas&quot;) %&gt;%
-  select(lon = long, lat, group, id = subregion)
-
-# Create data frame with hosuing data
-texas.sales &lt;- txhousing %&gt;%
-  filter(year == 2014) %&gt;%
-  select(city, sales) %&gt;%
-  mutate(city = tolower(city)) %&gt;%
-  group_by(city) %&gt;%
-  summarize(sales = sum(sales))
-
-# Join the vector boundaries and state data
-census.counties &lt;- left_join(texas.counties, texas.sales, by = c(&quot;id&quot; = &quot;city&quot;))
-
-#Plot
-ggplot(census.counties, aes(lon, lat, group = id)) +
-  geom_polygon(aes(fill = sales)) +
-  coord_quickmap()  +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_blank(),
-        legend.position = &quot;right&quot;,
-        legend.direction = &quot;vertical&quot;) +
-  labs(title = &quot;Home Sales in Select Texas Counties&quot;,
-       caption = &quot;Urban Institute&quot;)</code></pre>
-<p><img src="index_files/figure-html/texas-1.png" width="672" /></p>
-</div>
-</div>
 <div id="heat-map" class="section level2">
 <h2>Heat map</h2>
-<pre class="r"><code>bad_drivers %&gt;%
+<pre class="r"><code>library(fivethirtyeight)
+
+bad_drivers %&gt;%
   mutate(`Number of Drivers` = scale(num_drivers),
          `Percent Speeding` = scale(perc_speeding),
          `Percent Alcohol` = scale(perc_alcohol),
@@ -1010,20 +808,20 @@ ggplot(census.counties, aes(lon, lat, group = id)) +
 <p><img src="index_files/figure-html/heat%20map-1.png" width="672" /></p>
 <pre class="r"><code>#https://learnr.wordpress.com/2010/01/26/ggplot2-quick-heatmap-plotting/</code></pre>
 </div>
-<div id="facetting" class="section level2">
-<h2>Facetting</h2>
+<div id="faceting" class="section level2">
+<h2>Faceting</h2>
 <pre class="r"><code>##Facet Grid
 ggplot(mtcars, aes(mpg, wt)) +
   geom_point() + 
   ggtitle(&quot;Title&quot;) +
   facet_grid(vs ~ am, margins = TRUE)</code></pre>
-<p><img src="index_files/figure-html/facetting-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/faceting-1.png" width="672" /></p>
 </div>
 <div id="small-multiples" class="section level2">
 <h2>Small Multiples</h2>
 <div id="facet_wrap" class="section level3">
 <h3>facet_wrap()</h3>
-<p>R’s facetting system is a powerful way to make “small multiples”.</p>
+<p>R’s faceting system is a powerful way to make “small multiples”.</p>
 <p>Some edits to the theme may be necessary depending upon how many rows and columns are in the plot.</p>
 <pre class="r"><code># Facet Wrap
 txhousing %&gt;%
@@ -1045,7 +843,7 @@ txhousing %&gt;%
 <h3>facet_grid()</h3>
 <pre class="r"><code># Facet Wrap
 txhousing %&gt;%
-  filter(city != &quot;Brazoria County&quot; &amp; city != &quot;Brownsville&quot; &amp; city != &quot;San Angelo&quot; &amp; city != &quot;Denton County&quot;) %&gt;%
+  filter(!city %in% c(&quot;Brazoria County&quot;, &quot;Brownsville&quot;, &quot;San Angelo&quot;, &quot;Denton County&quot;)) %&gt;%
   ggplot(aes(x = median)) +
   geom_histogram() +
   facet_grid(~city) +
@@ -1060,10 +858,6 @@ txhousing %&gt;%
 <p><img src="index_files/figure-html/facet%20grid-1.png" width="672" /></p>
 <pre class="r"><code>#TODO(aaron): finish this</code></pre>
 </div>
-<div id="facet_geo" class="section level3">
-<h3>facet_geo()</h3>
-<p><code>geofacet</code> is a new package that combines small</p>
-</div>
 </div>
 <div id="smoothers" class="section level2">
 <h2>Smoothers</h2>
@@ -1077,7 +871,7 @@ txhousing %&gt;%
 <p><code>geom_point()</code> adds a scatterplot to <code>geom_smooth()</code>. The order of the function calls is important. The function called second will be layed on top of the function called first.</p>
 <pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
     geom_point(alpha = 0.1) +
-    geom_smooth(color = &quot;red&quot;) +
+    geom_smooth(color =  &quot;#ec008b&quot;) +
     scale_y_continuous(expand = c(0, 0), labels = scales::dollar)</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;gam&#39;</code></pre>
 <p><img src="index_files/figure-html/geom_smooth2-1.png" width="672" /></p>
@@ -1172,7 +966,7 @@ mpg %&gt;%
 <div id="system-info-and-package-versioning" class="section level3">
 <h3>System Info and Package Versioning</h3>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.1 (2017-06-30)
+<pre><code>## R version 3.4.2 (2017-09-28)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
 ## Running under: macOS Sierra 10.12.6
 ## 
@@ -1188,35 +982,26 @@ mpg %&gt;%
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] USAboundaries_0.3.0   maps_3.2.0            fivethirtyeight_0.3.0
-##  [4] ggmap_2.6.1           zipcode_1.0           waffle_0.7.0         
-##  [7] ggjoy_0.3.0           bindrcpp_0.2          hexbin_1.27.1        
-## [10] extrafont_0.17        RColorBrewer_1.1-2    dplyr_0.7.2          
-## [13] purrr_0.2.3           readr_1.1.1           tidyr_0.7.0          
-## [16] tibble_1.3.3          ggplot2_2.2.1         tidyverse_1.1.1      
-## [19] knitr_1.17           
+##  [1] fivethirtyeight_0.3.0 waffle_0.7.0          ggridges_0.4.1       
+##  [4] bindrcpp_0.2          hexbin_1.27.1         extrafont_0.17       
+##  [7] RColorBrewer_1.1-2    dplyr_0.7.4           purrr_0.2.4          
+## [10] readr_1.1.1           tidyr_0.7.2           tibble_1.3.4         
+## [13] ggplot2_2.2.1         tidyverse_1.1.1       knitr_1.17           
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.3.0        jsonlite_1.5      modelr_0.1.1     
-##  [4] assertthat_0.2.0  sp_1.2-5          cellranger_1.1.0 
-##  [7] yaml_2.1.14       Rttf2pt1_1.3.4    backports_1.1.0  
-## [10] lattice_0.20-35   glue_1.1.1        extrafontdb_1.0  
-## [13] digest_0.6.12     rvest_0.3.2       colorspace_1.3-2 
-## [16] htmltools_0.3.6   Matrix_1.2-11     plyr_1.8.4       
-## [19] psych_1.7.5       pkgconfig_2.0.1   broom_0.4.2      
-## [22] haven_1.1.0       scales_0.4.1      jpeg_0.1-8       
-## [25] mgcv_1.8-18       lazyeval_0.2.0    mnormt_1.5-5     
-## [28] proto_1.0.0       magrittr_1.5      readxl_1.0.0     
-## [31] evaluate_0.10.1   nlme_3.1-131      forcats_0.2.0    
-## [34] xml2_1.1.1        foreign_0.8-69    tools_3.4.1      
-## [37] hms_0.3           geosphere_1.5-5   RgoogleMaps_1.4.1
-## [40] stringr_1.2.0     munsell_0.4.3     compiler_3.4.1   
-## [43] rlang_0.1.2       rjson_0.2.15      labeling_0.3     
-## [46] rmarkdown_1.6     gtable_0.2.0      reshape2_1.4.2   
-## [49] R6_2.2.2          gridExtra_2.2.1   lubridate_1.6.0  
-## [52] bindr_0.1         rprojroot_1.2     stringi_1.1.5    
-## [55] parallel_3.4.1    Rcpp_0.12.12      mapproj_1.2-5    
-## [58] png_0.1-7         tidyselect_0.1.1</code></pre>
+##  [1] tidyselect_0.2.2 reshape2_1.4.2   haven_1.1.0      lattice_0.20-35 
+##  [5] colorspace_1.3-2 htmltools_0.3.6  mgcv_1.8-20      yaml_2.1.14     
+##  [9] rlang_0.1.2      foreign_0.8-69   glue_1.1.1       modelr_0.1.1    
+## [13] readxl_1.0.0     bindr_0.1        plyr_1.8.4       stringr_1.2.0   
+## [17] munsell_0.4.3    gtable_0.2.0     cellranger_1.1.0 rvest_0.3.2     
+## [21] psych_1.7.8      evaluate_0.10.1  labeling_0.3     forcats_0.2.0   
+## [25] parallel_3.4.2   Rttf2pt1_1.3.4   broom_0.4.2      Rcpp_0.12.13    
+## [29] scales_0.5.0     backports_1.1.1  jsonlite_1.5     gridExtra_2.3   
+## [33] mnormt_1.5-5     hms_0.3          png_0.1-7        digest_0.6.12   
+## [37] stringi_1.1.5    rprojroot_1.2    tools_3.4.2      magrittr_1.5    
+## [41] lazyeval_0.2.0   extrafontdb_1.0  pkgconfig_2.0.1  Matrix_1.2-11   
+## [45] xml2_1.1.1       lubridate_1.6.0  assertthat_0.2.0 rmarkdown_1.6   
+## [49] httr_1.3.1       R6_2.2.2         nlme_3.1-131     compiler_3.4.2</code></pre>
 </div>
 </div>
 
