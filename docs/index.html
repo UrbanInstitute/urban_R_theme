@@ -360,7 +360,7 @@ loadfonts()</code></pre>
        x = &quot;Number of Cylinders&quot;,
        y = &quot;Count&quot;
        ) </code></pre>
-<p><img src="index_files/figure-html/barplot%20with%203%20colors-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/3-color-barplot-1.png" width="672" /></p>
 </div>
 <div id="stacked-bar-plot" class="section level3">
 <h3>Stacked Bar Plot</h3>
@@ -375,7 +375,7 @@ loadfonts()</code></pre>
     x = &quot;Clarity&quot;,
     y = &quot;Count&quot;
     )</code></pre>
-<p><img src="index_files/figure-html/stacked%20bar%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/stacked-bar-plot-1.png" width="672" /></p>
 </div>
 <div id="stacked-bar-plot-with-position-fill" class="section level3">
 <h3>Stacked Bar Plot With Position = Fill</h3>
@@ -389,7 +389,7 @@ ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) +
       caption = &quot;The Source of Diamond Data&quot;,
       x = &quot;Clarity&quot;,
       y = &quot;Count&quot;)</code></pre>
-<p><img src="index_files/figure-html/stacked%20bar%20plot%20fill-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/stacked-bar-plot-fill-1.png" width="672" /></p>
 </div>
 <div id="dodged-bar-plot" class="section level3">
 <h3>Dodged Bar Plot</h3>
@@ -403,7 +403,49 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        caption = &quot;The Source of Diamond Data&quot;,
        x = &quot;Clarity&quot;,
        y = &quot;Count&quot;)</code></pre>
-<p><img src="index_files/figure-html/dodged%20bar%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/dodged-bar-plot-1.png" width="672" /></p>
+</div>
+<div id="lollipop-plotcleveland-dot-plot" class="section level3 tabset">
+<h3>Lollipop plot/Cleveland dot plot</h3>
+<p>Lollipop plots and Cleveland dot plots are minimalist alternatives to bar plots. The key to both plots is to order the data based on the continuous variable using <code>arrange()</code> and then turn the discrete variable into a factor with the ordered levels of the continuous variable using <code>mutate()</code>. This step “stores” the order of the data.</p>
+<div id="lollipop-plot" class="section level4">
+<h4>Lollipop plot</h4>
+<pre class="r"><code>mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    arrange(mpg) %&gt;%
+    mutate(model = factor(model, levels = .$model)) %&gt;%
+    ggplot(aes(mpg, model)) +
+        geom_segment(aes(x = 0, xend = mpg, y = model, yend = model)) + 
+        geom_point() +
+        scale_x_continuous(expand = c(0, 0), limits = c(0, max(mtcars$mpg) * 1.1)) +
+        labs(title = &quot;Miles Per Gallon of Popular Cars&quot;,
+                 subtitle = &quot;1974 Motor Trend US magazine&quot;,
+                 x = NULL, 
+                 y = &quot;Miles Per Gallon&quot;,
+                 caption = &quot;Urban Institute&quot;) +
+    theme(axis.text.y = element_text(size = 8))</code></pre>
+<p><img src="index_files/figure-html/lollipop-plot-1.png" width="672" /></p>
+</div>
+<div id="cleveland-dot-plot" class="section level4">
+<h4>Cleveland dot plot</h4>
+<pre class="r"><code>mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    arrange(mpg) %&gt;%
+    mutate(model = factor(model, levels = .$model)) %&gt;%
+    ggplot(aes(mpg, model)) +
+        geom_point() +
+        scale_x_continuous(expand = c(0, 0), limits = c(0, max(mtcars$mpg) * 1.1)) +
+        labs(title = &quot;Miles Per Gallon of Popular Cars&quot;,
+                 subtitle = &quot;1974 Motor Trend US magazine&quot;,
+                 x = NULL, 
+                 y = &quot;Miles Per Gallon&quot;,
+                 caption = &quot;Urban Institute&quot;) +
+    theme(axis.text.y = element_text(size = 8))</code></pre>
+<p><img src="index_files/figure-html/cleveland-dot-plot-1.png" width="672" /></p>
+</div>
+</div>
+<div id="dumbell-plot" class="section level3">
+<h3>Dumbell plot</h3>
 </div>
 </div>
 <div id="scatter-plots" class="section level2">
@@ -420,7 +462,7 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        x = &quot;Carat&quot;,
        y = &quot;Price&quot;
        )</code></pre>
-<p><img src="index_files/figure-html/one-color%20scatter%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/one-color-scatter-plot-1.png" width="672" /></p>
 </div>
 <div id="high-density-scatter-plot-with-transparency" class="section level3">
 <h3>High-Density Scatter Plot with Transparency</h3>
@@ -434,7 +476,7 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        x = &quot;Carat&quot;,
        y = &quot;Price&quot;
        )</code></pre>
-<p><img src="index_files/figure-html/alpha%20scatter%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/alpha-scatter-plot-1.png" width="672" /></p>
 </div>
 <div id="hex-scatter-plot" class="section level3">
 <h3>Hex Scatter Plot</h3>
@@ -449,7 +491,7 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        y = &quot;Price&quot;) +
   theme(legend.position = &quot;right&quot;,
         legend.direction = &quot;vertical&quot;)</code></pre>
-<p><img src="index_files/figure-html/scatter%20plot%20hex-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/scatter-plot-hex-1.png" width="672" /></p>
 </div>
 <div id="scatter-plots-with-random-noise" class="section level3 tabset">
 <h3>Scatter Plots With Random Noise</h3>
@@ -465,7 +507,7 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        x = &quot;Displacement&quot;,
        y = &quot;City MPG&quot;
        )</code></pre>
-<p><img src="index_files/figure-html/before%20scatter%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/before-scatter-plot-1.png" width="672" /></p>
 </div>
 <div id="after" class="section level4">
 <h4>After</h4>
@@ -479,7 +521,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
        x = &quot;Displacement&quot;,
        y = &quot;City MPG&quot;
        )</code></pre>
-<p><img src="index_files/figure-html/jitter%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/jitter-plot-1.png" width="672" /></p>
 </div>
 </div>
 <div id="scatter-plot-with-counts" class="section level3">
@@ -508,7 +550,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
        x = &quot;Weight (Tons)&quot;,
        y = &quot;Miles Per Gallon&quot;) +
   theme(legend.title = element_text(hjust = 0))</code></pre>
-<p><img src="index_files/figure-html/filled%20scatter%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/filled-scatter-plot-1.png" width="672" /></p>
 </div>
 <div id="bubble-scatter-plot" class="section level3">
 <h3>Bubble Scatter Plot</h3>
@@ -522,48 +564,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
        x = &quot;Weight (Tons)&quot;,
        y = &quot;Miles Per Gallon&quot;) +
   theme(legend.title = element_text(hjust = 0))</code></pre>
-<p><img src="index_files/figure-html/bubble%20chart-1.png" width="672" /></p>
-</div>
-<div id="highlight-points" class="section level3">
-<h3>Highlight Points</h3>
-</div>
-<div id="label-points" class="section level3 tabset">
-<h3>Label Points</h3>
-<p><code>geom_text()</code> and <code>geom_label()</code> annotate points on scatterplots. Both functions need <code>x</code> values, <code>y</code> values, and a vector of labels. It’s rarely useful to label every point. Use <code>filter()</code> to create a second data set that is subsetted and pass it into the labelling function.</p>
-<p><code>geom_text()</code> labels points without backgrounds. <code>geom_label()</code> labels points with backgrounds.</p>
-<p><em>Note:</em> <code>family = &quot;Lato&quot;</code> is required to turn <code>geom_text()</code> into Lato.</p>
-<div id="geom_text" class="section level4">
-<h4>geom_text()</h4>
-<pre class="r"><code>labels &lt;- mtcars %&gt;%
-    rownames_to_column(&quot;model&quot;) %&gt;%
-    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
-
-mtcars %&gt;%
-    ggplot(mapping = aes(x = wt, y = mpg)) +
-        geom_point() +
-        geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = &quot;Lato&quot;) +
-      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
-       caption = &quot;Urban Institute&quot;,
-       x = &quot;Weight (Tons)&quot;,
-       y = &quot;Miles Per Gallon&quot;)</code></pre>
-<p><img src="index_files/figure-html/scatterlot%20geom_text-1.png" width="672" /></p>
-</div>
-<div id="geom_label" class="section level4">
-<h4>geom_label()</h4>
-<pre class="r"><code>labels &lt;- mtcars %&gt;%
-    rownames_to_column(&quot;model&quot;) %&gt;%
-    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
-
-mtcars %&gt;%
-    ggplot(mapping = aes(x = wt, y = mpg)) +
-        geom_point() +
-        geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = &quot;Lato&quot;, nudge_x = 0.35) +
-      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
-       caption = &quot;Urban Institute&quot;,
-       x = &quot;Weight (Tons)&quot;,
-       y = &quot;Miles Per Gallon&quot;)</code></pre>
-<p><img src="index_files/figure-html/scatterlot%20geom_label-1.png" width="672" /></p>
-</div>
+<p><img src="index_files/figure-html/bubble-chart-1.png" width="672" /></p>
 </div>
 </div>
 <div id="line-plots" class="section level2">
@@ -576,7 +577,7 @@ mtcars %&gt;%
        caption = &quot;Urban Institute&quot;,
        x = &quot;Year&quot;, 
        y = &quot;Number Unemployed (1,000s)&quot;)</code></pre>
-<p><img src="index_files/figure-html/line%20plots-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/line-plots-1.png" width="672" /></p>
 <div id="lines-plots-with-multiple-lines" class="section level3">
 <h3>Lines Plots With Multiple Lines</h3>
 <p>Plotting more than one line can be useful for seeing the relationship of variables over time, but it takes a small amount of data munging.</p>
@@ -594,7 +595,43 @@ economics %&gt;%
        caption = &quot;Urban Institute&quot;,
        x = &quot;Year&quot;,
        y = &quot;People (1,000s)&quot;)</code></pre>
-<p><img src="index_files/figure-html/line%20charts%20multiple-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/multiple-line-charts-1.png" width="672" /></p>
+</div>
+<div id="slope-plots" class="section level3">
+<h3>Slope plots</h3>
+<pre class="r"><code># https://www.bls.gov/lau/
+
+library(ggrepel)
+
+unemployment &lt;- tibble(
+    time = c(&quot;October 2009&quot;, &quot;October 2009&quot;, &quot;October 2009&quot;, &quot;August 2017&quot;, &quot;August 2017&quot;, &quot;August 2017&quot;),
+    rate = c(7.4, 7.1, 10.0, 3.9, 3.8, 6.4),
+    state = c(&quot;Maryland&quot;, &quot;Virginia&quot;, &quot;Washington D.C.&quot;, &quot;Maryland&quot;, &quot;Virginia&quot;, &quot;Washington D.C.&quot;)
+)
+
+label &lt;- tibble(label = c(&quot;October 2009&quot;, &quot;August 2017&quot;))
+october &lt;- filter(unemployment, time == &quot;October 2009&quot;)
+august &lt;- filter(unemployment, time == &quot;August 2017&quot;)
+
+unemployment %&gt;%
+    mutate(time = factor(time, levels = c(&quot;October 2009&quot;, &quot;August 2017&quot;))) %&gt;%
+    ggplot() + 
+        geom_line(aes(time, rate, group = state, color = state)) +
+        geom_point(aes(x = time, y = rate, color = state)) +
+        labs(subtitle = &quot;Unemployment Rate&quot;,
+                 caption = &quot;Source: BLS Local Area Unemployment Statistics&quot;) +
+        theme(axis.ticks.x = element_blank(),
+                    axis.title.x = element_blank(),
+                    axis.ticks.y = element_blank(),
+          axis.title.y = element_blank(), 
+          axis.text.y = element_blank(),
+                    panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+                    axis.line = element_blank()) +
+        geom_text_repel(data = october, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = -0.06, family = &quot;Lato&quot;) + 
+        geom_text_repel(data = august, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = 0.06, family = &quot;Lato&quot;)</code></pre>
+<p><img src="index_files/figure-html/slope-plot-1.png" width="672" /></p>
 </div>
 </div>
 <div id="binning" class="section level2">
@@ -634,7 +671,7 @@ economics %&gt;%
        x = &quot;Population&quot;,
        y = &quot;Count&quot;)</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="index_files/figure-html/frequency%20polygon-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/frequency-polygon-1.png" width="672" /></p>
 <pre class="r"><code>diamonds %&gt;%
   filter(cut == &quot;Ideal&quot; | cut == &quot;Premium&quot;) %&gt;%
   ggplot(aes(x = price, color = cut)) +
@@ -646,11 +683,11 @@ economics %&gt;%
        x = &quot;Price&quot;,
        y = &quot;Count&quot;)</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="index_files/figure-html/frequency%20polygon-2.png" width="672" /></p>
+<p><img src="index_files/figure-html/frequency-polygon-2.png" width="672" /></p>
 </div>
-<div id="joy-plots" class="section level3">
-<h3>Joy Plots</h3>
-<p>Joy plots are partially overlapping histograms faceted by a categorical variable that pack a lot of information into one compact plot. They were <a href="https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html">recently introduced</a> by <code>library(ggjoy)</code>.</p>
+<div id="ridgeline-plots" class="section level3">
+<h3>Ridgeline plots</h3>
+<p>Ridgeline plots are partially overlapping histograms faceted by a categorical variable that pack a lot of information into one compact plot.</p>
 <pre class="r"><code>library(ggridges)
 
 ggplot(diamonds, mapping = aes(x = price, y = cut)) +
@@ -661,7 +698,7 @@ ggplot(diamonds, mapping = aes(x = price, y = cut)) +
        x = &quot;Price&quot;,
        y = &quot;Cut&quot;)</code></pre>
 <pre><code>## Picking joint bandwidth of 458</code></pre>
-<p><img src="index_files/figure-html/ridgeline%20plots-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/ridgeline-plots-1.png" width="672" /></p>
 </div>
 <div id="categorical-variables" class="section level3">
 <h3>Categorical Variables</h3>
@@ -676,7 +713,7 @@ ggplot(diamonds, mapping = aes(x = price, y = cut)) +
        caption = &quot;Urban Institute&quot;, 
        x = &quot;Type of Insect Spray&quot;,
        y = &quot;Number of Dead Insects&quot;)</code></pre>
-<p><img src="index_files/figure-html/box%20plot-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/box-plot-1.png" width="672" /></p>
 </div>
 <div id="violin-plot" class="section level3">
 <h3>Violin Plot</h3>
@@ -688,6 +725,10 @@ ggplot(diamonds, mapping = aes(x = price, y = cut)) +
        x = &quot;Type of Insect Spray&quot;,
        y = &quot;Number of Dead Insects&quot;)</code></pre>
 <p><img src="index_files/figure-html/violin%20plot-1.png" width="672" /></p>
+</div>
+<div id="binned-dot-plots" class="section level3">
+<h3>Binned dot plots</h3>
+<p>TODO(aaron):</p>
 </div>
 <div id="bean-plots" class="section level3">
 <h3>Bean Plots</h3>
@@ -730,7 +771,7 @@ ggplot(diamonds, mapping = aes(x = price, y = cut)) +
 </div>
 <div id="waffle-chart-square-pie-chart" class="section level2">
 <h2>Waffle Chart / Square Pie Chart</h2>
-<p>The waffle package {<a href="https://cran.r-project.org/web/packages/waffle/waffle.pdf">CRAN</a> and <a href="https://github.com/hrbrmstr/waffle">Github</a>} makes creating square pie charts easy. It can also be combined with <a href="http://fontawesome.io/">glpyhs</a> for more elegant shapes than squares. This example uses data pulled from <a href="http://www.urban.org/features/vision-equitable-dc">A Vision for an Equitable DC</a>.</p>
+<p>The waffle package {<a href="https://cran.r-project.org/web/packages/waffle/waffle.pdf">CRAN</a> and <a href="https://github.com/hrbrmstr/waffle">Github</a>} creates suare pie charts. It can also be combined with <a href="http://fontawesome.io/">glyphs</a> for more elegant shapes than squares. This example uses data pulled from <a href="http://www.urban.org/features/vision-equitable-dc">A Vision for an Equitable DC</a>.</p>
 <p>Waffle charts will require a little extra tinkering since they are called from <code>library(waffle)</code> instead of <code>library(ggplot2)</code>. Most importantly, waffle charts require <code>theme_urban(text = element_text(family = &quot;Lato&quot;))</code> for the Lato font.</p>
 <div id="single-waffle-chart" class="section level3">
 <h3>Single Waffle Chart</h3>
@@ -747,7 +788,7 @@ waffle(parts, rows = 25, size = 1, colors = c(&quot;#1696d2&quot;, &quot;#fdbf11
 <div id="waffle-charts-with-glyphs" class="section level3">
 <h3>Waffle Charts with Glyphs</h3>
 <p>Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are <code>glyph_size =</code> and <code>use_glyph =</code>. Both are called in the <code>waffle()</code> function. Note: <code>size = 1</code> is sensible and <code>glyph_size = 12</code> is sensible.</p>
-<p>Using glyphs requires downloading fontawesome. That can be done <a href="https://github.com/hrbrmstr/waffle/tree/master/inst/fonts">here</a>.Then run <code>library(extrafont)</code>, <code>port(&lt;font-location&gt;)</code>, and <code>loadfonts()</code> once. After that, building waffle charts with glpyhs should be as easy as one function call.</p>
+<p>Using glyphs requires downloading fontawesome. That can be done <a href="https://github.com/hrbrmstr/waffle/tree/master/inst/fonts">here</a>. Then run <code>library(extrafont)</code>, <code>port(&lt;font-location&gt;)</code>, and <code>loadfonts()</code> once. After that, building waffle charts with glpyhs should be as easy as one function call.</p>
 <pre class="r"><code>#library(extrafont)
 #font_import(&quot;H:/IT/urban_R_theme/docs&quot;)
 #loadfonts()
@@ -811,10 +852,17 @@ bad_drivers %&gt;%
 <div id="faceting" class="section level2">
 <h2>Faceting</h2>
 <pre class="r"><code>##Facet Grid
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() + 
-  ggtitle(&quot;Title&quot;) +
-  facet_grid(vs ~ am, margins = TRUE)</code></pre>
+mtcars %&gt;%
+    mutate(vs = factor(vs, levels = 0:1, labels = c(&quot;Normal Transmission&quot;, &quot;V/S Transmission&quot;)),
+                 am = factor(am, levels = 0:1, labels = c(&quot;Automatic Transmission&quot;, &quot;Manual Transmission&quot;))) %&gt;%
+    ggplot(aes(wt, mpg)) +
+        geom_point(alpha = 0.5) +
+        scale_y_continuous(expand = c(0, 0), limits = c(0, 45)) +
+    labs(title = &quot;Determinants of Fuel Efficiency&quot;, 
+             subtitle = &quot;1974 Motor Trends US magazine data&quot;, 
+        caption = &quot;Urban Institute&quot;) +
+    facet_grid(vs ~ am, margins = TRUE) +
+        theme(panel.border = element_rect(colour = &quot;black&quot;, fill = NA, size = 0.3))</code></pre>
 <p><img src="index_files/figure-html/faceting-1.png" width="672" /></p>
 </div>
 <div id="small-multiples" class="section level2">
@@ -824,8 +872,12 @@ ggplot(mtcars, aes(mpg, wt)) +
 <p>R’s faceting system is a powerful way to make “small multiples”.</p>
 <p>Some edits to the theme may be necessary depending upon how many rows and columns are in the plot.</p>
 <pre class="r"><code># Facet Wrap
+diamonds %&gt;%
+    group_by()
+    ggplot(cut)</code></pre>
+<pre class="r"><code># Facet Wrap
 txhousing %&gt;%
-  filter(city != &quot;Brazoria County&quot; &amp; city != &quot;Brownsville&quot; &amp; city != &quot;San Angelo&quot; &amp; city != &quot;Denton County&quot;) %&gt;%
+  filter(!city %in% c(&quot;Brazoria County&quot;, &quot;Brownsville&quot;, &quot;San Angelo&quot;, &quot;Denton County&quot;)) %&gt;%
   ggplot(aes(x = median)) +
   geom_histogram() +
   facet_wrap(~city) +
@@ -896,6 +948,90 @@ txhousing %&gt;%
              y = &quot;Highway MPG&quot;)</code></pre>
 <p><img src="index_files/figure-html/subset%20geom_smooth-2.png" width="672" /></p>
 </div>
+<div id="highlighting" class="section level2">
+<h2>Highlighting</h2>
+<p>points polygons lines</p>
+</div>
+<div id="text" class="section level2">
+<h2>Text</h2>
+<div id="libraryggplot2" class="section level3 tabset">
+<h3>library(ggplot2)</h3>
+<p><code>geom_text()</code> and <code>geom_label()</code> annotate points on scatterplots. Both functions need <code>x</code> values, <code>y</code> values, and a vector of labels. It’s rarely useful to label every point. Use <code>filter()</code> to create a second data set that is subsetted and pass it into the labelling function.</p>
+<p><code>geom_text()</code> labels points without backgrounds. <code>geom_label()</code> labels points with backgrounds.</p>
+<p><em>Note:</em> <code>family = &quot;Lato&quot;</code> is required to turn <code>geom_text()</code> into Lato.</p>
+<div id="geom_text" class="section level4">
+<h4>geom_text()</h4>
+<pre class="r"><code>labels &lt;- mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
+
+mtcars %&gt;%
+    ggplot(mapping = aes(x = wt, y = mpg)) +
+        geom_point() +
+        geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = &quot;Lato&quot;) +
+      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatterplot-geom_text-1.png" width="672" /></p>
+</div>
+<div id="geom_label" class="section level4">
+<h4>geom_label()</h4>
+<pre class="r"><code>labels &lt;- mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
+
+mtcars %&gt;%
+    ggplot(mapping = aes(x = wt, y = mpg)) +
+        geom_point() +
+        geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = &quot;Lato&quot;, nudge_x = 0.35) +
+      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatterplot-geom_label-1.png" width="672" /></p>
+</div>
+</div>
+<div id="libraryggrepel" class="section level3 tabset">
+<h3>library(ggrepel)</h3>
+<p>Text too often overlaps when using <code>geom_text()</code> or <code>geom_label()</code>. <code>library(ggrepel)</code> is a <code>library(ggplot2)</code> add-on that automatically positions text so it doesn’t overlap with geoms or other text.</p>
+<p>To add this functionalit simple load <code>library(ggrepel)</code> and then use <code>geom_text_repel()</code> and <code>geom_text_label()</code> with the same syntax as <code>geom_text()</code> and <code>geom_label()</code>. Don’t roget to add <code>family = &quot;Lato&quot;</code>.</p>
+<div id="geom_text_repel" class="section level4">
+<h4>geom_text_repel()</h4>
+<pre class="r"><code>library(ggrepel)
+
+labels &lt;- mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
+
+mtcars %&gt;%
+    ggplot(mapping = aes(x = wt, y = mpg)) +
+        geom_point() +
+        geom_text_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = &quot;Lato&quot;) +
+      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatterplot-geom_text_repel-1.png" width="672" /></p>
+</div>
+<div id="geom_label_repel" class="section level4">
+<h4>geom_label_repel()</h4>
+<pre class="r"><code>labels &lt;- mtcars %&gt;%
+    rownames_to_column(&quot;model&quot;) %&gt;%
+    filter(model %in% c(&quot;Toyota Corolla&quot;, &quot;Merc 240D&quot;, &quot;Datsun 710&quot;))
+
+mtcars %&gt;%
+    ggplot(mapping = aes(x = wt, y = mpg)) +
+        geom_point() +
+        geom_label_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = &quot;Lato&quot;, nudge_x = 0.35) +
+      labs(title = &quot;Fuel Efficiency Declines as Weight Increases&quot;,
+       caption = &quot;Urban Institute&quot;,
+       x = &quot;Weight (Tons)&quot;,
+       y = &quot;Miles Per Gallon&quot;)</code></pre>
+<p><img src="index_files/figure-html/scatterplot-geom_label_repel-1.png" width="672" /></p>
+</div>
+</div>
+</div>
 <div id="layered-geoms" class="section level2">
 <h2>Layered Geoms</h2>
 <p>Geoms can be layered in <code>ggplot2</code>. This is useful for design and analysis.</p>
@@ -956,10 +1092,8 @@ mpg %&gt;%
 <div id="ggvis" class="section level2">
 <h2>ggvis</h2>
 <p><a href="http://ggvis.rstudio.com/">ggvis</a> is Hadley Wickham’s successor to <code>ggplot2</code>. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. <code>ggplot2</code> is still the best way to make graphics in R.</p>
-<p>Functionality that is added to <code>ggvis</code> that isn’t possible in <code>ggplot</code> will be added to this section in the future.</p>
-</div>
-<div id="text" class="section level2">
-<h2>Text</h2>
+<p>Functionality that is added to <code>ggvis</code> that isn’t possible in <code>ggplot</code> will be added to this section in the future. ## Saving plots</p>
+<p>todo(aaron): make the case for svg and pdf png</p>
 </div>
 <div id="appendix" class="section level2">
 <h2>Appendix</h2>
@@ -983,10 +1117,11 @@ mpg %&gt;%
 ## 
 ## other attached packages:
 ##  [1] fivethirtyeight_0.3.0 waffle_0.7.0          ggridges_0.4.1       
-##  [4] bindrcpp_0.2          hexbin_1.27.1         extrafont_0.17       
-##  [7] RColorBrewer_1.1-2    dplyr_0.7.4           purrr_0.2.4          
-## [10] readr_1.1.1           tidyr_0.7.2           tibble_1.3.4         
-## [13] ggplot2_2.2.1         tidyverse_1.1.1       knitr_1.17           
+##  [4] ggrepel_0.7.0         hexbin_1.27.1         bindrcpp_0.2         
+##  [7] extrafont_0.17        RColorBrewer_1.1-2    dplyr_0.7.4          
+## [10] purrr_0.2.4           readr_1.1.1           tidyr_0.7.2          
+## [13] tibble_1.3.4          ggplot2_2.2.1         tidyverse_1.1.1      
+## [16] knitr_1.17           
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] tidyselect_0.2.2 reshape2_1.4.2   haven_1.1.0      lattice_0.20-35 

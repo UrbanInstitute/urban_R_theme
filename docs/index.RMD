@@ -24,8 +24,9 @@ library(tidyverse)
 
 options(scipen = 999)
 
-#source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R')
-source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
+# Source ggplot2 theme
+#source("../urban_theme_windows.R")
+source("../urban_theme_mac.R")
 ```
 
 
@@ -223,6 +224,51 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        y = "Count")
 ```
 
+### Lollipop plot/Cleveland dot plot{.tabset}
+
+Lollipop plots and Cleveland dot plots are minimalist alternatives to bar plots. The key to both plots is to order the data based on the continuous variable using `arrange()` and then turn the discrete variable into a factor with the ordered levels of the continuous variable using `mutate()`. This step "stores" the order of the data. 
+
+#### Lollipop plot
+
+```{r lollipop-plot}
+mtcars %>%
+	rownames_to_column("model") %>%
+	arrange(mpg) %>%
+	mutate(model = factor(model, levels = .$model)) %>%
+	ggplot(aes(mpg, model)) +
+		geom_segment(aes(x = 0, xend = mpg, y = model, yend = model)) +	
+		geom_point() +
+		scale_x_continuous(expand = c(0, 0), limits = c(0, max(mtcars$mpg) * 1.1)) +
+		labs(title = "Miles Per Gallon of Popular Cars",
+				 subtitle = "1974 Motor Trend US magazine",
+				 x = NULL, 
+				 y = "Miles Per Gallon",
+				 caption = "Urban Institute") +
+	theme(axis.text.y = element_text(size = 8))
+```
+
+#### Cleveland dot plot
+
+```{r cleveland-dot-plot}
+mtcars %>%
+	rownames_to_column("model") %>%
+	arrange(mpg) %>%
+	mutate(model = factor(model, levels = .$model)) %>%
+	ggplot(aes(mpg, model)) +
+		geom_point() +
+		scale_x_continuous(expand = c(0, 0), limits = c(0, max(mtcars$mpg) * 1.1)) +
+		labs(title = "Miles Per Gallon of Popular Cars",
+				 subtitle = "1974 Motor Trend US magazine",
+				 x = NULL, 
+				 y = "Miles Per Gallon",
+				 caption = "Urban Institute") +
+	theme(axis.text.y = element_text(size = 8))
+```
+
+### Dumbell plot
+
+
+
 ## Scatter Plots
 
 ### One Color Scatter Plot
@@ -354,51 +400,6 @@ mtcars %>%
   theme(legend.title = element_text(hjust = 0))
 ```
 
-### Highlight Points
-
-
-### Label Points{.tabset}
-
-`geom_text()` and `geom_label()` annotate points on scatterplots. Both functions need `x` values, `y` values, and a vector of labels. It's rarely useful to label every point. Use `filter()` to create a second data set that is subsetted and pass it into the labelling function. 
-
-`geom_text()` labels points without backgrounds. `geom_label()` labels points with backgrounds. 
-
-*Note:* `family = "Lato"` is required to turn `geom_text()` into Lato.
-
-#### geom_text()
-
-```{r scatterlot-geom_text}
-labels <- mtcars %>%
-	rownames_to_column("model") %>%
-	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
-
-mtcars %>%
-	ggplot(mapping = aes(x = wt, y = mpg)) +
-		geom_point() +
-		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
-	  labs(title = "Fuel Efficiency Declines as Weight Increases",
-       caption = "Urban Institute",
-       x = "Weight (Tons)",
-       y = "Miles Per Gallon")
-```
-
-#### geom_label()
-
-```{r scatterlot-geom_label}
-labels <- mtcars %>%
-	rownames_to_column("model") %>%
-	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
-
-mtcars %>%
-	ggplot(mapping = aes(x = wt, y = mpg)) +
-		geom_point() +
-		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
-	  labs(title = "Fuel Efficiency Declines as Weight Increases",
-       caption = "Urban Institute",
-       x = "Weight (Tons)",
-       y = "Miles Per Gallon")
-```
-
 ## Line Plots
 ```{r line-plots}
 
@@ -439,6 +440,8 @@ economics %>%
 ```{r slope-plot}
 # https://www.bls.gov/lau/
 
+library(ggrepel)
+
 unemployment <- tibble(
 	time = c("October 2009", "October 2009", "October 2009", "August 2017", "August 2017", "August 2017"),
 	rate = c(7.4, 7.1, 10.0, 3.9, 3.8, 6.4),
@@ -455,7 +458,7 @@ unemployment %>%
 		geom_line(aes(time, rate, group = state, color = state)) +
 		geom_point(aes(x = time, y = rate, color = state)) +
 		labs(subtitle = "Unemployment Rate",
-				 source = "BLS") +
+				 caption = "Source: BLS Local Area Unemployment Statistics") +
 		theme(axis.ticks.x = element_blank(),
 					axis.title.x = element_blank(),
 					axis.ticks.y = element_blank(),
@@ -465,8 +468,8 @@ unemployment %>%
   	      panel.grid.minor.y = element_blank(),
   	      panel.grid.major.x = element_blank(),
 					axis.line = element_blank()) +
-		geom_text(data = october, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = -0.06) + 
-		geom_text(data = august, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = 0.06)
+		geom_text_repel(data = october, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = -0.06, family = "Lato") + 
+		geom_text_repel(data = august, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = 0.06, family = "Lato")
 ```
 
 ## Binning
@@ -699,7 +702,7 @@ mtcars %>%
 				 am = factor(am, levels = 0:1, labels = c("Automatic Transmission", "Manual Transmission"))) %>%
 	ggplot(aes(wt, mpg)) +
 		geom_point(alpha = 0.5) +
-		scale_y_continuous(limits = c(0, 40)) +
+		scale_y_continuous(expand = c(0, 0), limits = c(0, 45)) +
   	labs(title = "Determinants of Fuel Efficiency", 
   			 subtitle = "1974 Motor Trends US magazine data", 
   		caption = "Urban Institute") +
@@ -715,7 +718,7 @@ R's faceting system is a powerful way to make "small multiples".
 
 Some edits to the theme may be necessary depending upon how many rows and columns are in the plot. 
 
-```{r small multiples 1, message = FALSE, warning = FALSE, fig.height = 9}
+```{r small multiples 1, message = FALSE, warning = FALSE, fig.height = 9, eval = FALSE}
 # Facet Wrap
 diamonds %>%
 	group_by()
@@ -725,7 +728,7 @@ diamonds %>%
 ```{r small multiples, message = FALSE, warning = FALSE, fig.height = 9}
 # Facet Wrap
 txhousing %>%
-  filter(city != "Brazoria County" & city != "Brownsville" & city != "San Angelo" & city != "Denton County") %>%
+  filter(!city %in% c("Brazoria County", "Brownsville", "San Angelo", "Denton County")) %>%
   ggplot(aes(x = median)) +
   geom_histogram() +
   facet_wrap(~city) +
@@ -757,10 +760,6 @@ txhousing %>%
                               size = rel(0.5)))
 #TODO(aaron): finish this
 ```
-
-
-
-
 
 ## Smoothers
 
@@ -808,6 +807,103 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
 			 y = "Highway MPG")
 
 ```
+
+
+## Highlighting
+
+points
+polygons
+lines
+
+## Text
+
+### library(ggplot2){.tabset}
+
+`geom_text()` and `geom_label()` annotate points on scatterplots. Both functions need `x` values, `y` values, and a vector of labels. It's rarely useful to label every point. Use `filter()` to create a second data set that is subsetted and pass it into the labelling function. 
+
+`geom_text()` labels points without backgrounds. `geom_label()` labels points with backgrounds. 
+
+*Note:* `family = "Lato"` is required to turn `geom_text()` into Lato.
+
+#### geom_text()
+
+```{r scatterplot-geom_text}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+#### geom_label()
+
+```{r scatterplot-geom_label}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+### library(ggrepel){.tabset}
+
+Text too often overlaps when using `geom_text()` or `geom_label()`. `library(ggrepel)` is a `library(ggplot2)` add-on that automatically positions text so it doesn't overlap with geoms or other text.
+
+To add this functionalit simple load `library(ggrepel)` and then use `geom_text_repel()` and `geom_text_label()` with the same syntax as `geom_text()` and `geom_label()`. Don't roget to add `family = "Lato"`.
+
+#### geom_text_repel()
+
+```{r scatterplot-geom_text_repel}
+library(ggrepel)
+
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_text_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+#### geom_label_repel()
+
+```{r scatterplot-geom_label_repel}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_label_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+
+
+
 
 ## Layered Geoms
 
@@ -879,9 +975,10 @@ mpg %>%
 [ggvis](http://ggvis.rstudio.com/) is Hadley Wickham's successor to `ggplot2 `. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. `ggplot2` is still the best way to make graphics in R. 
 
 Functionality that is added to `ggvis` that isn't possible in `ggplot` will be added to this section in the future. 
+## Saving plots
 
-
-## Text
+todo(aaron): make the case for svg and pdf
+png
 
 ## Appendix
 
