@@ -2,7 +2,7 @@
 output:
   html_document:
     css: styles.css
-    self_contained: FALSE
+    self_contained: TRUE
     code_folding: hide
     toc: TRUE
     toc_float: TRUE
@@ -11,16 +11,7 @@ output:
 ![](images/urban-institute-logo.png)
 </div>
 
-```{r urban logo, echo = FALSE}
-#include_graphics("images/urban-institute-logo.png", dpi = NA)
-
-#htmltools::img(src = "images/urban-institute-logo.png", 
-#               alt = 'logo', 
-#               style = 'position:absolute; top:0; right:0; padding:10px;')
-```
-
 ## Urban Institute R Graphics Guide
-
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -33,8 +24,9 @@ library(tidyverse)
 
 options(scipen = 999)
 
-#source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_windows.R')
-source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/master/urban_theme_mac.R')
+# Source ggplot2 theme
+#source("../urban_theme_windows.R")
+source("../urban_theme_mac.R")
 ```
 
 
@@ -122,15 +114,15 @@ library(extrafont)
 
 #### Grammar of Graphics and Conventions
 
-Hadley Wickham's ggplot2 is based on Leland Wilkinson's *Grammar of Graphics* and Wickham's *A Layered Grammar of Graphics*. The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2. 
+Hadley Wickham's ggplot2 is based on Leland Wilkinson's [*The Grammar of Graphics*](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448) and Wickham's [*A Layered Grammar of Graphics*](http://vita.had.co.nz/papers/layered-grammar.html). The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2. 
 
 
 * **Data** are what are visualizaed in a plot and **mappings** are directions for how data are mapped in a plot in a way that can be perceived by humans.  
 * **Geoms** are representations of the actual data like points, lines, and bars. 
 * **Stats** are statistical transformations that represent summaries of the data like histograms. 
 * **Scales** map values in the data space to values in the aesthetic space. Scales draw legends and axes.
-* **Coordinate System** describe how geoms are mapped to the plane of the graphic.  
-* **Facettings** break the data into meaningful subsets like small multiples. 
+* **Coordinate Systems** describe how geoms are mapped to the plane of the graphic.  
+* **Facets** break the data into meaningful subsets like small multiples. 
 * **Themes** control the finer points of a plot such as fonts, font sizes, and background colors. 
 
 More information: [ggplot2: Elegant Graphics for Data Analysis](https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403) 
@@ -172,7 +164,7 @@ ggplot(data = mtcars, mapping = aes(factor(cyl))) +
 
 This is identical to the previous plot except colors and a legend are added with `fill = factor(cyl)`. Turning `x` into a factor with `factor(cyl)` skips 5 and 7 on the `x-axis`. Adding `fill = cyl` without `factor()` would have created a continuous color scheme and legend.   
 
-``` {r barplot with 3 colors}
+``` {r 3-color-barplot}
 ggplot(data = mtcars, mapping = aes(x = factor(cyl), fill = factor(cyl))) +
   geom_bar() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -187,7 +179,7 @@ ggplot(data = mtcars, mapping = aes(x = factor(cyl), fill = factor(cyl))) +
 
 An additional aesthetic can easily be added to bar plots by adding `fill = categorical variable` to the mapping. Here, diamond quality subsets each bar showing the count of diamonds with each level of clarity. 
 
-```{r stacked bar plot}
+```{r stacked-bar-plot}
 ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) + 
   geom_bar() +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 15000), labels = scales::comma) +
@@ -204,7 +196,7 @@ ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) +
 
 `position = "fill"` in `geom_bar()` changes the y-axis from count to the proportion of each bar. 
 
-```{r stacked bar plot fill}
+```{r stacked-bar-plot-fill}
 #5 colors (stacked)
 ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) + 
   geom_bar(position = "fill") +
@@ -220,7 +212,7 @@ ggplot(data = diamonds, mapping = aes(x = clarity, fill = cut)) +
 
 Subsetted bar charts in ggplot2 are stacked by default. `position = "dodge"` in `geom_bar()` expands the bar chart so the bars appear next to each other.
 
-```{r dodged bar plot}
+```{r dodged-bar-plot}
 #5 colors (dodged)
 ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
   geom_bar(position = "dodge") +
@@ -232,13 +224,58 @@ ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) +
        y = "Count")
 ```
 
+### Lollipop plot/Cleveland dot plot{.tabset}
+
+Lollipop plots and Cleveland dot plots are minimalist alternatives to bar plots. The key to both plots is to order the data based on the continuous variable using `arrange()` and then turn the discrete variable into a factor with the ordered levels of the continuous variable using `mutate()`. This step "stores" the order of the data. 
+
+#### Lollipop plot
+
+```{r lollipop-plot}
+mtcars %>%
+	rownames_to_column("model") %>%
+	arrange(mpg) %>%
+	mutate(model = factor(model, levels = .$model)) %>%
+	ggplot(aes(mpg, model)) +
+		geom_segment(aes(x = 0, xend = mpg, y = model, yend = model)) +	
+		geom_point() +
+		scale_x_continuous(expand = c(0, 0), limits = c(0, max(mtcars$mpg) * 1.1)) +
+		labs(title = "Miles Per Gallon of Popular Cars",
+				 subtitle = "1974 Motor Trend US magazine",
+				 x = NULL, 
+				 y = "Miles Per Gallon",
+				 caption = "Urban Institute") +
+	theme(axis.text.y = element_text(size = 8))
+```
+
+#### Cleveland dot plot
+
+```{r cleveland-dot-plot}
+mtcars %>%
+	rownames_to_column("model") %>%
+	arrange(mpg) %>%
+	mutate(model = factor(model, levels = .$model)) %>%
+	ggplot(aes(mpg, model)) +
+		geom_point() +
+		scale_x_continuous(expand = c(0, 0), limits = c(0, max(mtcars$mpg) * 1.1)) +
+		labs(title = "Miles Per Gallon of Popular Cars",
+				 subtitle = "1974 Motor Trend US magazine",
+				 x = NULL, 
+				 y = "Miles Per Gallon",
+				 caption = "Urban Institute") +
+	theme(axis.text.y = element_text(size = 8))
+```
+
+### Dumbell plot
+
+
+
 ## Scatter Plots
 
 ### One Color Scatter Plot
 
 Scatter plots are useful for showing relationships between two or more variables. 
 
-```{r one-color scatter plot}
+```{r one-color-scatter-plot}
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
   geom_point() + 
   scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
@@ -254,7 +291,7 @@ ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
 
 Large numbers of observations can sometimes make scatter plots tough to interpret because points overlap. Adding `alpha = ` with a number between 0 and 1 adds transparency to points and clarity to plots. Now it's easy to see that jewelry stores are probably rounding up but not rounding down carats!
 
-```{r alpha scatter plot}
+```{r alpha-scatter-plot}
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
   geom_point(alpha = 0.05) + 
   scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
@@ -270,10 +307,11 @@ ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
 
 Sometimes transparency isn't enough to bring clarity to a scatter plot with many observations. As n increases into the hundreds of thousands and even millions, `geom_hex` can be one of the best ways to display relationships between two variables. 
 
-``` {r scatter plot hex}
+``` {r scatter-plot-hex}
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
-  geom_hex(mapping = aes(colour = ..count..)) + 
+  geom_hex(mapping = aes(fill = ..count..)) + 
   scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
+	scale_fill_gradientn(colors = c("#CFE8F3", "#062635"), labels = scales::comma) +
   labs(title = "Title",
        subtitle = "geom_hex adds clarity to overlapping points",
        x = "Carat",
@@ -288,7 +326,7 @@ ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
 Sometimes scatter plots have many overlapping points but a reasonable number of observations. `geom_jitter` adds a small amount of random noise so points are less likely to overlap. `width` and `height` control the amount of noise that is added. In the following before-and-after, notice how many more points are visible after adding jitter.
 
 #### Before
-```{r before scatter plot}
+```{r before-scatter-plot}
 ggplot(data = mpg, mapping = aes(x = displ, y = cty)) + 
   geom_point() + 
   scale_y_continuous(expand = c(0, 0)) +
@@ -301,7 +339,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
 ```
 
 #### After
-```{r jitter plot}
+```{r jitter-plot}
 set.seed(2017)
 ggplot(data = mpg, mapping = aes(x = displ, y = cty)) + 
   geom_jitter(width = 0.2, height = 0.2) + 
@@ -334,7 +372,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = cty)) +
 
 A third aesthetic can be added to scatter plots. Here, color signifies the number of cylinders in each car. Before `ggplot()` is called, Cylinders is created using `library(dplyr)` and the piping operator `%>%`.
 
-``` {r filled scatter plot}
+``` {r filled-scatter-plot}
 mtcars %>%
   mutate(Cylinders = factor(cyl)) %>%
   ggplot(mapping = aes(x = wt, y = mpg, colour = Cylinders)) + 
@@ -350,7 +388,7 @@ mtcars %>%
 
 `size =` can be used as a mapping to plot a fourth dimension. 
 
-```{r bubble chart}
+```{r bubble-chart}
 mtcars %>%
   mutate(Cylinders = factor(cyl), `Automatic Transmission` = factor(am)) %>%
   ggplot(mapping = aes(x = wt, y = mpg, color = `Automatic Transmission`, size = Cylinders)) + 
@@ -362,51 +400,8 @@ mtcars %>%
   theme(legend.title = element_text(hjust = 0))
 ```
 
-### Highlight Points
-
-
-### Label Points{.tabset}
-
-`geom_text()` and `geom_label()` annotate points on scatterplots. Both functions need `x` values, `y` values, and a vector of labels. It's rarely useful to label every point. Use `filter()` to create a second data set that is subsetted and pass it into the labelling function. 
-
-`geom_text()` labels points without backgrounds. `geom_label()` labels points with backgrounds. 
-
-#### geom_text()
-
-```{r scatterlot geom_text}
-labels <- mtcars %>%
-	rownames_to_column("model") %>%
-	filter(gear == 5)
-
-mtcars %>%
-	ggplot(mapping = aes(x = wt, y = mpg)) +
-		geom_point() +
-		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
-	  labs(title = "Fuel Efficiency Declines as Weight Increases",
-       caption = "Urban Institute",
-       x = "Weight (Tons)",
-       y = "Miles Per Gallon")
-```
-
-#### geom_label()
-
-```{r scatterlot geom_label}
-labels <- mtcars %>%
-	rownames_to_column("model") %>%
-	filter(gear == 5)
-
-mtcars %>%
-	ggplot(mapping = aes(x = wt, y = mpg)) +
-		geom_point() +
-		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
-	  labs(title = "Fuel Efficiency Declines as Weight Increases",
-       caption = "Urban Institute",
-       x = "Weight (Tons)",
-       y = "Miles Per Gallon")
-```
-
 ## Line Plots
-```{r line plots}
+```{r line-plots}
 
 ggplot(data = economics, mapping = aes(x = date, y = unemploy)) +
   geom_line() +
@@ -424,8 +419,7 @@ Plotting more than one line can be useful for seeing the relationship of variabl
 
 This is because `ggplot2` wants data in a "long" format instead of a "wide" format for line plots with multiple lines. `gather()` and `spread()` from the `tidyr` package make switching back-and-forth between "long" and "wide" painless. Essentially, variable titles go into "key" and variable values go into "value". Then ggplot2, turns the different levels of the key variable (population, unemployment) into colors. 
 
-```{r line charts multiple}
-
+```{r multiple-line-charts}
 library(tidyverse)
 
 economics %>%
@@ -439,6 +433,43 @@ economics %>%
        caption = "Urban Institute",
        x = "Year",
        y = "People (1,000s)")
+```
+
+### Slope plots
+
+```{r slope-plot}
+# https://www.bls.gov/lau/
+
+library(ggrepel)
+
+unemployment <- tibble(
+	time = c("October 2009", "October 2009", "October 2009", "August 2017", "August 2017", "August 2017"),
+	rate = c(7.4, 7.1, 10.0, 3.9, 3.8, 6.4),
+	state = c("Maryland", "Virginia", "Washington D.C.", "Maryland", "Virginia", "Washington D.C.")
+)
+
+label <- tibble(label = c("October 2009", "August 2017"))
+october <- filter(unemployment, time == "October 2009")
+august <- filter(unemployment, time == "August 2017")
+
+unemployment %>%
+	mutate(time = factor(time, levels = c("October 2009", "August 2017"))) %>%
+	ggplot() + 
+		geom_line(aes(time, rate, group = state, color = state)) +
+		geom_point(aes(x = time, y = rate, color = state)) +
+		labs(subtitle = "Unemployment Rate",
+				 caption = "Source: BLS Local Area Unemployment Statistics") +
+		theme(axis.ticks.x = element_blank(),
+					axis.title.x = element_blank(),
+					axis.ticks.y = element_blank(),
+  	      axis.title.y = element_blank(), 
+  	      axis.text.y = element_blank(),
+					panel.grid.major.y = element_blank(),
+  	      panel.grid.minor.y = element_blank(),
+  	      panel.grid.major.x = element_blank(),
+					axis.line = element_blank()) +
+		geom_text_repel(data = october, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = -0.06, family = "Lato") + 
+		geom_text_repel(data = august, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = 0.06, family = "Lato")
 ```
 
 ## Binning
@@ -467,7 +498,7 @@ diamonds %>%
 ```
 
 ### Frequency Polygon
-```{r frequency polygon}
+```{r frequency-polygon}
 population %>%
   filter(year == 2013 & population < 3000000) %>%
   ggplot(mapping = aes(x = population)) + 
@@ -491,15 +522,15 @@ diamonds %>%
        y = "Count")
 ```
 
-### Joy Plots
+### Ridgeline plots
 
-Joy plots are partially overlapping histograms facetted by a categorical variable that pack a lot of information into one compact plot. They were [recently introduced](https://cran.r-project.org/web/packages/ggjoy/vignettes/introduction.html) by `library(ggjoy)`.
+Ridgeline plots are partially overlapping histograms faceted by a categorical variable that pack a lot of information into one compact plot. 
 
-```{r joyplot}
-library(ggjoy)
+```{r ridgeline-plots}
+library(ggridges)
 
 ggplot(diamonds, mapping = aes(x = price, y = cut)) +
-	geom_joy(fill = "#1696d2") +
+	geom_density_ridges(fill = "#1696d2") +
 	scale_x_continuous(labels = scales::dollar) +
   labs(title = "Distribution of Diamond Prices by Diamond Cut",
        caption = "Urban Institue",
@@ -512,7 +543,7 @@ ggplot(diamonds, mapping = aes(x = price, y = cut)) +
 The following plots are effective at displaying how a continuous or discrete variable varies across different levels of a categorical variable. 
 
 ### Box Plot
-```{r box plot}
+```{r box-plot}
 ggplot(InsectSprays, aes(x = spray, y = count)) +
   geom_boxplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -532,6 +563,9 @@ ggplot(InsectSprays, aes(x = spray, y = count, fill = spray)) +
        x = "Type of Insect Spray",
        y = "Number of Dead Insects")
 ```
+
+### Binned dot plots
+TODO(aaron): 
 
 ### Bean Plots
 TODO(aaron): Add bean plots
@@ -571,7 +605,7 @@ txhousing %>%
 
 ## Waffle Chart / Square Pie Chart
 
-The waffle package {[CRAN](https://cran.r-project.org/web/packages/waffle/waffle.pdf) and [Github](https://github.com/hrbrmstr/waffle)} makes creating square pie charts easy. It can also be combined with [glpyhs](http://fontawesome.io/) for more elegant shapes than squares. This example uses data pulled from [A Vision for an Equitable DC](http://www.urban.org/features/vision-equitable-dc).
+The waffle package {[CRAN](https://cran.r-project.org/web/packages/waffle/waffle.pdf) and [Github](https://github.com/hrbrmstr/waffle)} creates suare pie charts. It can also be combined with [glyphs](http://fontawesome.io/) for more elegant shapes than squares. This example uses data pulled from [A Vision for an Equitable DC](http://www.urban.org/features/vision-equitable-dc).
 
 Waffle charts will require a little extra tinkering since they are called from `library(waffle)` instead of `library(ggplot2)`. Most importantly, waffle charts require `theme_urban(text = element_text(family = "Lato"))` for the Lato font. 
 
@@ -592,7 +626,7 @@ waffle(parts, rows = 25, size = 1, colors = c("#1696d2", "#fdbf11", "#000000"), 
 
 Waffle charts can be enhanced by replacing squares qith glyphs. Two important arguments to know are `glyph_size =` and `use_glyph =`. Both are called in the `waffle()` function. Note: `size = 1` is sensible and `glyph_size = 12` is sensible. 
 
-Using glyphs requires downloading fontawesome. That can be done [here](https://github.com/hrbrmstr/waffle/tree/master/inst/fonts).Then run `library(extrafont)`, 
+Using glyphs requires downloading fontawesome. That can be done [here](https://github.com/hrbrmstr/waffle/tree/master/inst/fonts). Then run `library(extrafont)`, 
 `port(<font-location>)`, and `loadfonts()` once. After that, building waffle charts with glpyhs should be as easy as one function call. 
 
 ```{r waffle with glyphs}
@@ -630,231 +664,10 @@ iron(
 ) 
 ```
 
-## Dot Maps
-
-R can function as a geographical information system (GIS) using `library(ggmap)`. ggmap uses Google Maps, OpenStreetMap, Stamen Maps to create mappings (Grammar of Graphics) of maps (colloquial). Data with longitudes and latitudes can then be charted using many ggplot2 geoms. 
-
-ggmap creates several different map types:
-* terrain - A combination of major roads, cities names, state borders, and a terrain map. 
-* terrain-background -
-* satellite - A satellite image of the specified area with no labels. 
-* roadmap - A Google roadmap
-* hybrid - A satellite image with state boarders and major cities.
-* watercolor - A bizarre sand-colored map with roads and water. 
-* toner - A clean black-and-white map where land is white and water is black. 
-
-Set the map type with `maptype = ""`. 
-
-NOTE: If ggmap returns `ggmap Error: GeomRasterAnn was built with an incompatible version of ggproto` then reinstall the package using `install.packages("ggmap", type = "source")`.
-
-### States{.tabset}
-
-#### Terrain
-```{r Colorado terrain, message=FALSE}
-library(zipcode)
-library(tidyverse)
-library(ggmap)
-
-data(zipcode)
-zipcode <- as_tibble(zipcode)
-
-colorado <- zipcode %>%
-  filter(state == "CO")
-
-ggmap(get_map(location = "colorado", zoom = 6, maptype = "terrain")) +
-  scale_x_continuous(limits = c(-109, -102)) +
-  scale_y_continuous(limits = c(37, 41)) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()) +
-  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
-  labs(title = "Zip Codes in Colorado",
-       x = NULL,
-       y = NULL)
-```
-
-#### Toner
-```{r Colorado toner, message=FALSE}
-library(zipcode)
-library(tidyverse)
-library(ggmap)
-
-data(zipcode)
-zipcode <- as_tibble(zipcode)
-
-colorado <- zipcode %>%
-  filter(state == "CO")
-
-ggmap(get_map(location = "colorado", zoom = 6, maptype = "toner", source = "stamen")) +
-  scale_x_continuous(limits = c(-109, -102)) +
-  scale_y_continuous(limits = c(37, 41)) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()) +
-  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
-  labs(title = "Zip Codes in Colorado",
-       x = NULL,
-       y = NULL)
-```
-
-#### Hybrid
-```{r colorado hybrid, message=FALSE}
-library(zipcode)
-library(tidyverse)
-library(ggmap)
-
-data(zipcode)
-zipcode <- as_tibble(zipcode)
-
-colorado <- zipcode %>%
-  filter(state == "CO")
-
-ggmap(get_map(location = "colorado", zoom = 6, maptype = "hybrid")) +
-  scale_x_continuous(limits = c(-109, -102)) +
-  scale_y_continuous(limits = c(37, 41)) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank()) +
-  geom_point(data = colorado, aes(x = longitude, y = latitude), size = 1.5, alpha = 0.5) +
-  labs(title = "Zip Codes in Colorado",
-       x = NULL,
-       y = NULL)
-```
-
-### Localities
-
-```{r nyc, message=FALSE}
-newyork <- zipcode %>%
-  filter(state == "NY")
-
-ggmap(get_map(location = "new york city", zoom = 11, maptype = "satellite")) +
-  geom_point(data = newyork, aes(x = longitude, y = latitude), size = 2, alpha = 0.5) +
-  labs(title = "Zip Codes in New York, NY",
-       x = NULL,
-       y = NULL) +
-  theme(axis.text = element_blank(),
-        axis.line = element_blank(),
-        axis.ticks = element_blank())
-```
-
-## Choropleth
-
-Choropleths are maps with regions shaded based on variables. It is simple to build choropleths in R for states and counties. 
-
-Choropleths require some data management because state or county level data need to be joined to the vector boundaries. Additionally, extra edits need to be made in `theme()` but those changes can just be copied-and-pasted from the examples. 
-
-For a more thorough explanation, read pages 55-61 of Hadley Wickham's [ggplot2: Elegant Graphics for Data Analysis](https://www.amazon.com/ggplot2-Elegant-Graphics-Data-Analysis/dp/0387981403). Please contact Aaron at awilliams@urban.org if you want to borrow a copy. 
-
-### States
-
-Be sure to add `scale_fill_gradient()` with `low =` and `high =` to ensure that continuous variables are clearly displayed from low to high. 
-
-```{r state chorpleth, message = FALSE, warning = FALSE}
-library(fivethirtyeight)
-
-# Create data frame with vector boundaries
-states <- map_data("state") %>%
-  select(lon = long, lat, group, state = region)
-
-# Create data frame with state driving data
-drivers.usa <- bad_drivers %>%
-  mutate(state = tolower(state))
-  
-# Join the vector boundaries and state data
-drivers.states <- left_join(states, drivers.usa, by = c("state" = "state"))
-
-# Plot!
-ggplot(drivers.states, aes(lon, lat, group = state)) +
-  geom_polygon(aes(fill = perc_speeding)) +
-  scale_fill_gradient(low = "#CEE8F3", 
-                      high = "#094C6B") +
-  coord_quickmap() +
-  labs(title = "Percentage of Fatal Collisions Involving Speeding",
-       subtitle = "Share of fatal collisions per billion miles, 2009",
-       caption = "Source: fivethirtyeight R package")  +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_blank(),
-        legend.position = "right",
-        legend.direction = "vertical")
-
-```
-
-### Counties
-```{r choropleth}
-library(USAboundaries)
-
-# Create data frame with vector boundaries
-indiana.counties <- map_data("county", "indiana") %>%
-  select(lon = long, lat, group, id = subregion)
-
-# Create data frame with population data
-indiana.census <- midwest %>%
-  tbl_df() %>%
-  filter(state == "IN") %>%
-  mutate(county = tolower(county)) %>%
-  select(county, area, poptotal, percwhite, percblack) 
-
-# Join the vector boundaries and county data
-census.counties <- left_join(indiana.census, indiana.counties, by = c("county" = "id"))
-   
-# Plot
-ggplot(census.counties, aes(lon, lat, group = county)) +
-  geom_polygon(aes(fill = poptotal)) +
-  scale_fill_gradient(low = "#CEE8F3", 
-                    high = "#094C6B") +
-  coord_quickmap()  +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_blank(),
-        legend.position = "right",
-        legend.direction = "vertical") +
-  labs(title = "Population in Indiana Counties",
-       caption = "Urban Institute")
-
-```
-
-### Texas sales
-```{r texas}
-library(USAboundaries)
-
-# Create data frame with vector boundaries
-texas.counties <- map_data("county", "texas") %>%
-  select(lon = long, lat, group, id = subregion)
-
-# Create data frame with hosuing data
-texas.sales <- txhousing %>%
-  filter(year == 2014) %>%
-  select(city, sales) %>%
-  mutate(city = tolower(city)) %>%
-  group_by(city) %>%
-  summarize(sales = sum(sales))
-
-# Join the vector boundaries and state data
-census.counties <- left_join(texas.counties, texas.sales, by = c("id" = "city"))
-
-#Plot
-ggplot(census.counties, aes(lon, lat, group = id)) +
-  geom_polygon(aes(fill = sales)) +
-  coord_quickmap()  +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        axis.line = element_blank(),
-        legend.position = "right",
-        legend.direction = "vertical") +
-  labs(title = "Home Sales in Select Texas Counties",
-       caption = "Urban Institute")
-
-```
-
 ## Heat map
 ```{r heat map, fig.height=10}
+library(fivethirtyeight)
+
 bad_drivers %>%
   mutate(`Number of Drivers` = scale(num_drivers),
          `Percent Speeding` = scale(perc_speeding),
@@ -880,28 +693,18 @@ bad_drivers %>%
 
 ```
 
-## Facetting
-
-``` {r facetting}
-##Facet Grid
-ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() + 
-  ggtitle("Title") +
-  facet_grid(vs ~ am, margins = TRUE)
-```
-
-## Small Multiples
+## Faceting and Small Multiples
 
 ### facet_wrap()
 
-R's facetting system is a powerful way to make "small multiples".
+R's faceting system is a powerful way to make "small multiples".
 
 Some edits to the theme may be necessary depending upon how many rows and columns are in the plot. 
 
-```{r small multiples, message = FALSE, warning = FALSE, fig.height=9}
+```{r small multiples, message = FALSE, warning = FALSE, fig.height = 9}
 # Facet Wrap
 txhousing %>%
-  filter(city != "Brazoria County" & city != "Brownsville" & city != "San Angelo" & city != "Denton County") %>%
+  filter(!city %in% c("Brazoria County", "Brownsville", "San Angelo", "Denton County")) %>%
   ggplot(aes(x = median)) +
   geom_histogram() +
   facet_wrap(~city) +
@@ -916,31 +719,21 @@ txhousing %>%
 ```
 
 ### facet_grid()
-```{r facet grid, message = FALSE, warning = FALSE, fig.height=9}
-# Facet Wrap
-txhousing %>%
-  filter(city != "Brazoria County" & city != "Brownsville" & city != "San Angelo" & city != "Denton County") %>%
-  ggplot(aes(x = median)) +
-  geom_histogram() +
-  facet_grid(~city) +
-  scale_x_continuous(labels = scales::dollar) +
-  scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Median Monthly Home Prices in Selected Texas Cities",
-       x = "Median Monthly Home Value",
-       y = "Count") + 
-  theme(axis.text.x = element_text(angle = 90),
-        strip.text = element_text(face = "plain", 
-                              size = rel(0.5)))
-#TODO(aaron): finish this
+
+``` {r faceting}
+## Facet Grid
+mtcars %>%
+	mutate(vs = factor(vs, levels = 0:1, labels = c("Normal Transmission", "V/S Transmission")),
+				 am = factor(am, levels = 0:1, labels = c("Automatic Transmission", "Manual Transmission"))) %>%
+	ggplot(aes(wt, mpg)) +
+		geom_point(alpha = 0.5) +
+		scale_y_continuous(expand = c(0, 0), limits = c(0, 45)) +
+  	labs(title = "Determinants of Fuel Efficiency", 
+  			 subtitle = "1974 Motor Trends US magazine data", 
+  		caption = "Urban Institute") +
+  	facet_grid(vs ~ am, margins = TRUE) +
+		theme(panel.border = element_rect(colour = "black", fill = NA, size = 0.3))
 ```
-
-
-
-
-
-### facet_geo()
-
-`geofacet` is a new package that combines small 
 
 ## Smoothers
 
@@ -961,7 +754,7 @@ Models are chosen with `method = ` and can be set to lm(), glm(), gam(), loess()
 ```{r geom_smooth2}
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
 	geom_point(alpha = 0.1) +
-	geom_smooth(color = "red") +
+	geom_smooth(color =  "#ec008b") +
 	scale_y_continuous(expand = c(0, 0), labels = scales::dollar)
 ```
 
@@ -988,6 +781,103 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
 			 y = "Highway MPG")
 
 ```
+
+
+## Highlighting
+
+points
+polygons
+lines
+
+## Text
+
+### library(ggplot2){.tabset}
+
+`geom_text()` and `geom_label()` annotate points on scatterplots. Both functions need `x` values, `y` values, and a vector of labels. It's rarely useful to label every point. Use `filter()` to create a second data set that is subsetted and pass it into the labelling function. 
+
+`geom_text()` labels points without backgrounds. `geom_label()` labels points with backgrounds. 
+
+*Note:* `family = "Lato"` is required to turn `geom_text()` into Lato.
+
+#### geom_text()
+
+```{r scatterplot-geom_text}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+#### geom_label()
+
+```{r scatterplot-geom_label}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+### library(ggrepel){.tabset}
+
+Text too often overlaps when using `geom_text()` or `geom_label()`. `library(ggrepel)` is a `library(ggplot2)` add-on that automatically positions text so it doesn't overlap with geoms or other text.
+
+To add this functionalit simple load `library(ggrepel)` and then use `geom_text_repel()` and `geom_text_label()` with the same syntax as `geom_text()` and `geom_label()`. Don't roget to add `family = "Lato"`.
+
+#### geom_text_repel()
+
+```{r scatterplot-geom_text_repel}
+library(ggrepel)
+
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_text_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+#### geom_label_repel()
+
+```{r scatterplot-geom_label_repel}
+labels <- mtcars %>%
+	rownames_to_column("model") %>%
+	filter(model %in% c("Toyota Corolla", "Merc 240D", "Datsun 710"))
+
+mtcars %>%
+	ggplot(mapping = aes(x = wt, y = mpg)) +
+		geom_point() +
+		geom_label_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
+	  labs(title = "Fuel Efficiency Declines as Weight Increases",
+       caption = "Urban Institute",
+       x = "Weight (Tons)",
+       y = "Miles Per Gallon")
+```
+
+
+
+
 
 ## Layered Geoms
 
@@ -1059,9 +949,10 @@ mpg %>%
 [ggvis](http://ggvis.rstudio.com/) is Hadley Wickham's successor to `ggplot2 `. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. `ggplot2` is still the best way to make graphics in R. 
 
 Functionality that is added to `ggvis` that isn't possible in `ggplot` will be added to this section in the future. 
+## Saving plots
 
-
-## Text
+todo(aaron): make the case for svg and pdf
+png
 
 ## Appendix
 
