@@ -7,6 +7,9 @@ output:
     toc: TRUE
     toc_float: TRUE
 ---
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato" />
+
 <div id="header">
 ![](images/urban-institute-logo.png)
 </div>
