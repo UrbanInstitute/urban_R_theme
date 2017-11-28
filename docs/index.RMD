@@ -2,7 +2,7 @@
 output:
   html_document:
     css: styles.css
-    self_contained: FALSE
+    self_contained: TRUE
     code_folding: hide
     toc: TRUE
     toc_float: TRUE
@@ -693,37 +693,13 @@ bad_drivers %>%
 
 ```
 
-## Faceting
-
-``` {r faceting}
-##Facet Grid
-mtcars %>%
-	mutate(vs = factor(vs, levels = 0:1, labels = c("Normal Transmission", "V/S Transmission")),
-				 am = factor(am, levels = 0:1, labels = c("Automatic Transmission", "Manual Transmission"))) %>%
-	ggplot(aes(wt, mpg)) +
-		geom_point(alpha = 0.5) +
-		scale_y_continuous(expand = c(0, 0), limits = c(0, 45)) +
-  	labs(title = "Determinants of Fuel Efficiency", 
-  			 subtitle = "1974 Motor Trends US magazine data", 
-  		caption = "Urban Institute") +
-  	facet_grid(vs ~ am, margins = TRUE) +
-		theme(panel.border = element_rect(colour = "black", fill = NA, size = 0.3))
-```
-
-## Small Multiples
+## Faceting and Small Multiples
 
 ### facet_wrap()
 
 R's faceting system is a powerful way to make "small multiples".
 
 Some edits to the theme may be necessary depending upon how many rows and columns are in the plot. 
-
-```{r small multiples 1, message = FALSE, warning = FALSE, fig.height = 9, eval = FALSE}
-# Facet Wrap
-diamonds %>%
-	group_by()
-	ggplot(cut)
-```
 
 ```{r small multiples, message = FALSE, warning = FALSE, fig.height = 9}
 # Facet Wrap
@@ -743,22 +719,20 @@ txhousing %>%
 ```
 
 ### facet_grid()
-```{r facet grid, message = FALSE, warning = FALSE, fig.height=9}
-# Facet Wrap
-txhousing %>%
-  filter(!city %in% c("Brazoria County", "Brownsville", "San Angelo", "Denton County")) %>%
-  ggplot(aes(x = median)) +
-  geom_histogram() +
-  facet_grid(~city) +
-  scale_x_continuous(labels = scales::dollar) +
-  scale_y_continuous(expand = c(0, 0)) +
-  labs(title = "Median Monthly Home Prices in Selected Texas Cities",
-       x = "Median Monthly Home Value",
-       y = "Count") + 
-  theme(axis.text.x = element_text(angle = 90),
-        strip.text = element_text(face = "plain", 
-                              size = rel(0.5)))
-#TODO(aaron): finish this
+
+``` {r faceting}
+## Facet Grid
+mtcars %>%
+	mutate(vs = factor(vs, levels = 0:1, labels = c("Normal Transmission", "V/S Transmission")),
+				 am = factor(am, levels = 0:1, labels = c("Automatic Transmission", "Manual Transmission"))) %>%
+	ggplot(aes(wt, mpg)) +
+		geom_point(alpha = 0.5) +
+		scale_y_continuous(expand = c(0, 0), limits = c(0, 45)) +
+  	labs(title = "Determinants of Fuel Efficiency", 
+  			 subtitle = "1974 Motor Trends US magazine data", 
+  		caption = "Urban Institute") +
+  	facet_grid(vs ~ am, margins = TRUE) +
+		theme(panel.border = element_rect(colour = "black", fill = NA, size = 0.3))
 ```
 
 ## Smoothers
