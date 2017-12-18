@@ -233,7 +233,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     
     strip.text.x = element_text(margin = margin(t = 4.5, b = 4.5)), 
     strip.text.y = element_text(angle = -90, 
-                                margin = margin(l = 4.5, r = 4.5)), 
+                                margin = margin(t = 4.5, b = 4.5)), 
     
     strip.placement = "inside",
     strip.placement.x =  NULL,
