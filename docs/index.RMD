@@ -878,10 +878,6 @@ mtcars %>%
        y = "Miles Per Gallon")
 ```
 
-
-
-
-
 ## Layered Geoms
 
 Geoms can be layered in `ggplot2`. This is useful for design and analysis. 
@@ -922,7 +918,6 @@ Layering geoms is also useful for adding trend lines and centroids to scatter pl
 # Centroids
 ```
 
-
 ### Centroids
 
 ```{r centroids}
@@ -945,17 +940,7 @@ mpg %>%
 
 ```
 
-## Shiny
-
-## ggvis
-
-[ggvis](http://ggvis.rstudio.com/) is Hadley Wickham's successor to `ggplot2 `. It incorporates what he has learned over the past decade and extends to include web and interactive graphics. The package is available, but it is still very much in development. `ggplot2` is still the best way to make graphics in R. 
-
-Functionality that is added to `ggvis` that isn't possible in `ggplot` will be added to this section in the future. 
 ## Saving plots
-
-todo(aaron): make the case for svg and pdf
-png
 
 ## Appendix
 

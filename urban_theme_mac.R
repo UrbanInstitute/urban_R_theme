@@ -1,6 +1,5 @@
 library(ggplot2)
 library(grid)
-library(RColorBrewer)
 library(extrafont)
 
 ####################################
@@ -304,3 +303,12 @@ scale_colour_custom <- function(..., type = "seq", palette = 1) {
 scale_fill_custom <- function(..., type = "seq", palette = 1) {
   discrete_scale("fill", "custom", custom_pal(type, palette), ...)
 }
+
+# Urban Institute ggplot2 theme map add-on
+urban_map <- theme(
+	axis.text = element_blank(),
+	axis.ticks = element_blank(),
+	axis.title = element_blank(),
+	panel.grid = element_blank(),
+	axis.line = element_blank()
+)
