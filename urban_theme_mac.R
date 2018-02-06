@@ -3,98 +3,6 @@ library(grid)
 library(RColorBrewer)
 library(extrafont)
 
-########### Example plots #################
-
-####Bar
-##1 color
-#ggplot(data = mtcars, mapping = aes(factor(cyl))) + 
-#  geom_bar() + 
-#  ylim(c(0, 50)) +
-#  labs(title = "Title")
-
-##3 colors
-#ggplot(data = mtcars, mapping = aes(x = factor(cyl), fill = factor(cyl))) +
-#  geom_bar() +
-#  labs(title = "Title")
-
-##5 colors (stacked)
-#ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
-#  geom_bar() +
-#  scale_y_continuous(expand = c(0, 0), limits = c(0, 15000)) +
-#  xlab("Clarity") +
-#  ylab("Count") +
-#  labs(
-#    title = "Diamond Clarity",
-#    subtitle = "Something Informative About Diamonds",
-#    caption = "The Source of Diamond Data"
-#       )
-
-##5 colors (dodged)
-#ggplot(data = diamonds, mapping = aes(clarity, fill = cut)) + 
-#  geom_bar(position = "dodge") +
-#  scale_y_continuous(expand = c(0, 0), limits = c(0, 6000)) +
-#  xlab("Clarity") +
-#  ylab("Count") +
-#  labs(
-#    title = "Diamond Clarity",
-#    subtitle = "Something Informative About Diamonds",
-#    caption = "The Source of Diamond Data"
-#  )
-
-####Scatter
-## 1 Color
-#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
-#  geom_point() + 
-#  scale_y_continuous(expand = c(0, 0)) +
-#  labs(title = "Title")
-
-#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
-#  geom_point(alpha = 0.1) + 
-#  scale_y_continuous(expand = c(0, 0)) +
-#  labs(title = "Title",
-#       subtitle = "alpha = 0.1 adds transparency to overlapping points")
-
-#ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
-#  geom_hex() + 
-#  labs(title = "Title",
-#       subtitle = "geom_hex adds clarity to overlapping points")
-
-##3 colors
-#ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) + 
-#  geom_point(aes(colour = factor(cyl))) + 
-#  labs(title = "Title")
-
-##9 colors
-#dsamp <- diamonds[sample(nrow(diamonds), 1000), ]
-#ggplot(data = dsamp, mapping = aes(x = carat, y = price, color = clarity)) +
-#  geom_point(size = 3) +
-#  scale_y_continuous(expand = c(0, 0), limits = c(0, 20000)) +
-#  labs(title = "Title") +
-#  xlab("Carat") +
-#  ylab("Price (USD)")
-
-###Line
-##3 colors
-#library(tidyverse)
-#mtcars %>% 
-#  select(mpg, disp, hp, wt) %>%
-#  gather(-mpg, key = variable, value = value) %>%
-#  ggplot(mapping = aes(mpg, value, color = variable)) +
-#  geom_line(size = 1) +
-#  labs(title = "Title") 
-
-###Facet Grid
-#ggplot(mtcars, aes(mpg, wt)) +
-#  geom_point() + 
-#  ggtitle("Title") +
-#  facet_grid(vs ~ am, margins = TRUE)
-
-###Histogram
-#ggplot(data = diamonds, mapping = aes(x = depth)) + 
-#  geom_histogram() +
-#  scale_y_continuous(expand = c(0, 0)) +
-#  labs(title = "Title")
-
 ####################################
 
 #resize window to 650 px width
@@ -105,18 +13,24 @@ quartz.options(width = 8.33333333333333, height = 5.55555555555556, dpi = 72)
 
 #################### create new 'complete' ggplot2 theme ###################
 
-theme_urban <- function(base_size = 12, base_family = "Lato") {
-  theme(
+theme_urban <- function(base_size = 12L, 
+												base_family = "Lato",
+												base_line_size = base_size / 24L,
+												base_rect_size = base_size / 24L) {
+  
+	half_line <- base_size / 2L
+	
+	theme(
     
     ## Main Attributes
     
     line = element_line(colour = "#000000", 
-                        size = 0.5, 
+                        size = base_line_size, 
                         linetype = 1L, 
                         lineend = "butt"), 
     rect = element_rect(fill = "#FFFFFF", 
                         colour = "#000000", 
-                        size = 0.5, 
+                        size = base_rect_size, 
                         linetype = 1L), 
     text = element_text(family = base_family, 
                         face = "plain", 
@@ -131,39 +45,39 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     
     ## Plot Attributes
     
-    plot.title = element_text(size = 18L,
-                              hjust = 0,
-                              margin = margin(b = 8)), 
-    plot.subtitle = element_text(size = 14L,
-                                 hjust = 0,
-                                 margin = margin(b = 10)),
-    
-    plot.caption = element_text(size = 8L,
-                                hjust = 1,
-                                vjust = 1,
-                                margin = margin(t = base_size / 2 * 0.9)),
+    plot.title = element_text(size = base_size * 1.5,
+                              hjust = 0L,
+    													vjust = 0L,
+                              margin = margin(b = 8L)), 
+    plot.subtitle = element_text(size = base_size * 7L / 6L,
+                                 hjust = 0L,
+    														 vjust = 0L,
+                                 margin = margin(b = 10L)),
+    plot.caption = element_text(size = base_size * 2L / 3L,
+                                hjust = 1L,
+                                vjust = 1L,
+                                margin = margin(t = half_line * 0.9)),
     plot.background = NULL, 
     
     plot.margin = margin(t = 10L, r = 10L, b = 10L, l = 10L), 
     
     ## Axis Attributes
     
-    axis.text = element_text(size = 12L),
-    axis.text.x = element_text(margin = margin(t = 4)),
+    axis.text = element_text(size = base_size),
+    axis.text.x = element_text(margin = margin(t = 4L)),
     axis.text.y = NULL, 
     axis.text.x.top = NULL, 
     axis.text.y.right = NULL, 
     
-    axis.ticks = element_line(), 
     axis.title = element_text(face = "italic", 
-                              size = 12L), 
-    axis.title.x = element_text(margin = margin(t = 8)), 
-    axis.title.y = element_text(angle = 90,
-                                margin = margin(r = 4)),
+                              size = base_size), 
+    axis.title.x = element_text(margin = margin(t = 8L)), 
+    axis.title.y = element_text(angle = 90L, 
+    														margin = margin(r = 4L)),
     axis.title.x.top = NULL, 
     axis.title.y.right = NULL,
-    
-    
+ 
+    axis.ticks = element_line(),     
     axis.ticks.length = unit(4L, "pt"),
     axis.ticks.x = element_line(colour = NULL, 
                                 size = NULL, 
@@ -199,7 +113,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     legend.position = "top", 
     legend.direction = "horizontal", 
     legend.justification = NULL, 
-    legend.margin = margin(t = 6, r = 0, b = 6, l = 0, "pt"), 
+    legend.margin = margin(t = 6L, r = 0L, b = 6L, l = 0L, "pt"), 
     
     legend.box = "horizontal", 
     legend.box.margin = NULL, 
@@ -216,6 +130,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     panel.spacing.x = NULL, 
     panel.spacing.y = NULL, 
     
+    panel.grid = NULL,
     panel.grid.major = element_line(), 
     panel.grid.major.x = element_blank(), 
     panel.grid.major.y = element_line(colour = "#DEDDDD"), 
@@ -227,12 +142,13 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
     
     strip.background = element_rect(fill = "#dedddd", 
                                     colour = NA,
-                                    size = 10), 
+                                    size = 10L), 
     strip.text = element_text(face = "bold", 
-                              size = rel(0.5)),
+                              size = rel(0.5),
+    													margin = margin(t = 0L, r = 0L, b = 0L, l = 0L)),
     
     strip.text.x = element_text(margin = margin(t = 4.5, b = 4.5)), 
-    strip.text.y = element_text(angle = -90, 
+    strip.text.y = element_text(angle = -90L, 
                                 margin = margin(l = 4.5, r = 4.5)), 
     
     strip.placement = "inside",
@@ -250,7 +166,7 @@ theme_urban <- function(base_size = 12, base_family = "Lato") {
 
 theme_set(theme_urban())
 
-################ Set Default Colors for Monochromatic Plots ####################
+################ Set Default colours for Monochromatic Plots ####################
 
 update_geom_defaults("bar", list(fill = "#1696d2"))
 update_geom_defaults("point", list(colour = "#1696d2"))
@@ -258,7 +174,7 @@ update_geom_defaults("line", list(colour = "#1696d2"))
 
 #############################
 
-#Redefine default discrete colors, up to 9 colors.
+#Redefine default discrete colours, up to 9 colours.
 scale_colour_discrete <- function(...) scale_colour_custom(..., palette = "Set1")
 scale_fill_discrete <- function(...) scale_fill_custom(... , palette = "Set1")
 
