@@ -33,44 +33,9 @@ options(scipen = 999)
 source("../urban_theme_mac.R")
 ```
 
+R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This .html file made with [R Markdown](http://rmarkdown.rstudio.com/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots. If you have any questions, please don't hesitate to contact Aaron Williams (awilliams@urban.org) or Kyle Ueyama (kueyama@urban.org). 
 
-R is a powerful, open-source programming language and environment. R excels at data management and munging, traditional statistical analysis, machine learning, and reproducible research, but it is probably best known for its graphics. This .html file made with [R Markdown](http://rmarkdown.rstudio.com/) contains examples and instructions for popular and lesser-known plotting techniques in R. Furthermore, it includes instructions on how to leverage the Urban Institute's ggplot2 theme which will create near-publication-ready plots.
-
-The greatest strength of R is its vibrant and open community of users, developers, and educators. If you ever hit a wall, there are plenty of places to look for help. Hadley Wickham's book, [R for Data Science](http://r4ds.had.co.nz/), is a comprehensive text for beginners. [Stackoverflow](http://stackoverflow.com/) is full of questions and answers (be sure to include "[r]" in the search). Finally, don't hesitate to contact Aaron Williams (awilliams@urban.org). 
-
-#### Installation
-
-**R** can be added on any Urban Institute computer by IT.
-
-**R Studio** is an Integrated Development Environment that greatly expands the interface and capabilites of R. Loading R Studio is the preferred way of loading R. 
-
-**R Packages** are collections of open-source code developed by R users that contain useful functions and data that expand the power and applicability of R. Packages are regularly added on [CRAN](https://cran.r-project.org/) and [GitHub](https://github.com/). Most packages can be installed with `install.packages("package name")`. This only needs to happen once on each computer for each version of the package. Packages can be loaded using `library(package name)`. This needs to happen at the beginning of each script for each package used. **Note:** `install.packages()` uses quotation marks while `library()` does not. 
-
-There are thousands of packages, but most tasks can be accomplished with a handful of important packages:
-
-  * `ggplot2` data visualization
-  * `dplyr` data management
-  * `tidyr` data tidying
-  * `readr` data import 
-  * `purrr` functional programming
-  * `tibble` data frames
-  * `hms` times
-  * `stringr` character strings
-  * `lubridate` dates/times  
-  * `forcats` factors
-  * `DBI` databases 
-  * `haven` SPSS, SAS, and Stata files
-  * `httr` web apis
-  * `jsonlite` JSON
-  * `readxl`.xls and .xlsx
-  * `rvest` web scraping
-  * `xml2` XML
-  * `modelr` simple modeling within a pipeline
-  * `broom` turning models into tidy data
-  * `tidyverse` loads all of the packages listed up to this point; see Hadley Wichkham's "[tidyverse](https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0/)"
-  * `shiny` interactive web applications
-  
-#### Using the Urban R Theme
+#### Using the Urban Institute ggplot2 Theme
 
 Depending on your operating system, run one of the following scripts once per R session:
 
