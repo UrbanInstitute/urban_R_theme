@@ -18,14 +18,12 @@ output:
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(datasets)
+library(tidyverse)
 
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(warning = FALSE)
 opts_chunk$set(message = FALSE)
-
-library(datasets)
-library(tidyverse)
-
 options(scipen = 999)
 
 # Source ggplot2 theme
@@ -68,7 +66,7 @@ Sys.setenv(R_GSCMD="C:/Program Files/gs/gs9.05/bin/gswin32c.exe")`
 **Run this script once:**
 
 ```
-install.packages(c("ggplot2", "reshape2", "RColorBrewer", "extrafont"))
+install.packages(c("ggplot2", "ggrepel", "RColorBrewer", "extrafont"))
 library(extrafont)
 port()
 loadfonts()
@@ -84,7 +82,6 @@ library(extrafont)
 #### Grammar of Graphics and Conventions
 
 Hadley Wickham's ggplot2 is based on Leland Wilkinson's [*The Grammar of Graphics*](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448) and Wickham's [*A Layered Grammar of Graphics*](http://vita.had.co.nz/papers/layered-grammar.html). The layered grammar of graphics is a structured way of thinking about the components of a plot, which then lend themselves to the simple structure of ggplot2. 
-
 
 * **Data** are what are visualizaed in a plot and **mappings** are directions for how data are mapped in a plot in a way that can be perceived by humans.  
 * **Geoms** are representations of the actual data like points, lines, and bars. 
@@ -459,8 +456,8 @@ unemployment %>%
   	      panel.grid.minor.y = element_blank(),
   	      panel.grid.major.x = element_blank(),
 					axis.line = element_blank()) +
-		geom_text_repel(data = october, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = -0.06, family = "Lato") + 
-		geom_text_repel(data = august, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = 0.06, family = "Lato")
+		geom_text_repel(data = october, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = -0.06) + 
+		geom_text_repel(data = august, mapping = aes(x = time, y = rate, label = as.character(rate)), nudge_x = 0.06)
 ```
 
 ## Binning
@@ -788,8 +785,6 @@ lines
 
 `geom_text()` labels points without backgrounds. `geom_label()` labels points with backgrounds. 
 
-*Note:* `family = "Lato"` is required to turn `geom_text()` into Lato.
-
 #### geom_text()
 
 ```{r scatterplot-geom_text}
@@ -800,7 +795,7 @@ labels <- mtcars %>%
 mtcars %>%
 	ggplot(mapping = aes(x = wt, y = mpg)) +
 		geom_point() +
-		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
+		geom_text(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38) +
 	  labs(title = "Fuel Efficiency Declines as Weight Increases",
        caption = "Urban Institute",
        x = "Weight (Tons)",
@@ -817,7 +812,7 @@ labels <- mtcars %>%
 mtcars %>%
 	ggplot(mapping = aes(x = wt, y = mpg)) +
 		geom_point() +
-		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
+		geom_label(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
 	  labs(title = "Fuel Efficiency Declines as Weight Increases",
        caption = "Urban Institute",
        x = "Weight (Tons)",
@@ -828,7 +823,7 @@ mtcars %>%
 
 Text too often overlaps when using `geom_text()` or `geom_label()`. `library(ggrepel)` is a `library(ggplot2)` add-on that automatically positions text so it doesn't overlap with geoms or other text.
 
-To add this functionalit simple load `library(ggrepel)` and then use `geom_text_repel()` and `geom_text_label()` with the same syntax as `geom_text()` and `geom_label()`. Don't roget to add `family = "Lato"`.
+To add this functionalit simple load `library(ggrepel)` and then use `geom_text_repel()` and `geom_text_label()` with the same syntax as `geom_text()` and `geom_label()`. 
 
 #### geom_text_repel()
 
@@ -842,7 +837,7 @@ labels <- mtcars %>%
 mtcars %>%
 	ggplot(mapping = aes(x = wt, y = mpg)) +
 		geom_point() +
-		geom_text_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38, family = "Lato") +
+		geom_text_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.38) +
 	  labs(title = "Fuel Efficiency Declines as Weight Increases",
        caption = "Urban Institute",
        x = "Weight (Tons)",
@@ -859,7 +854,7 @@ labels <- mtcars %>%
 mtcars %>%
 	ggplot(mapping = aes(x = wt, y = mpg)) +
 		geom_point() +
-		geom_label_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), family = "Lato", nudge_x = 0.35) +
+		geom_label_repel(data = labels, mapping = aes(x = wt, y = mpg, label = model), nudge_x = 0.35) +
 	  labs(title = "Fuel Efficiency Declines as Weight Increases",
        caption = "Urban Institute",
        x = "Weight (Tons)",

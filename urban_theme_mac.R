@@ -1,16 +1,17 @@
-library(ggplot2)
-library(grid)
 library(extrafont)
+library(tidyverse)
+library(ggrepel)
 
-####################################
+# resize windows ----------------------------------------------------------
 
-#resize window to 650 px width
+# resize window to 650 px width
 quartz.options(width = 8.33333333333333, height = 5.55555555555556, dpi = 72)
 
-# For windows, uncomment below line (and comment out above line)
-#windows.options(width = 8.33333333333333, height = 5.55555555555556)
+# for windows, uncomment below line (and comment out above line)
+# windows.options(width = 8.33333333333333, height = 5.55555555555556)
 
-#################### create new 'complete' ggplot2 theme ###################
+
+# create new complete ggplot2 theme ---------------------------------------
 
 theme_urban <- function(base_size = 12L, 
 												base_family = "Lato",
@@ -21,7 +22,7 @@ theme_urban <- function(base_size = 12L,
 	
 	theme(
     
-    ## Main Attributes
+    # main attributes
     
     line = element_line(colour = "#000000", 
                         size = base_line_size, 
@@ -42,7 +43,7 @@ theme_urban <- function(base_size = 12L,
                         margin = margin(),
                         debug = FALSE),
     
-    ## Plot Attributes
+    # Plot Attributes
     
     plot.title = element_text(size = base_size * 1.5,
                               hjust = 0L,
@@ -60,7 +61,7 @@ theme_urban <- function(base_size = 12L,
     
     plot.margin = margin(t = 10L, r = 10L, b = 10L, l = 10L), 
     
-    ## Axis Attributes
+    # axis attributes
     
     axis.text = element_text(size = base_size),
     axis.text.x = element_text(margin = margin(t = 4L)),
@@ -91,7 +92,7 @@ theme_urban <- function(base_size = 12L,
                                lineend = NULL), 
     axis.line.y = element_blank(), 
     
-    ## Legend Attributes
+    # legend attributes
     
     legend.background = element_blank(), 
     
@@ -119,7 +120,7 @@ theme_urban <- function(base_size = 12L,
     legend.box.background = NULL, 
     legend.box.spacing = NULL, 
     
-    ## Panel Attributes
+    # panel attributes
     
     panel.background = element_blank(), 
     panel.border = element_blank(), 
@@ -137,7 +138,7 @@ theme_urban <- function(base_size = 12L,
     panel.grid.minor.x = element_blank(), 
     panel.grid.minor.y = element_blank(),
     
-    ## Strip Attributes (Facetting)
+    # strip attributes (Faceting)
     
     strip.background = element_rect(fill = "#dedddd", 
                                     colour = NA,
@@ -157,7 +158,7 @@ theme_urban <- function(base_size = 12L,
     strip.switch.pad.grid = unit(0.1, "cm"), 
     strip.switch.pad.wrap = unit(0.1, "cm"), 
     
-    ## Create a 'complete' format
+    # create a complete format
     complete = TRUE
     
   )
@@ -165,21 +166,23 @@ theme_urban <- function(base_size = 12L,
 
 theme_set(theme_urban())
 
-################ Set Default colours for Monochromatic Plots ####################
+
+# add lato font to text and label geoms ---------------------------
+
+update_geom_defaults("text", list(family = "Lato"))
+update_geom_defaults("label", list(family = "Lato"))
+update_geom_defaults("text_repel", list(family = "Lato"))
+update_geom_defaults("label_repel", list(family = "Lato"))
+
+# set default colours for monochromatic plots -----------------------------
 
 update_geom_defaults("bar", list(fill = "#1696d2"))
 update_geom_defaults("point", list(colour = "#1696d2"))
 update_geom_defaults("line", list(colour = "#1696d2"))
 
-#############################
+# set default colors for continuous color scales --------------------------
 
-#Redefine default discrete colours, up to 9 colours.
-scale_colour_discrete <- function(...) scale_colour_custom(..., palette = "Set1")
-scale_fill_discrete <- function(...) scale_fill_custom(... , palette = "Set1")
-
-# The following three functions add defaults to gardientn functions that match
-# the Urban Institute palette
-scale_color_gradientn <- function(..., 
+scale_colour_gradientn <- function(..., 
 																	 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
 																	 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
 																	 values = NULL, 
@@ -193,7 +196,9 @@ scale_color_gradientn <- function(...,
 									 scales::gradient_n_pal(colours, values, space), na.value = na.value, guide = guide, ...)
 }
 
-scale_colour_gradientn <- function(..., 
+scale_color_gradientn <- scale_colour_gradientn
+
+scale_fill_gradientn <- function(..., 
 																 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
 																 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
 																 values = NULL, 
@@ -203,25 +208,16 @@ scale_colour_gradientn <- function(...,
 	
 	colours <- if (missing(colours)) colors else colours
 	
-	continuous_scale("colour", "gradientn",
-									 scales::gradient_n_pal(colours, values, space), na.value = na.value, guide = guide, ...)
-}
-
-scale_fill_gradientn <- function(..., 
-																 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
-																 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
-																 values = NULL, 
-																 space = "Lab", 
-																 na.value = "grey50", 
-																 guide = "colourbar") {
-
- 	colours <- if (missing(colours)) colors else colours
-
 	continuous_scale("fill", "gradientn",
 									 scales::gradient_n_pal(colours, values, space), na.value = na.value, guide = guide, ...)
 }
 
-#################### Functions to Define custom colours #####################
+# set default colors for discrete color scales ----------------------------
+
+# redefine default discrete colours, up to 9 colours.
+scale_colour_discrete <- function(...) scale_colour_custom(..., palette = "Set1")
+scale_fill_discrete <- function(...) scale_fill_custom(... , palette = "Set1")
+
 .divlist <- c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral")
 .quallist <- c("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3")
 .seqlist <- c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
@@ -348,7 +344,7 @@ scale_fill_custom <- function(..., type = "seq", palette = 1) {
   discrete_scale("fill", "custom", .custom_pal(type, palette), ...)
 }
 
-# Urban Institute ggplot2 theme map add-on
+# Urban Institute ggplot2 theme map add-on --------------------------------
 urban_map <- theme(
 	axis.text = element_blank(),
 	axis.ticks = element_blank(),
