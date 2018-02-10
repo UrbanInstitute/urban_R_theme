@@ -177,6 +177,22 @@ update_geom_defaults("line", list(colour = "#1696d2"))
 scale_colour_discrete <- function(...) scale_colour_custom(..., palette = "Set1")
 scale_fill_discrete <- function(...) scale_fill_custom(... , palette = "Set1")
 
+# The following three functions add defaults to gardientn functions that match
+# the Urban Institute palette
+scale_color_gradientn <- function(..., 
+																	 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
+																	 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
+																	 values = NULL, 
+																	 space = "Lab", 
+																	 na.value = "grey50", 
+																	 guide = "colourbar") {
+	
+	colours <- if (missing(colours)) colors else colours
+	
+	continuous_scale("colour", "gradientn",
+									 scales::gradient_n_pal(colours, values, space), na.value = na.value, guide = guide, ...)
+}
+
 scale_colour_gradientn <- function(..., 
 																 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
 																 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
@@ -206,35 +222,35 @@ scale_fill_gradientn <- function(...,
 }
 
 #################### Functions to Define custom colours #####################
-divlist <- c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral")
-quallist <- c("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3")
-seqlist <- c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
+.divlist <- c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral")
+.quallist <- c("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3")
+.seqlist <- c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
              "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd")
 
-divnum <- rep(11, length(divlist))
-qualnum <- c(8, 8, 12, 9, 8, 9, 8, 12)
-seqnum <- rep(9, length(seqlist))
+.divnum <- rep(11, length(.divlist))
+.qualnum <- c(8, 8, 12, 9, 8, 9, 8, 12)
+.seqnum <- rep(9, length(.seqlist))
 
-namelist <- c(divlist, quallist, seqlist)
-maxcolours <- c(divnum, qualnum, seqnum)
-catlist <- rep(c("div", "qual", "seq"), c(length(divlist), length(quallist), length(seqlist)))
+.namelist <- c(.divlist, .quallist, .seqlist)
+.maxcolours <- c(.divnum, .qualnum, .seqnum)
+.catlist <- rep(c("div", "qual", "seq"), c(length(.divlist), length(.quallist), length(.seqlist)))
 
-custom.pal.info <- data.frame(maxcolours = maxcolours, category = catlist, row.names = namelist)
+.custom.pal.info <- data.frame(maxcolours = .maxcolours, category = .catlist, row.names = .namelist)
 
-custom.pal <- function(n, name){
-  if (!(name %in% namelist)) {
-    stop(paste(name, "is not a valid palette name for custom.pal\n"))
+.custom.pal <- function(n, name){
+  if (!(name %in% .namelist)) {
+    stop(paste(name, "is not a valid palette name for .custom.pal\n"))
   }
   
   if (n < 3) {
     warning("minimal value for n is 3, returning requested palette with 3 different levels\n")
-    return(custom.pal(3, name))
+    return(.custom.pal(3, name))
   }
   
-  if (n > maxcolours[which(name == namelist)]) {
-    warning(paste("n too large, allowed maximum for palette",name,"is", maxcolours[which(name == namelist)]),
+  if (n > .maxcolours[which(name == .namelist)]) {
+    warning(paste("n too large, allowed maximum for palette",name,"is", .maxcolours[which(name == .namelist)]),
             "\nReturning the palette you asked for with that many colours\n")
-    return(custom.pal(maxcolours[which(name == namelist)], name))
+    return(.custom.pal(.maxcolours[which(name == .namelist)], name))
   }
   
   c1 <- col2rgb("#1696d2")
@@ -293,7 +309,7 @@ custom.pal <- function(n, name){
   )
 }
 
-pal_name <- function(palette, type) {
+.pal_name <- function(palette, type) {
   if (is.character(palette)) {
     if (!palette %in% RColorBrewer:::namelist) {
       warning("Unknown palette ", palette)
@@ -303,33 +319,33 @@ pal_name <- function(palette, type) {
   }
   
   switch(type,
-         div = divlist,
-         qual = quallist,
-         seq = seqlist,
+         div = .divlist,
+         qual = .quallist,
+         seq = .seqlist,
          stop("Unknown palette type. Should be 'div', 'qual' or 'seq'",
               call. = FALSE)
   )[palette]
 }
 
-custom_pal <- function(type = "seq", palette = 1) {
-  pal <- pal_name(palette, type)
+.custom_pal <- function(type = "seq", palette = 1) {
+  pal <- .pal_name(palette, type)
   
   function(n) {
     if (n < 3 | length(n) > 1)
-      suppressWarnings(custom.pal(n, pal))[seq_len(n)]
+      suppressWarnings(.custom.pal(n, pal))[seq_len(n)]
     else
-      custom.pal(n, pal)[seq_len(n)]
+      .custom.pal(n, pal)[seq_len(n)]
   }
 }
 
 scale_colour_custom <- function(..., type = "seq", palette = 1) {
-  discrete_scale("colour", "custom", custom_pal(type, palette), ...)
+  discrete_scale("colour", "custom", .custom_pal(type, palette), ...)
 }
 
 #' @export
 #' @rdname scale_custom
 scale_fill_custom <- function(..., type = "seq", palette = 1) {
-  discrete_scale("fill", "custom", custom_pal(type, palette), ...)
+  discrete_scale("fill", "custom", .custom_pal(type, palette), ...)
 }
 
 # Urban Institute ggplot2 theme map add-on
