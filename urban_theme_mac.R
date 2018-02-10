@@ -179,6 +179,9 @@ update_geom_defaults("label_repel", list(family = "Lato"))
 update_geom_defaults("bar", list(fill = "#1696d2"))
 update_geom_defaults("point", list(colour = "#1696d2"))
 update_geom_defaults("line", list(colour = "#1696d2"))
+update_geom_defaults("boxplot", list(fill = "#1696d2"))
+update_geom_defaults("density", list(fill = "#1696d2"))
+update_geom_defaults("violin", list(fill = "#1696d2"))
 
 # set default colors for continuous color scales --------------------------
 

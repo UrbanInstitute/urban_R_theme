@@ -462,9 +462,10 @@ unemployment %>%
 
 ## Binning
 
-Histograms and frequency polygons show the distribution of a single numeric variable. Both bin variables and then count the number of observations in a bin. Histograms display distributions with a bar as a geom and frequency polygons show distributions with the line geom. Frequency polygons can be easily layered.
+Histograms and kernel density polygons show the distribution of a single numeric variable. Histograms display distributions with a bar as a geom. Kernel density polygons compute and draw smooth kernel density estimates. 
 
 ### Histogram
+
 ```{r histogram}
 ggplot(data = diamonds, mapping = aes(x = depth)) + 
   geom_histogram(bins = 100) +
@@ -485,12 +486,13 @@ diamonds %>%
        y = "Count")
 ```
 
-### Frequency Polygon
+### Smoothed kernel density estimates
+
 ```{r frequency-polygon}
 population %>%
   filter(year == 2013 & population < 3000000) %>%
   ggplot(mapping = aes(x = population)) + 
-  geom_freqpoly() +
+  geom_density() +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(labels = scales::comma) +
   labs(title = "Populations of World Countries",
@@ -500,8 +502,8 @@ population %>%
 
 diamonds %>%
   filter(cut == "Ideal" | cut == "Premium") %>%
-  ggplot(aes(x = price, color = cut)) +
-  geom_freqpoly(size = 1) +
+  ggplot(aes(x = price, fill = cut)) +
+  geom_density(alpha = 0.2) +
   scale_x_continuous(labels = scales::comma) +
   scale_y_continuous(labels = scales::dollar) +
   labs(title = "Distribution of Diamond Prices and Diamond Cut",
@@ -512,7 +514,7 @@ diamonds %>%
 
 ### Ridgeline plots
 
-Ridgeline plots are partially overlapping histograms faceted by a categorical variable that pack a lot of information into one compact plot. 
+Ridgeline plots are partially overlapping smoothed kernel density plots faceted by a categorical variable that pack a lot of information into one elegant plot. 
 
 ```{r ridgeline-plots}
 library(ggridges)
