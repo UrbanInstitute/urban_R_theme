@@ -56,7 +56,7 @@ This is an `R` script that makes `ggplot2` output align more closely with [the U
 	*  You may need to tweak pdf export options to preserve fonts. For example, in RStudio on OSX, check this option in the export pdf window: `r knitr::include_graphics("images/pdf_export_option.png")`
 
 
-* The theme has been tested against `ggplot2 version 2.2.0`. It will not function properly with older (`< 2.0.0`) versions of `ggplot2`
+* The theme has been tested against `ggplot2 version 2.2.1`. It will not function properly with older (`< 2.0.0`) versions of `ggplot2`
 
 * If it is not already installed, please install the free [Lato font from Google fonts](https://www.google.com/fonts/specimen/Lato).
   * If you're on Windows, you'll first need to [install Ghostscript](http://ghostscript.com/download/). You may need to have IT enter an admin password for this installation. Then, in R, tell R where your ghostscript file is.
@@ -280,7 +280,7 @@ Sometimes transparency isn't enough to bring clarity to a scatter plot with many
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) + 
   geom_hex(mapping = aes(fill = ..count..)) + 
   scale_y_continuous(expand = c(0, 0), labels = scales::dollar) +
-	scale_fill_gradientn(colors = c("#CFE8F3", "#062635"), labels = scales::comma) +
+	scale_fill_gradientn(labels = scales::comma) +
   labs(title = "Title",
        subtitle = "geom_hex adds clarity to overlapping points",
        x = "Carat",
@@ -676,7 +676,7 @@ bad_drivers %>%
       caption = "Source: fivethirtyeight R package",
       x = NULL,
       y = NULL) + 
-    scale_fill_gradient(low = "white", high = "#1696d2") +
+    scale_fill_gradientn() +
     theme(legend.position = "right",
       legend.direction = "vertical",
       axis.text.x = element_text(angle = 45))

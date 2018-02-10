@@ -177,6 +177,34 @@ update_geom_defaults("line", list(colour = "#1696d2"))
 scale_colour_discrete <- function(...) scale_colour_custom(..., palette = "Set1")
 scale_fill_discrete <- function(...) scale_fill_custom(... , palette = "Set1")
 
+scale_colour_gradientn <- function(..., 
+																 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
+																 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
+																 values = NULL, 
+																 space = "Lab", 
+																 na.value = "grey50", 
+																 guide = "colourbar") {
+	
+	colours <- if (missing(colours)) colors else colours
+	
+	continuous_scale("colour", "gradientn",
+									 scales::gradient_n_pal(colours, values, space), na.value = na.value, guide = guide, ...)
+}
+
+scale_fill_gradientn <- function(..., 
+																 colours = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"), 
+																 colors = c("#CFE8F3","#A2D4EC","#73BFE2","#46ABDB", "#1696D2","#12719E","#0A4C6A","#062635"),
+																 values = NULL, 
+																 space = "Lab", 
+																 na.value = "grey50", 
+																 guide = "colourbar") {
+
+ 	colours <- if (missing(colours)) colors else colours
+
+	continuous_scale("fill", "gradientn",
+									 scales::gradient_n_pal(colours, values, space), na.value = na.value, guide = guide, ...)
+}
+
 #################### Functions to Define custom colours #####################
 divlist <- c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral")
 quallist <- c("Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3")
@@ -287,7 +315,7 @@ custom_pal <- function(type = "seq", palette = 1) {
   pal <- pal_name(palette, type)
   
   function(n) {
-    if (n < 3)
+    if (n < 3 | length(n) > 1)
       suppressWarnings(custom.pal(n, pal))[seq_len(n)]
     else
       custom.pal(n, pal)[seq_len(n)]
