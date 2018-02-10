@@ -21,6 +21,7 @@ library(knitr)
 
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(warning = FALSE)
+opts_chunk$set(message = FALSE)
 
 library(datasets)
 library(tidyverse)
@@ -405,7 +406,6 @@ mtcars %>%
 
 ## Line Plots
 ```{r line-plots}
-
 ggplot(data = economics, mapping = aes(x = date, y = unemploy)) +
   geom_line() +
   scale_y_continuous(labels = scales::comma) +
@@ -418,24 +418,47 @@ ggplot(data = economics, mapping = aes(x = date, y = unemploy)) +
 
 ### Lines Plots With Multiple Lines
 
-Plotting more than one line can be useful for seeing the relationship of variables over time, but it takes a small amount of data munging. 
+
+```{r multiple-line-charts1}
+library(tidyverse)
+library(gapminder)
+
+gapminder %>%
+	filter(country %in% c("Australia", "Canada", "New Zealand", "Japan")) %>%
+	ggplot(aes(year, gdpPercap, color = country)) +
+	geom_line() +
+	scale_y_continuous(expand = c(0, 0),
+										 labels = scales::dollar) +
+	labs(title = "Per Capita GDP in Selected Countries",
+			 subtitle = "From the gapminder data set",
+			 caption = "Urban Institute",
+			 x = "Year",
+			 y = "Per capita GDP")
+
+
+
+```
+
+Plotting more than one variable can be useful for seeing the relationship of variables over time, but it takes a small amount of data munging. 
 
 This is because `ggplot2` wants data in a "long" format instead of a "wide" format for line plots with multiple lines. `gather()` and `spread()` from the `tidyr` package make switching back-and-forth between "long" and "wide" painless. Essentially, variable titles go into "key" and variable values go into "value". Then ggplot2, turns the different levels of the key variable (population, unemployment) into colors. 
 
-```{r multiple-line-charts}
+```{r multiple-line-charts2}
 library(tidyverse)
 
-economics %>%
-  select(date, pop, unemploy) %>%
-  gather(pop, unemploy, key = "variable", value = "value") %>%
-  ggplot(mapping = aes(x = date, y = value, color = variable)) +
-  geom_line(size = 1) +
-  scale_y_continuous(expand = c(0, 0), labels = scales::comma) +
-  labs(title = "Unemployment and Population",
-       subtitle = "Total Population and Total Unemployment in the U.S. Over Time",
-       caption = "Urban Institute",
-       x = "Year",
-       y = "People (1,000s)")
+as_tibble(EuStockMarkets) %>%
+	mutate(date = time(EuStockMarkets)) %>%
+	gather(key = "key", value = "value", -date) %>%
+	ggplot(aes(date, value, color = key)) +
+	geom_line() +
+  scale_y_continuous(expand = c(0, 0), 
+  									 labels = scales::dollar,
+  									 limits = c(0, 10000)) +
+	labs(title = "Major European Stock Indices",
+			 subtitle = "Based on daily closing prices",
+			 caption = "Urban Institute",
+			 x = "Date",
+			 y = "Value")
 ```
 
 ### Slope plots
