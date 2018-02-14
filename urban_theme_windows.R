@@ -10,6 +10,7 @@ library(ggrepel)
 # for windows, uncomment below line (and comment out above line)
 windows.options(width = 8.33333333333333, height = 5.55555555555556)
 
+windowsFonts(Lato = windowsFont("Lato"))
 
 # create new complete ggplot2 theme ---------------------------------------
 

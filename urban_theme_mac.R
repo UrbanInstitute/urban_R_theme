@@ -7,9 +7,10 @@ library(ggrepel)
 # resize window to 650 px width
 quartz.options(width = 8.33333333333333, height = 5.55555555555556, dpi = 72)
 
-# for windows, uncomment below line (and comment out above line)
+# for windows, uncomment lines (and comment out above line)
 # windows.options(width = 8.33333333333333, height = 5.55555555555556)
 
+# windowsFonts(Lato = windowsFont("Lato"))
 
 # create new complete ggplot2 theme ---------------------------------------
 
