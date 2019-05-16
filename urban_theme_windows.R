@@ -1,2 +1,1 @@
-message('urban_theme_windows.R is deprecated. Consider using urban_theme.R instead')
-source('https://raw.githubusercontent.com/UrbanInstitute/urban_R_theme/urban_R_theme_revamp/urban_theme.R')
+message("urban_theme.R is deprecated. Consider using library(urbnthemes) instead: https://github.com/UI-Research/urbnthemes")
