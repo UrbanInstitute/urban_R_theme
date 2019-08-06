@@ -4,7 +4,7 @@ A guide to building R graphics at the Urban Institute can be found [here](http:/
 
 ## Urban Institute ggplot2 theme
 
-This version of the Urban Institute ggplot2 theme is entirely deprecated. Please use the R package [libary(urbnthemes)](https://github.com/UI-Research/urbnthemes). 
+This version of the Urban Institute ggplot2 theme is entirely deprecated. Please use the R package [libary(urbnthemes)](https://github.com/UrbanInstitute/urbnthemes). 
 
 ## R Theme Copyright and License 
 
